@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="16px" viewBox="0 0 14 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>Icon/Lock-DDDDDD</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M3.33333333,6.33333333 L3.33333333,5 C3.33333333,2.23838192 5.57171525,0 8.33333333,0 C10.4674232,0 12.342315,1.35153315 13.0434026,3.33312676 C13.2276117,3.85378546 12.9548653,4.42519364 12.4342066,4.60940265 C11.9135479,4.79361165 11.3421397,4.52086528 11.1579307,4.00020658 C10.7370564,2.81062365 9.61253223,2 8.33333333,2 C6.67628475,2 5.33333333,3.34295142 5.33333333,5 L5.33333333,6.33333333 L13.7272727,6.33333333 C14.4304545,6.33333333 15,6.8740625 15,7.54166667 L15,14.7916667 C15,15.4592708 14.4304545,16 13.7272727,16 L2.27272727,16 C1.56954545,16 1,15.4592708 1,14.7916667 L1,7.54166667 C1,6.8740625 1.56954545,6.33333333 2.27272727,6.33333333 L3.33333333,6.33333333 Z" id="path-1"></path>
+    </defs>
+    <g id="Icon/Lock" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-1.000000, 0.000000)">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Icon/Lock-DDDDDD" fill="#DDDDDD" fill-rule="nonzero" xlink:href="#path-1"></use>
+    </g>
+</svg>

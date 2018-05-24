@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>OTCMAKER</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta name="keywords" content="ETH,Dai,Maker,OTC,比特币买卖,区块链, blockchain">
+    <meta name="description" content="安全的场外交易平台">
+    <!-- <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" rel="external nofollow" /> -->
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" type="image/x-icon" href="/dist/favicon.ico" rel="external nofollow"/>
+    <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[0] %>">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113782476-1"></script>
+    <script>
+        // 判断是否是IE浏览器，
+        // IE浏览器需要添加promise垫片
+        var ms_ie = false;
+        var ua = window.navigator.userAgent;
+        var old_ie = ua.indexOf('MSIE ');
+        var new_ie = ua.indexOf('Trident/');
+
+        if ((old_ie > -1) || (new_ie > -1)) {
+            ms_ie = true;
+        }
+        if (ms_ie) {
+            var node = document.createElement('script')
+            node.src = './src/static/javascript/promise-polyfill.min.js'
+            document.head.appendChild(node)
+        }
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'UA-113782476-1');
+    </script>
+</head>
+
+<body>
+<div id="app"></div>
+<script type="text/javascript" src="<%= htmlWebpackPlugin.files.js[0] %>"></script>
+<script type="text/javascript" src="<%= htmlWebpackPlugin.files.js[1] %>"></script>
+</body>
+
+</html>

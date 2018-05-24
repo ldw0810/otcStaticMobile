@@ -1,0 +1,14 @@
+// extend
+// 滚动条
+%scrollbar {
+  &::-webkit-scrollbar {
+    width: 10px;
+    -webkit-appearance: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border: 2px solid #fff;
+    border-radius: 8px;
+  }
+}
+// mixins

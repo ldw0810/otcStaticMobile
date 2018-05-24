@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>Icon/User-999999</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M16,16 C16,11.3331389 10.6666667,12.6665278 10,10.6664444 L10,9.33305554 C10.3,9.18438268 11.158,8.16300679 11.248,7.36497354 C11.484,7.34697279 11.8546667,7.1302971 11.964,6.27492812 C12.0226667,5.81557565 11.7893333,5.5575649 11.648,5.47622818 C11.648,5.47622818 12,4.80753365 12,4.00016667 C12,2.38143256 11.3646667,1.00004167 10,1.00004167 C10,1.00004167 9.526,0 8,0 C5.172,0 4,1.81407559 4,4.00016667 C4,4.73619734 4.352,5.47622818 4.352,5.47622818 C4.21066667,5.5575649 3.97733333,5.81624234 4.036,6.27492812 C4.14533333,7.1302971 4.516,7.34697279 4.752,7.36497354 C4.842,8.16300679 5.7,9.18438268 6,9.33305554 L6,10.6664444 C5.33333333,12.6665278 0,11.3331389 0,16 L16,16 Z" id="path-1"></path>
+    </defs>
+    <g id="Icon/User" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Icon/User-999999" fill="#999999" fill-rule="nonzero" xlink:href="#path-1"></use>
+    </g>
+</svg>

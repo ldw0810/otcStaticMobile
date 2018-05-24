@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>Icon/Order</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M3.28571429,13.0909091 L10.140056,13.0909091 L10.140056,13.5909091 C10.140056,14.3187622 11.1436028,15 12.452381,15 L12.6746032,15 C13.9626634,15 15,13.9986894 15,12.7727273 L15,1 L3.28571429,1 L3.28571429,13.0909091 Z M2.28571429,13.0909091 L2.28571429,0 L16,0 L16,12.7727273 C16,14.5590379 14.5071937,16 12.6746032,16 L12.1746032,16 L3.31232493,16 C1.5148902,16 1.11022302e-16,14.9716469 1.11022302e-16,13.5909091 L0,13.0909091 L2.28571429,13.0909091 Z M5.38095238,5.5 L5.38095238,4.5 L12.952381,4.5 L12.952381,5.5 L5.38095238,5.5 Z M5.38095238,9.5 L5.38095238,8.5 L12.952381,8.5 L12.952381,9.5 L5.38095238,9.5 Z" id="path-1"></path>
+    </defs>
+    <g id="Icon/Order" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use fill="#999999" fill-rule="nonzero" xlink:href="#path-1"></use>
+    </g>
+</svg>

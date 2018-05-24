@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="335px" height="95px" viewBox="0 0 335 95" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>Combined Shape</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="-1.11022302e-14%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#DE3489" offset="0%"></stop>
+            <stop stop-color="#F96250" offset="51.5128251%"></stop>
+            <stop stop-color="#FEA45F" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="-1.11022302e-14%" y1="50%" x2="100%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#D91B82" offset="0%"></stop>
+            <stop stop-color="#F8483C" offset="49.437771%"></stop>
+            <stop stop-color="#FFAB51" offset="100%"></stop>
+        </linearGradient>
+        <path d="M309,0 C309,14.3594035 320.640597,26 335,26 L335,69 C320.640597,69 309,80.6405965 309,95 L26,95 C26,80.6405965 14.3594035,69 0,69 L0,26 C14.3594035,26 26,14.3594035 26,0 L309,0 Z" id="path-3"></path>
+    </defs>
+    <g id="用户中心" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="square">
+        <g id="用户中心-账号设置-分享" transform="translate(-20.000000, -943.000000)">
+            <g id="Group-5" transform="translate(20.000000, 943.000000)">
+                <g id="Group">
+                    <g id="Combined-Shape">
+                        <path stroke="#FFFFFF" stroke-width="10" d="M304.401125,5 L30.5988747,5 C28.4720862,18.1157828 18.1157828,28.4720862 5,30.5988747 L5,64.4011253 C18.1157828,66.5279138 28.4720862,76.8842172 30.5988747,90 L304.401125,90 C306.527914,76.8842172 316.884217,66.5279138 330,64.4011253 L330,30.5988747 C316.884217,28.4720862 306.527914,18.1157828 304.401125,5 Z" fill="url(#linearGradient-1)" fill-rule="evenodd"></path>
+                        <path stroke="url(#linearGradient-2)" stroke-width="5" d="M306.608138,2.5 L28.3918621,2.5 C27.197307,16.2455209 16.2455209,27.197307 2.5,28.3918621 L2.5,66.6081379 C16.2455209,67.802693 27.197307,78.7544791 28.3918621,92.5 L306.608138,92.5 C307.802693,78.7544791 318.754479,67.802693 332.5,66.6081379 L332.5,28.3918621 C318.754479,27.197307 307.802693,16.2455209 306.608138,2.5 Z"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

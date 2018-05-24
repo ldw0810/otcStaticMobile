@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="12px" viewBox="0 0 16 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>Icon/Card-ED1C24</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M1,2 L15,2 C15.5522847,2 16,2.44771525 16,3 L16,13 C16,13.5522847 15.5522847,14 15,14 L1,14 C0.44771525,14 6.76353751e-17,13.5522847 0,13 L0,3 C-6.76353751e-17,2.44771525 0.44771525,2 1,2 Z M0.800000012,4 C0.63431458,4 0.5,4.13431458 0.5,4.30000001 L0.5,5.69999999 C0.5,5.86568542 0.63431458,6 0.800000012,6 L15.2,6 C15.3656854,6 15.5,5.86568542 15.5,5.69999999 L15.5,4.30000001 C15.5,4.13431458 15.3656854,4 15.2,4 L0.800000012,4 Z" id="path-1"></path>
+    </defs>
+    <g id="Icon/Card" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(0.000000, -2.000000)">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <use id="Icon/Card-ED1C24" fill="#ED1C24" xlink:href="#path-1"></use>
+    </g>
+</svg>

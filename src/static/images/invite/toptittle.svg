@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="710px" height="95px" viewBox="0 0 710 95" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>Combined Shape</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="-1.11022302e-14%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#DE3489" offset="0%"></stop>
+            <stop stop-color="#F96250" offset="51.5128251%"></stop>
+            <stop stop-color="#FEA45F" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="-1.11022302e-14%" y1="50%" x2="100%" y2="50%" id="linearGradient-2">
+            <stop stop-color="#D91B82" offset="0%"></stop>
+            <stop stop-color="#F8483C" offset="49.437771%"></stop>
+            <stop stop-color="#FFAB51" offset="100%"></stop>
+        </linearGradient>
+        <path d="M684,0 C684,14.3594035 695.640597,26 710,26 L710,69 C695.640597,69 684,80.6405965 684,95 L26,95 C26,80.6405965 14.3594035,69 0,69 L0,26 C14.3594035,26 26,14.3594035 26,0 L684,0 Z" id="path-3"></path>
+    </defs>
+    <g id="主页&amp;公共" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="square">
+        <g id="Invite-Copy-2" transform="translate(-445.000000, -951.000000)">
+            <g id="Group-5" transform="translate(445.000000, 951.000000)">
+                <g id="Combined-Shape">
+                    <path stroke="#FFFFFF" stroke-width="10" d="M679.401125,5 L30.5988747,5 C28.4720862,18.1157828 18.1157828,28.4720862 5,30.5988747 L5,64.4011253 C18.1157828,66.5279138 28.4720862,76.8842172 30.5988747,90 L679.401125,90 C681.527914,76.8842172 691.884217,66.5279138 705,64.4011253 L705,30.5988747 C691.884217,28.4720862 681.527914,18.1157828 679.401125,5 Z" fill="url(#linearGradient-1)" fill-rule="evenodd"></path>
+                    <path stroke="url(#linearGradient-2)" stroke-width="5" d="M681.608138,2.5 L28.3918621,2.5 C27.197307,16.2455209 16.2455209,27.197307 2.5,28.3918621 L2.5,66.6081379 C16.2455209,67.802693 27.197307,78.7544791 28.3918621,92.5 L681.608138,92.5 C682.802693,78.7544791 693.754479,67.802693 707.5,66.6081379 L707.5,28.3918621 C693.754479,27.197307 682.802693,16.2455209 681.608138,2.5 Z"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
