@@ -20,7 +20,7 @@
         .goButton(v-text="$t('user.password_forget')" @click="$router.push('/forgetPassword')")
         .empty
         .goButton(v-text="$t('user.login_toRegister')" @click="$router.push('/register')")
-      mt-popup(class="popup" v-model="validatePhoneFlag || validateGoogleFlag" position="right" v-if="popupFlag")
+      mt-popup(class="popup" v-model="validatePhoneFlag" position="right" v-if="popupFlag")
         slot
           ValidatePhone(@close="validatePhoneFlag = false")
     #captcha
@@ -71,7 +71,8 @@ export default {
       captchaLoading: false,
       captchaObj: '',
       validatePhoneFlag: false,
-      validateGoogleFlag: false
+      validateGoogleFlag: false,
+      popupFlag: false
     }
   },
   watch: {
