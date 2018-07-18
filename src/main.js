@@ -1,56 +1,36 @@
-import Vue from 'vue';
-import globalComponents from '@/config/global-components';
-import {DEFAULT_LANGUAGE} from 'config/config';
-import router from './router';
-import Vuex from 'vuex';
-import App from './app.vue';
-import Functions from './libs/functions';
-import Filters from './libs/filters';
-import '@/style/lib/index.less';
-import '@/style/index.scss';
-import store from './store/store';
-import VueI18n from 'vue-i18n';
-import languageData from './locale';
-import VueClipboard from 'vue-clipboard2';
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router/index'
+import vuexI18n from 'vuex-i18n'
+import store from './store'
+import {$getLanguage} from './utils'
+import install from './utils/install'
+import languageDataList from './locale'
+import './style/index.styl'
 
-Vue.use(Vuex);
-Vue.use(VueI18n);
-Vue.use(globalComponents);
-Vue.use(Functions);
-Vue.use(Filters);
-Vue.use(VueClipboard);
+Vue.config.productionTip = false
+Vue.use(install)
+Vue.use(vuexI18n.plugin, store)
+// Vue.use(VueLazyLoad, {
+//   preLoad: 1.3,
+//   error: require('../src/assets/images/common/logo.svg'),
+//   loading: require('../src/assets/images/common/logo.svg'),
+//   attempt: 1
+// })
 // 自动设置语言
-const navLang = navigator.language || navigator.userLanguage;
-const langs = ['zh-CN', 'zh-HK', 'en-US'];
-const localLang = langs.indexOf(navLang) > -1 ? navLang : DEFAULT_LANGUAGE;
-const currentLanguage = window.localStorage.getItem('language');
-let lang;
-if (currentLanguage) {
-    lang = currentLanguage;
-} else {
-    window.localStorage.setItem('language', localLang);
-    lang = localLang;
+for (let i = 0; i < languageDataList.length; i++) {
+  Vue.i18n.add(languageDataList[i].language, languageDataList[i].data)
 }
-Vue.config.lang = lang;
-//判断设备端
-if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
-    store.commit('device_setter', 1);
-} else {
-    store.commit('device_setter', 0);
-}
-//存储token
-if (localStorage.getItem('userToken') && !store.state.userToken) {
-    store.commit('saveToken', localStorage.getItem('userToken'));
-}
+// 自动设置语言
+Vue.i18n.set($getLanguage())
 
-// 多语言配置
-for (let i = 0; i < languageData.length; i++) {
-    Vue.locale(languageData[i].language, languageData[i].data);
-}
-
+/* eslint-disable no-new */
 new Vue({
-    el: '#app',
-    router: router,
-    store: store,
-    render: h => h(App)
-});
+  el: '#app',
+  router,
+  store,
+  template: '<App/>',
+  components: {App}
+})

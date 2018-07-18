@@ -1,0 +1,44 @@
+<template lang="pug">
+  .page
+    LogoDiv
+    .bg
+    .content
+      transition(name="fade" mode="out-in")
+        router-view
+    FooterDiv
+</template>
+
+<script type="es6">
+import LogoDiv from '../common/logo'
+import FooterDiv from '../common/footer'
+export default {
+  components: {
+    LogoDiv, FooterDiv
+  },
+  data () {
+    return {}
+  }
+}
+</script>
+<style lang='stylus' scoped>
+  .page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .bg {
+      background-image: linear-gradient(45deg, #0BBFD5 0%, #6DD788 100%);
+      background-size: cover;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      height: 100%;
+      width: 100%;
+    }
+    .content {
+      width: 100vw;
+      min-height: 100 - $headerHeight - $footerHeight;
+    }
+  }
+</style>
