@@ -222,45 +222,6 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  .content div {
-    word-wrap: break-word;
-  }
-
-  .logoBg {
-    width: 100vm;
-    height: 10vh;
-    background: #f4f6f9;
-  }
-
-  .title {
-    padding-top: 5vh;
-    font-size: 1.6rem;
-    color: #FFFFFF;
-    margin-left: 14vw;
-    text-align: left;
-  }
-
-  #captcha {
-    width: 72vw;
-    display: inline-block;
-  }
-
-  .goDiv {
-    display: flex;
-    margin: 0 14vw;
-    .empty {
-      flex: 1;
-    }
-    .goButton {
-      min-width: 1vw;
-      text-align: center;
-      font-size: 0.85rem;
-      color: #FFFFFF;
-      letter-spacing: 0;
-      cursor: pointer;
-    }
-  }
-
   .checkbox {
     color: #FFFFFF;
     margin 1vh 0
@@ -272,6 +233,9 @@ export default {
   }
 
   .popup {
+    width 100%
+    height 100%
+    background #FFFFFF
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
   }

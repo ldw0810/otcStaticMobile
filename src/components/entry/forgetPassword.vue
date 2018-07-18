@@ -119,43 +119,4 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  .content div {
-    word-wrap: break-word;
-  }
-
-  .title {
-    padding-top: 5vh;
-    font-size: 1.6rem;
-    color: #FFFFFF;
-    margin-left: 14vw;
-    text-align: left;
-  }
-
-  .form {
-    margin-top: 5vh;
-  }
-
-  .formItem {
-    margin-left: 14vw;
-  }
-
-  .input {
-    width: 72vw;
-  }
-
-  .goDiv {
-    display: flex;
-    margin: 0 14vw;
-    .empty {
-      flex: 1;
-    }
-    .goButton {
-      min-width: 1vw;
-      text-align: center;
-      font-size: 0.85rem;
-      color: #FFFFFF;
-      letter-spacing: 0;
-      cursor: pointer;
-    }
-  }
 </style>

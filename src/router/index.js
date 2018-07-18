@@ -6,8 +6,8 @@ const entry = {
   index: r => require.ensure([], () => r(require('../components/entry/index')), 'otcMobile'),
   register: r => require.ensure([], () => r(require('../components/entry/register')), 'otcMobile'),
   login: r => require.ensure([], () => r(require('../components/entry/login')), 'otcMobile'),
-  forgetPassword: r => require.ensure([], () => r(require('../components/entry/forgetPassword')), 'otcMobile')
-  // modifyPassword: r => require.ensure([], () => r(require('../components/login/modifyPassword')), 'otcMobile'),
+  forgetPassword: r => require.ensure([], () => r(require('../components/entry/forgetPassword')), 'otcMobile'),
+  modifyPassword: r => require.ensure([], () => r(require('../components/entry/modifyPassword')), 'otcMobile'),
   // validatePhone: r => require.ensure([], () => r(require('../components/login/validatePhone')), 'otcMobile'),
 }
 // const page = {
@@ -33,6 +33,11 @@ const routers = [
         path: 'forgetPassword',
         alias: '/forgetPassword',
         component: entry.forgetPassword
+      },
+      {
+        path: 'modifyPassword',
+        alias: '/modifyPassword',
+        component: entry.modifyPassword
       }
     ]
   }
