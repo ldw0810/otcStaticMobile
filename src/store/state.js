@@ -2,15 +2,13 @@ export default {
   header_index: 0, // 顶部菜单坐标
   layer_index: 1, // layer层级坐标，默认main层：1，蒙层：2
   user_sider_index: 0, // 个人中心页面的侧边栏坐标
-
   pinCodeValue: '', // PIN码的值
   pinCodeRefresh: 0, // 是否刷新PIN码
-
   googleKey: '', // 谷歌验证码
   googleCode: '', // 谷歌二维码的值
   loginInfo: {
-    email: '',
-    password: ''
+    mobile: '',
+    loginToken: ''
   },
   userInfo: { // 用户信息
     id: '',
@@ -23,15 +21,7 @@ export default {
     invite: '',
     notice: 0,
     valid_account: [
-      // {
-      //     "currency": "eth",
-      //     "balance": "0.0",
-      //     "locked": "0.0",
-      //     "amount": "0.0"
-      // },
     ],
-    mobile: false,
-    app_two_factor: false,
     omt: {},
     stat: {
       trade_count: 0,

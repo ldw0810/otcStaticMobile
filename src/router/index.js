@@ -15,6 +15,10 @@ const entry = {
 // }
 const routers = [
   {
+    path: '/',
+    redirect: '/login'
+  },
+  {
     path: '/entry',
     component: entry.index,
     children: [
