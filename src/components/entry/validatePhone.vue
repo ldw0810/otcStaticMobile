@@ -3,15 +3,14 @@
     .content
       .title(v-text="$t('user.auth_phone')")
       .subTitle(v-text="tipText")
-      .form
-        el-form(status-icon ref="form" :model="form" :rules="rules" @submit.native.prevent="submit")
-          el-form-item(prop="pinCode" class="formItem" :show-message="false")
-            el-input(class="input" type="text" v-model="form.pinCode" :placeholder="$t('user.pinCode_required')")
-              span(slot="prepend")
-                img(src="../../assets/images/icon/IdentifyingCode-CCCCCC.svg")
-            sendCodeButton
-          el-form-item(class="formItem submit")
-            el-button(class="submitButton" type='primary' :loading='submitLoading' @click="submit") {{$t('public.complete')}}
+      el-form(ref="form" class="form" :model="form" :rules="rules" @submit.native.prevent="submit" status-icon)
+        el-form-item(prop="pinCode" class="formItem" :show-message="false")
+          el-input(class="input" type="text" v-model="form.pinCode" :placeholder="$t('user.pinCode_required')")
+            span(slot="prepend")
+              img(src="../../assets/images/icon/IdentifyingCode-CCCCCC.svg")
+          sendCodeButton
+        el-form-item(class="formItem submit")
+          el-button(class="submitButton" type='primary' :loading='submitLoading' @click="submit") {{$t('public.complete')}}
       .goDiv
         .empty
         <!--.goButton(v-text="$t('user.auth_google_use')" @click="$router.push('/user/validateGoogle')")-->

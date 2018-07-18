@@ -65,7 +65,7 @@ export default {
         rePassword: [
           {
             required: true,
-            message: this.$i18n.translate('user.password_required', '')
+            message: this.$i18n.translate('user.rePassword_required', '')
           },
           {
             validator: validateRePassword
