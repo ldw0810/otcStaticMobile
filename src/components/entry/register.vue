@@ -3,29 +3,28 @@
     .bg
     .content
       .title(v-text="$t('public.register')")
-      .form
-        el-form(ref="form" :model="form" :rules="rules" @submit.native.prevent="submit" status-icon)
-          el-form-item(prop="email" class="formItem" :show-message="false")
-            el-input(class="input" v-model="form.email" :placeholder="$t('user.email_required')")
-              span(slot="prepend")
-                img(src="../../assets/images/icon/Email-FFFFFF.svg")
-          el-form-item(prop="password" class="formItem" :show-message="false")
-            el-input(class="input" type="password" v-model="form.password" :placeholder="$t('user.password_required')")
-              span(slot="prepend")
-                img(src="../../assets/images/icon/Lock-FFFFFF.svg")
-          el-form-item(prop="invitationCode" class="formItem" :show-message="false")
-            el-input(class="input" v-model="form.invitationCode" :placeholder="$t('user.invitationCode_required')")
-              span(slot="prepend")
-                img(src="../../assets/images/icon/InviteCode-FFFFFF.svg")
-          el-form-item(prop="checkbox" class="formItem" :show-message="false")
-            el-checkbox(class="checkbox" v-model="form.checkbox")
-              span {{$t('user.terms_allowed')}}
-              a(class="showLink" @click="showAgreement") {{$t('user.terms_name')}}
-          el-form-item(class="formItem submit")
-            el-button(class="submitButton" type='primary' @click="submit" :disabled="captchaLoading")
-              slot(v-if="captchaLoading")
-                mt-spinner(class="spinner" :type="3" color="#00A6AE" :size="14")
-              slot(v-else) {{$t('public.register')}}
+      el-form(ref="form" class="form" :model="form" :rules="rules" @submit.native.prevent="submit" status-icon)
+        el-form-item(prop="email" class="formItem" :show-message="false")
+          el-input(class="input" v-model="form.email" :placeholder="$t('user.email_required')")
+            span(slot="prepend")
+              img(src="../../assets/images/icon/Email-FFFFFF.svg")
+        el-form-item(prop="password" class="formItem" :show-message="false")
+          el-input(class="input" type="password" v-model="form.password" :placeholder="$t('user.password_required')")
+            span(slot="prepend")
+              img(src="../../assets/images/icon/Lock-FFFFFF.svg")
+        el-form-item(prop="invitationCode" class="formItem" :show-message="false")
+          el-input(class="input" v-model="form.invitationCode" :placeholder="$t('user.invitationCode_required')")
+            span(slot="prepend")
+              img(src="../../assets/images/icon/InviteCode-FFFFFF.svg")
+        el-form-item(prop="checkbox" class="formItem" :show-message="false")
+          el-checkbox(class="checkbox" v-model="form.checkbox")
+            span {{$t('user.terms_allowed')}}
+            a(class="showLink" @click="showAgreement") {{$t('user.terms_name')}}
+        el-form-item(class="formItem submit")
+          el-button(class="submitButton" type='primary' @click="submit" :disabled="captchaLoading")
+            slot(v-if="captchaLoading")
+              mt-spinner(class="spinner" :type="3" color="#00A6AE" :size="14")
+            slot(v-else) {{$t('public.register')}}
       .goDiv
         .empty
         .goButton(v-text="$t('user.register_toLogin')" @click="$router.push('/login')")
@@ -35,8 +34,8 @@
     #captcha
 </template>
 <script type="es6">
-import {Button, Form, FormItem, Input, Checkbox} from 'element-ui'
-import {Spinner, Popup} from 'mint-ui'
+import {Button, Checkbox, Form, FormItem, Input} from 'element-ui'
+import {Popup, Spinner} from 'mint-ui'
 import UserAgreement from '../policy/userAgreement'
 import Vue from 'vue'
 import {$getAxiosLanguage, $getNicknameByHash} from '../../utils'
@@ -56,11 +55,9 @@ export default {
   },
   data () {
     const validateEmail = (rule, value, callback) => {
-      this.validatingFlag = true
       this.$store.dispatch('axios_verified_email', {
         email: value
       }).then(res => {
-        this.validatingFlag = false
         if (res.data && +res.data.error === 0) {
           if (!res.data.exist) {
             callback()
@@ -71,7 +68,6 @@ export default {
           callback(new Error(this.$i18n.translate('user.email_repeat', '')))
         }
       }).catch(() => {
-        this.validatingFlag = false
         callback(new Error(this.$i18n.translate('public.url_request_fail', '')))
       })
     }
@@ -148,8 +144,7 @@ export default {
       userAgreementFlag: false
     }
   },
-  computed: {
-  },
+  computed: {},
   watch: {
     $route: function () {
       this.init()
@@ -209,27 +204,14 @@ export default {
                 geetest_seccode: result.geetest_seccode,
                 check_captcha: 1
               }).then(result => {
-                this.$loading.close()
                 if (result.data && +result.data.error === 0) {
                   this.$message.success(this.$i18n.translate('user.register_success', ''))
                   this.$router.push('/login')
-                } else {
-                  this.$message.error(this.$i18n.translate('user.register_error', ''))
                 }
-              }).catch(() => {
-                this.$loading.close()
-                this.$message.error(this.$i18n.translate('public.url_request_fail', ''))
               })
             })
-          }
-          )
-        } else {
-          this.captchaLoading = false
-          this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
+          })
         }
-      }).catch(() => {
-        this.captchaLoading = false
-        this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
       })
     },
     init () {
@@ -258,25 +240,9 @@ export default {
     text-align: left;
   }
 
-  .checkbox {
-    color: #FFFFFF;
-  }
-
-  .checkbox span a {
-    color: #FFFFFF;
-    text-decoration: underline;
-  }
-
   #captcha {
     width: 72vw;
     display: inline-block;
-  }
-
-  .submitButton {
-    width: 72vw;
-    display flex
-    align-items center
-    justify-content center
   }
 
   .goDiv {
@@ -294,15 +260,19 @@ export default {
       cursor: pointer;
     }
   }
+
   .checkbox {
+    color: #FFFFFF;
+    margin 1vh 0
     width 72vw
     word-break break-all
     .showLink {
       text-decoration underline
     }
   }
-  .popup{
+
+  .popup {
     overflow: scroll;
-    -webkit-overflow-scrolling : touch;
+    -webkit-overflow-scrolling: touch;
   }
 </style>

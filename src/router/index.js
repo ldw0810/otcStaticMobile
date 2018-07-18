@@ -5,8 +5,8 @@ Vue.use(VueRouter)
 const entry = {
   index: r => require.ensure([], () => r(require('../components/entry/index')), 'otcMobile'),
   register: r => require.ensure([], () => r(require('../components/entry/register')), 'otcMobile'),
-  login: r => require.ensure([], () => r(require('../components/entry/login')), 'otcMobile')
-  // forgetPassword: r => require.ensure([], () => r(require('../components/login/forgetPassword')), 'otcMobile'),
+  login: r => require.ensure([], () => r(require('../components/entry/login')), 'otcMobile'),
+  forgetPassword: r => require.ensure([], () => r(require('../components/entry/forgetPassword')), 'otcMobile')
   // modifyPassword: r => require.ensure([], () => r(require('../components/login/modifyPassword')), 'otcMobile'),
   // validatePhone: r => require.ensure([], () => r(require('../components/login/validatePhone')), 'otcMobile'),
 }
@@ -28,6 +28,11 @@ const routers = [
         path: 'register',
         alias: '/register',
         component: entry.register
+      },
+      {
+        path: 'forgetPassword',
+        alias: '/forgetPassword',
+        component: entry.forgetPassword
       }
     ]
   }

@@ -1,26 +1,17 @@
 import axios from 'axios'
 import store from '../store'
-// import router from '../router'
-// import languageData from '../locale'
+import router from 'vue-router'
+import languageDataList from '../locale'
+import {$getLanguageIndex} from '../utils'
+import {Toast, Indicator} from 'mint-ui'
 
 const configure = require('../../configure')
 
 /**
  * Responsible for all HTTP requests.
  */
-
 axios.defaults.timeout = 20000
 axios.defaults.baseURL = configure.axios_BASEURL
-
-// function languageSelectIndex () {
-//   let index = 0
-//   for (let i = 0; i < languageData.length; i++) {
-//     if (languageData[i].language === (window.localStorage.getItem('language') || configure.DEFAULT_LANGUAGE)) {
-//       index = i
-//     }
-//   }
-//   return index
-// }
 
 // http request 拦截器
 axios.interceptors.request.use(
@@ -36,42 +27,36 @@ axios.interceptors.request.use(
   })
 // http response 拦截器
 
-const showaxiosError = (errorCode) => {
-  // const index = languageSelectIndex()
-  // const errMsg = languageData[index].data.request['' + errorCode]
+const showAxiosError = (errorCode) => {
+  Indicator.close()
+  const errMsg = languageDataList[$getLanguageIndex()].data.request['' + errorCode]
   if (+errorCode) {
-    if (+errorCode === 999999) {
+    if ([999999, 100039].indexOf(+errorCode) > -1) {
       store.commit('delToken')
-      // Alert.error({
-      //   title: languageData[index].data.public.error_title_default,
-      //   content: languageData[index].data.request['' + +errorCode],
-      //   onCancel: router.push('/user/login')
-      // })
-    } else if (+errorCode === 100031) {
-      // store.commit("showAuthEmail_setter", 1);
-    } else if (+errorCode === 100039) {
-      // errMsg && Alert.error({
-      //   title: languageData[index].data.public.error_title_default,
-      //   content: errMsg,
-      //   onCancel: router.push('/user/login')
-      // })
-    } else if ([100002, 100017, 100021, 100030, 100033, 100036, 100038].contains(+errorCode)) {
-    } else {
-      // errMsg && Alert.error({
-      //   title: languageData[index].data.public.error_title_default,
-      //   content: errMsg
-      // })
+      errMsg && Toast({
+        message: errMsg,
+        iconClass: 'icon icon-error'
+      })
+      router.push('/login')
+    } else if ([100002, 100017, 100021, 100030, 100033, 100036, 100038].indexOf(+errorCode) === -1) {
+      errMsg && Toast({
+        message: errMsg,
+        iconClass: 'icon icon-error'
+      })
+      if (+errorCode === 100031) {
+        // store.commit("showAuthEmail_setter", 1);
+      }
     }
   }
 }
 axios.interceptors.response.use(
   response => {
-    showaxiosError(response.data.error)
+    showAxiosError(+response.data.error)
     return response
   },
   error => {
     if (error.response) {
-      showaxiosError(error.response.data.error)
+      showAxiosError(+error.response.data.error)
     } else if (error.message) {
       error.response = {
         data: error.message

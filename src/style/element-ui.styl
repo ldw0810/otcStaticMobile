@@ -58,6 +58,10 @@ input
 /*!
 checkbox
  */
+.el-checkbox {
+  display flex
+  align-items center
+}
 /deep/ .el-checkbox__inner {
   background-image linear-gradient(0deg, #F2F4F7 0%, #FFFFFF 100%)
   border 1px solid #DEE0E1
@@ -76,7 +80,8 @@ checkbox
 /deep/ .el-checkbox__label {
   font-size 0.8rem
   color #FFFFFF
-  line-height 0.8rem
+  display flex
+  align-items center
 }
 
 /deep/ .el-checkbox__input.is-checked + .el-checkbox__label {

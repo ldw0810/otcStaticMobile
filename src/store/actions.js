@@ -1,6 +1,7 @@
 import axios from '../utils/axios'
 import qs from 'qs' // post请求转码
 import store from './index'
+import {Indicator} from 'mint-ui'
 
 const configure = require('../../configure')
 const http = {
@@ -9,6 +10,7 @@ const http = {
       axios.get(url, Object.assign({params: requestJson}, config)).then(res => {
         resolve(res)
       }).catch(err => {
+        Indicator.close()
         reject(err)
       })
     })
@@ -18,6 +20,7 @@ const http = {
       axios.post(url, qs.stringify(Object.assign(requestJson, config))).then(res => {
         resolve(res)
       }).catch(err => {
+        Indicator.close()
         reject(err)
       })
     })
@@ -27,6 +30,7 @@ const http = {
       axios.put(url, qs.stringify(Object.assign(requestJson, config))).then(res => {
         resolve(res)
       }).catch(err => {
+        Indicator.close()
         reject(err)
       })
     })
@@ -36,6 +40,7 @@ const http = {
       axios.delete(url, Object.assign({params: requestJson}, config)).then(res => {
         resolve(res)
       }).catch(err => {
+        Indicator.close()
         reject(err)
       })
     })

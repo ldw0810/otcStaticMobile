@@ -9,7 +9,6 @@
 <script type="es6">
 import Vue from 'vue'
 import {Actionsheet} from 'mint-ui'
-import indexOf from 'lodash/indexOf'
 import languageDataList from '../../locale'
 Vue.component(Actionsheet.name, Actionsheet)
 const configure = require('../../../configure')
@@ -62,7 +61,7 @@ export default{
         const language = this.languageList[+index] && this.languageList[+index].language
         let ln = language
         if (this.$store.state.userToken) {
-          if (indexOf(['zh-HK', 'zh-TW'], ln) > -1) {
+          if (['zh-HK', 'zh-TW'].indexOf(ln) > -1) {
             ln = 'zh-TW'
           } else if (ln !== 'zh-CN') {
             ln = 'en'

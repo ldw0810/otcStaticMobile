@@ -1,5 +1,4 @@
 import languageDataList from '../locale'
-import indexOf from 'lodash'
 import {hexSha1} from './sha1'
 const configure = require('../../configure')
 
@@ -17,7 +16,7 @@ export function $title (title) {
  *
  * @return {string} --> like 'en-US', 'zh-CN', 'zh-TW', 'zh-HK'
  * */
-export function $getLanguage (title) {
+export function $getLanguage () {
   const currentLanguage = localStorage.getItem('language')
   if (currentLanguage) {
     return currentLanguage
@@ -49,12 +48,26 @@ export function $getAxiosLanguage () {
     localStorage.setItem('language', localLang)
     ln = localLang
   }
-  if (indexOf(['zh-HK', 'zh-TW'], ln) > -1) {
+  if (['zh-HK', 'zh-TW'].indexOf(ln) > -1) {
     ln = 'zh-TW'
   } else if (ln !== 'zh-CN') {
     ln = 'en'
   }
   return ln
+}
+/**
+ * 获取语言在配置locale中的index坐标
+ *
+ * return {index} number
+ * */
+export function $getLanguageIndex () {
+  let index = 0
+  for (let i = 0; i < languageDataList.length; i++) {
+    if (languageDataList[i].language === (localStorage.getItem('language') || configure.DEFAULT_LANGUAGE)) {
+      index = i
+    }
+  }
+  return index
 }
 
 export function $getNicknameByHash (str) {

@@ -65,11 +65,6 @@ export default {
           }
         ]
       },
-      formState: {
-        email: '',
-        password: ''
-      },
-      message: '',
       captchaLoading: false,
       captchaObj: ''
     }
@@ -130,19 +125,12 @@ export default {
                     this.$store.dispatch('axios_language', {
                       ln: this.$getLanguage()
                     })]).then(axios.spread((resMe, resLan) => {
-                    this.$loading.close()
                     if (resMe.data && +resMe.data.error === 0 && resLan.data && +resLan.data.error === 0) {
                       this.$message.success(this.$i18n.translate('user.login_success', ''))
                       this.$router.push(this.$route.query.redirect || '/userCenter')
-                    } else {
-                      this.$message.error(this.$i18n.translate('user.userInfo_response_none', ''))
                     }
-                  })).catch(() => {
-                    this.$loading.close()
-                    this.$message.error(this.$i18n.translate('public.url_request_fail', ''))
-                  })
+                  }))
                 } else if (result.data && +result.data.error === 100038) {
-                  this.$loading.close()
                   if (result.data.sms || result.data.app) {
                     this.$store.commit('loginInfo_setter', {
                       mobile: result.data.mobile,
@@ -162,25 +150,11 @@ export default {
                   } else {
                     this.$message.error(this.$i18n.translate('user.login_error', ''))
                   }
-                } else if (result.data && +result.data.error === 100049) {
-                  this.$loading.close()
-                  this.$message.error(this.$i18n.translate('user.user_frozen', ''))
-                } else {
-                  this.$loading.close()
-                  this.$message.error(this.$i18n.translate('user.login_error', ''))
                 }
-              }).catch(() => {
-                this.$loading.close()
-                this.$message.error(this.$i18n.translate('user.login_error', ''))
               })
             })
           })
-        } else {
-          this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
         }
-      }).catch(() => {
-        this.captchaLoading = false
-        this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
       })
     },
     init () {
@@ -204,12 +178,6 @@ export default {
     color: #FFFFFF;
     margin-left: 14vw;
     text-align: left;
-  }
-  .submitButton {
-    width: 72vw;
-    display flex
-    align-items center
-    justify-content center
   }
   .goDiv {
     display: flex;

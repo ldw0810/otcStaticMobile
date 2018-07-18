@@ -8,7 +8,8 @@
 import {$getLanguage} from '../../utils'
 
 const language = {}
-language['zh-CN'] = `<h1 class='title'>用户协议</h1><p>https://www.otcmaker.com（以下称“本网站”或“网站”），是一个专门供用户进行数字资产交易和提供相关服务（以下称“该服务”或“服务”）的平台。为了本协议表述之方便，该网站在本协议中使用“我们”或其他第一人称称呼。只要登陆该网站的自然人或其他主体均为本网站的用户，本协议表述之便利，以下使用“您”或其他第二人称。为了本协议表述之便利，我们和您在本协议中合称为“双方”，我们或您单称为“一方”。</p>
+language['zh-CN'] = `<h1 class='title'>用户协议</h1><p class='underline'></p>
+<p>https://www.otcmaker.com（以下称“本网站”或“网站”），是一个专门供用户进行数字资产交易和提供相关服务（以下称“该服务”或“服务”）的平台。为了本协议表述之方便，该网站在本协议中使用“我们”或其他第一人称称呼。只要登陆该网站的自然人或其他主体均为本网站的用户，本协议表述之便利，以下使用“您”或其他第二人称。为了本协议表述之便利，我们和您在本协议中合称为“双方”，我们或您单称为“一方”。</p>
 <p class='sub-title'>重要提示：</p>
 <p>我们在此特别提醒您：</p>
 <p>1 数字资产本身不由任何金融机构或公司或本网站发行；</p>
@@ -185,7 +186,8 @@ language['zh-CN'] = `<h1 class='title'>用户协议</h1><p>https://www.otcmaker.
 <p>4.3 我们凭借自身的判断认定为可疑交易的情况，我们可能会采取暂停该交易、拒绝该交易等限制性措施，甚至如果可能将尽快逆转该交易，同时向主管部门报告，但不会通知您;</p>
 <p>4.4 我们保留拒绝来自于不符合国际反洗钱标准辖区的人或可被视为政治公众人物的人的注册申请，我们保留随时暂停或终止根据我们自身判断为可疑交易的交易，但我们这样做并不违反对您的任何义务和责任。</p>`
 
-language['zh-HK'] = `<h1 class='title'>用戶協議</h1><p>https://www.otcmaker.com（以下稱“本網站”或“網站”），是一個專門供用戶進行數字資產交易和提供相關服務（以下稱“該服務”或“服務”）的平臺。為了本協議表述之方便，該網站在本協議中使用“我們”或其他第一人稱稱呼。只要登陸該網站的自然人或其他主體均為本網站的用戶，本協議表述之便利，以下使用“您”或其他第二人稱。為了本協議表述之便利，我們和您在本協議中合稱為“雙方”，我們或您單稱為“一方”。</p>
+language['zh-HK'] = `<h1 class='title'>用戶協議</h1><p class='underline'></p>
+<p>https://www.otcmaker.com（以下稱“本網站”或“網站”），是一個專門供用戶進行數字資產交易和提供相關服務（以下稱“該服務”或“服務”）的平臺。為了本協議表述之方便，該網站在本協議中使用“我們”或其他第一人稱稱呼。只要登陸該網站的自然人或其他主體均為本網站的用戶，本協議表述之便利，以下使用“您”或其他第二人稱。為了本協議表述之便利，我們和您在本協議中合稱為“雙方”，我們或您單稱為“一方”。</p>
 <p>重要提示：</p>
 <p class='sub-title'>我們在此特別提醒您：</p>
 <p>1 數字資產本身不由任何金融機構或公司或本網站發行；</p>
@@ -362,7 +364,8 @@ language['zh-HK'] = `<h1 class='title'>用戶協議</h1><p>https://www.otcmaker.
 <p>4.2如果交易頻繁集中發生在某個註冊用戶或存在超乎合理的情況，我們的專業團隊將評估並決定他們是否可疑;</p>
 <p>4.3我們憑借自身的判斷認定為可疑交易的情況，我們可能會采取暫停該交易、拒絕該交易等限制性措施，甚至如果可能將盡快逆轉該交易，同時向主管部門報告，但不會通知您;</p>
 <p>4.4我們保留拒絕來自於不符合國際反洗錢標準轄區的人或可被視為政治公眾人物的人的註冊申請，我們保留隨時暫停或終止根據我們自身判斷為可疑交易的交易，但我們這樣做並不違反對您的任何義務和責任。</p>`
-language['en-US'] = `<h1 class='title'>User Agreement</h1><p>https://www.otcmaker.com (hereinafter referred to as 'this Website' or 'the Website'), which is a platform dedicated to the transaction of digital assets and the provision of related services (hereinafter referred to as 'the Service'). For the convenience of wording in this Agreement, the Website is referred to as 'We' or other applicable forms of first person pronouns in this Agreement. All natural persons or other subjects who log onto this Website shall be users of this Website. For the convenience of wording in this Agreement, the users are referred to as 'You' or any other applicable forms of the second-person pronouns. For the convenience of wording in this Agreement, you and us are collectively referred to as “both parties”, and individually as “one party”.</p>
+language['en-US'] = `<h1 class='title'>User Agreement</h1><p class='underline'></p>
+<p>https://www.otcmaker.com (hereinafter referred to as 'this Website' or 'the Website'), which is a platform dedicated to the transaction of digital assets and the provision of related services (hereinafter referred to as 'the Service'). For the convenience of wording in this Agreement, the Website is referred to as 'We' or other applicable forms of first person pronouns in this Agreement. All natural persons or other subjects who log onto this Website shall be users of this Website. For the convenience of wording in this Agreement, the users are referred to as 'You' or any other applicable forms of the second-person pronouns. For the convenience of wording in this Agreement, you and us are collectively referred to as “both parties”, and individually as “one party”.</p>
 <p>Important reminder:</p>
 <p class='sub-title'>We hereby remind you that:</p>
 <p>1. The digital assets themselves are not offered by any financial institution, corporation or this Website;</p>
@@ -566,6 +569,9 @@ export default {
       padding 5vh 8vw
       overflow: scroll;
       -webkit-overflow-scrolling : touch;
+      /deep/ .underline{
+        border-bottom 1px solid #000000
+      }
       /deep/ .title {
         text-align: center;
         margin-bottom: 20px;
