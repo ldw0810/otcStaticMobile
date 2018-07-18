@@ -7,6 +7,7 @@
     "production": {
       "user": "otcmaker",
       "host": "35.200.203.143",
+      "ref": "origin/master",
       "repo": "git@bitbucket.org:itering/otc-static-mobile.git",
       "path": "/home/otcmaker/otc-static-mobile",
       "post-deploy" : "npm install; npm run build"
