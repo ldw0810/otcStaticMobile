@@ -262,7 +262,7 @@ export default {
     color: #FFFFFF;
   }
 
-  .checkbox a {
+  .checkbox span a {
     color: #FFFFFF;
     text-decoration: underline;
   }
