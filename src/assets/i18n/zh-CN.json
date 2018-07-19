@@ -12,6 +12,7 @@
     "language": "语言",
     "register": "注册",
     "login": "登录",
+    "backLogin": "返回登录",
     "success": "成功",
     "fail": "失败",
     "loading": "加载中",

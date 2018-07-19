@@ -63,25 +63,25 @@ export default {
           if (!res.data.exist) {
             callback()
           } else {
-            callback(new Error(this.$i18n.translate('user.email_repeat', '')))
+            callback(new Error(this.$i18n.translate('user.email_repeat')))
           }
         } else {
-          callback(new Error(this.$i18n.translate('user.email_repeat', '')))
+          callback(new Error(this.$i18n.translate('user.email_repeat')))
         }
       }).catch(() => {
-        callback(new Error(this.$i18n.translate('public.url_request_fail', '')))
+        callback(new Error(this.$i18n.translate('public.url_request_fail')))
       })
     }
     const validatePassword = (rule, value, callback) => {
       if (!/[^\d].*[\d]|[\d].*[^\d]/.test(value)) {
-        callback(new Error(this.$i18n.translate('user.password_minLength', '')))
+        callback(new Error(this.$i18n.translate('user.password_minLength')))
       } else {
         callback()
       }
     }
     const validateInviteCode = (rule, value, callback) => {
       if (!/^[0-9a-zA-Z]*$/g.test(value)) {
-        callback(new Error(this.$i18n.translate('user.invitationCode_notValid', '')))
+        callback(new Error(this.$i18n.translate('user.invitationCode_notValid')))
       } else {
         callback()
       }
@@ -98,11 +98,11 @@ export default {
         email: [
           {
             required: true,
-            message: this.$i18n.translate('user.email_required', '')
+            message: this.$i18n.translate('user.email_required')
           },
           {
             type: 'email',
-            message: this.$i18n.translate('user.email_notValid', '')
+            message: this.$i18n.translate('user.email_notValid')
           },
           {
             validator: validateEmail,
@@ -112,12 +112,12 @@ export default {
         password: [
           {
             required: true,
-            message: this.$i18n.translate('user.password_required', '')
+            message: this.$i18n.translate('user.password_required')
           },
           {
             min: 6,
             max: 100,
-            message: this.$i18n.translate('user.password_minLength', '')
+            message: this.$i18n.translate('user.password_minLength')
           },
           {
             validator: validatePassword
@@ -181,7 +181,6 @@ export default {
       this.captchaStatus = 'loading'
       this.$store.dispatch('axios_captcha_server').then(res => {
         if (res.data && +res.data.error === 0) {
-          this.captchaStatus = 'success'
           window.initGeetest({
             gt: res.data.gt,
             challenge: res.data.challenge,
@@ -209,21 +208,22 @@ export default {
                 check_captcha: 1
               }).then(result => {
                 if (result.data && +result.data.error === 0) {
-                  this.$message.success(this.$i18n.translate('user.register_success', ''))
+                  this.$message.success(this.$i18n.translate('user.register_success'))
                   this.$router.push('/login')
                 }
               }).catch(() => {
-                this.$message.error(this.$i18n.translate('public.url_request_fail', ''))
+                this.$message.error(this.$i18n.translate('public.url_request_fail'))
               })
             })
           })
+          this.captchaStatus = 'success'
         } else {
           this.captchaStatus = 'error'
-          this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
+          this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
         }
       }).catch(() => {
         this.captchaStatus = 'error'
-        this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
+        this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
       })
     },
     init () {

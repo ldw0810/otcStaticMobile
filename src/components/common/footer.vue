@@ -19,15 +19,15 @@ export default{
     return {
       footerList: [
         {
-          name: this.$i18n.translate('public.about', ''),
+          name: this.$i18n.translate('public.about'),
           url: `${domain}/articles/360001934074`
         },
         {
-          name: this.$i18n.translate('public.explain', ''),
+          name: this.$i18n.translate('public.explain'),
           url: `${domain}/articles/360001929453`
         },
         {
-          name: this.$i18n.translate('public.helpCenter', ''),
+          name: this.$i18n.translate('public.helpCenter'),
           url: `${domain}/categories/360000187674`
         }
       ],

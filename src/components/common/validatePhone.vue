@@ -5,20 +5,23 @@
     .content
       .validatePhone
         .content
-          .title(v-text="$t('user.auth_phone')")
+          .title {{$t('user.auth_phone')}}
           .subTitle(v-text="tipText")
           el-form(ref="form" class="form" :model="form" :rules="rules" @submit.native.prevent="submit" status-icon)
-            el-form-item(prop="pinCode" class="formItem" :show-message="false")
-              el-input(class="input" type="text" v-model="form.pinCode" :placeholder="$t('user.pinCode_required')")
+            el-form-item(prop="pinCode" class="formItem phoneCodeDiv" :show-message="false")
+              el-input(class="phoneCode" type="text" v-model="form.pinCode" :placeholder="$t('user.auth_phone_code_required')")
                 span(slot="prepend")
-                  img(src="../../assets/images/icon/IdentifyingCode-CCCCCC.svg")
-              SendCode
+                  img(src="../../assets/images/icon/IdentifyingCode-FFFFFF.svg")
+              SendCode(ref="sendCode" class="sendCode")
             el-form-item(class="formItem submit")
               el-button(class="submitButton" type='primary' @click="submit") {{$t('public.complete')}}
-          .goDiv
-            .goButton(v-text="$t('public.login')" @click="$emit('close', 1)")
+          .goDiv(v-if="validateGoogle")
+            .goButton(v-text="$t('public.backLogin')" @click="$emit('close', 1)")
             .empty
             .goButton(v-text="$t('user.auth_google_use')" @click="$emit('changeValidate', 1)")
+          .goDiv(v-else)
+            .empty
+            .goButton(v-text="$t('public.backLogin')" @click="$emit('close', 1)")
     FooterDiv
 </template>
 <script type="es6">
@@ -48,7 +51,7 @@ export default {
         pinCode: [
           {
             required: true,
-            message: this.$i18n.translate('user.auth_phone_code_required', '')
+            message: this.$i18n.translate('user.auth_phone_code_required')
           }
         ]
       }
@@ -58,8 +61,13 @@ export default {
     validatePhone () {
       return this.$store.state.userInfo.mobile
     },
+    validateGoogle () {
+      return this.$store.state.userInfo_app_two_factor_setter
+    },
     tipText () {
-      return this.$i18n.translate('user.auth_phone_code_will_send', this.loginInfo.mobile)
+      return this.$i18n.translate('user.auth_phone_code_will_send', {
+        '0': this.loginInfo.mobile
+      })
     },
     loginInfo () {
       return this.$store.state.loginInfo || {}
@@ -83,11 +91,14 @@ export default {
             if (res.data && +res.data.error === 0) {
               this.$store.commit('saveToken', res.data.token)
               this.$emit('success', 1)
+            } else if (res.data && +res.data.error === 100039) {
+              this.$emit('close', 1)
             } else {
-              this.$refs.sendCodeButton.refresh()
+              this.$refs.sendCode.refresh()
             }
           }).catch(() => {
-            this.$refs.sendCodeButton.refresh()
+            this.$refs.sendCode.refresh()
+            this.$message.error(this.$i18n.translate('public.url_request_fail'))
           })
         } else {
           for (let i = 0; i < Object.keys(this.form).length; i++) {
@@ -99,6 +110,15 @@ export default {
           }
         }
       })
+    },
+    init () {
+      if (!this.validatePhone) {
+        if (this.validateGoogle) {
+          this.$emit('changeValidate', 1)
+        } else {
+          this.$emit('close', 1)
+        }
+      }
     }
   }
 }
@@ -122,10 +142,6 @@ export default {
     .content {
       width: 100vw;
       min-height: 100 - $headerHeight - $footerHeight;
-      .subTitle {
-        font-size: 0.85rem;
-        color: #FFFFFF;
-      }
     }
   }
 </style>

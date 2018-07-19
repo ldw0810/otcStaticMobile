@@ -12,6 +12,7 @@
     "language": "Language",
     "register": "Register",
     "login": "Login",
+    "backLogin": "Back login",
     "success": "Success",
     "fail": "Fail",
     "loading": "Loading",

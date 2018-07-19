@@ -1,17 +1,12 @@
 <template lang="pug">
   .logo
-    .btn(@click="goHome")
+    .btn(@click="$router.push('/')")
       img(src="../../assets/images/public/logo.svg")
 </template>
 <script type="es6">
 export default {
   data () {
     return {}
-  },
-  methods: {
-    goHome () {
-      this.$router.push('/')
-    }
   }
 }
 </script>

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import store from '../store'
-import router from 'vue-router'
+import router from '../router'
 import languageDataList from '../locale'
 import {$getLanguageIndex} from '../utils'
 import {Toast} from 'mint-ui'

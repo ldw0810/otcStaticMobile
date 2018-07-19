@@ -7,6 +7,13 @@
     margin-left: 14vw;
     text-align: left;
   }
+  .subTitle {
+    padding-top: 2.5vh;
+    color: #FFFFFF;
+    margin-left: 14vw;
+    text-align: left;
+    font-size: 0.85rem;
+  }
 }
 
 .form {
@@ -41,6 +48,7 @@
 .submitButton {
   margin-top: 1vh;
   font-size: 0.85rem;
+  line-height 1.2
   color: #00A6AE;
   text-align: center;
   width: 72vw;
@@ -78,4 +86,67 @@
 
 .inputPinCodePhone {
   width: 45vw;
+}
+
+.phoneCodeDiv {
+  .el-form-item__content {
+    display flex
+    .phoneCode {
+      width 44vw
+    }
+    .sendCode {
+      text-align center
+      margin-left 4vw
+      width 24vw
+    }
+  }
+}
+
+.popup {
+  position: fixed;
+  background: #fff;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transition: .2s ease-out;
+  transition: .2s ease-out;
+}
+
+.popup-top {
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 50%;
+  -webkit-transform: translate3d(-50%, 0, 0);
+  transform: translate3d(-50%, 0, 0);
+}
+
+.popup-right {
+  top: 50%;
+  right: 0;
+  bottom: auto;
+  left: auto;
+  -webkit-transform: translate3d(0, -50%, 0);
+  transform: translate3d(0, -50%, 0);
+}
+
+.popup-bottom {
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 50%;
+  -webkit-transform: translate3d(-50%, 0, 0);
+  transform: translate3d(-50%, 0, 0);
+}
+
+.popup-left {
+  top: 50%;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  -webkit-transform: translate3d(0, -50%, 0);
+  transform: translate3d(0, -50%, 0);
 }

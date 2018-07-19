@@ -21,17 +21,18 @@
         .goButton(v-text="$t('user.password_forget')" @click="$router.push('/forgetPassword')")
         .empty
         .goButton(v-text="$t('user.login_toRegister')" @click="$router.push('/register')")
-      mt-popup(class="popup" v-model="validatePhoneFlag" position="right" v-if="validatePhonePopupFlag")
-        slot
-          ValidatePhone(@close="validatePhoneFlag = false" @changeValidate="changeValidate('google')" @success="login")
-      mt-popup(class="popup" v-model="validateGoogleFlag" position="right" v-if="validateGooglePopupFlag")
-        slot
-          ValidateGoogle(@close="validateGoogleFlag = false" @changeValidate="changeValidate('phone')" @success="login")
+      transition(name="slide-right" mode="out-in")
+        .popup(class="popup-right" v-if="validatePhonePopupFlag")
+          slot
+            ValidatePhone(@close="validatePhonePopupFlag = false" @changeValidate="changeValidate('google')" @success="login")
+        .popup(class="popup-right" v-if="validateGooglePopupFlag")
+          slot
+            ValidateGoogle(@close="validateGooglePopupFlag = false" @changeValidate="changeValidate('phone')" @success="login")
     #captcha
 </template>
 <script type="es6">
 import {Button, Form, FormItem, Input} from 'element-ui'
-import {Spinner, Popup} from 'mint-ui'
+import {Spinner} from 'mint-ui'
 import Vue from 'vue'
 import axios from '../../utils/axios'
 import '../../utils/gt'
@@ -44,7 +45,6 @@ Vue.component(Form.name, Form)
 Vue.component(FormItem.name, FormItem)
 Vue.component(Input.name, Input)
 Vue.component(Spinner.name, Spinner)
-Vue.component(Popup.name, Popup)
 
 export default {
   components: {
@@ -61,29 +61,27 @@ export default {
         email: [
           {
             required: true,
-            message: this.$i18n.translate('user.email_required', '')
+            message: this.$i18n.translate('user.email_required')
           },
           {
             type: 'email',
-            message: this.$i18n.translate('user.email_notValid', '')
+            message: this.$i18n.translate('user.email_notValid')
           }
         ],
         password: [
           {
             required: true,
-            message: this.$i18n.translate('user.password_required', '')
+            message: this.$i18n.translate('user.password_required')
           },
           {
             min: 6,
             max: 100,
-            message: this.$i18n.translate('user.password_minLength', '')
+            message: this.$i18n.translate('user.password_minLength')
           }
         ]
       },
       captchaStatus: '',
       captchaObj: '',
-      validatePhoneFlag: false,
-      validateGoogleFlag: false,
       validatePhonePopupFlag: false,
       validateGooglePopupFlag: false
     }
@@ -115,13 +113,11 @@ export default {
     },
     changeValidate (validateStr) {
       if (validateStr === 'phone') {
-        this.validateGoogleFlag = false
         this.validatePhonePopupFlag = true
-        this.validatePhoneFlag = true
+        this.validateGooglePopupFlag = false
       } else {
-        this.validatePhoneFlag = false
+        this.validatePhonePopupFlag = false
         this.validateGooglePopupFlag = true
-        this.validateGoogleFlag = true
       }
     },
     login () {
@@ -131,16 +127,17 @@ export default {
           ln: $getAxiosLanguage()
         })]).then(axios.spread((resMe, resLan) => {
         if (resMe.data && +resMe.data.error === 0 && resLan.data && +resLan.data.error === 0) {
-          this.$message.success(this.$i18n.translate('user.login_success', ''))
+          this.$message.success(this.$i18n.translate('user.login_success'))
           this.$router.push(this.$route.query.redirect || '/user')
         }
-      }))
+      })).catch(() => {
+        this.$message.error(this.$i18n.translate('public.url_request_fail'))
+      })
     },
     initCaptcha () {
       this.captchaStatus = 'loading'
       this.$store.dispatch('axios_captcha_server').then(res => {
         if (res.data && +res.data.error === 0) {
-          this.captchaStatus = 'success'
           window.initGeetest({
             gt: res.data.gt,
             challenge: res.data.challenge,
@@ -178,24 +175,25 @@ export default {
                   }
                   if (result.data.sms) {
                     this.validatePhonePopupFlag = true
-                    this.validatePhoneFlag = true
+                    this.validateGooglePopupFlag = false
                   } else if (result.data.app) {
+                    this.validatePhonePopupFlag = false
                     this.validateGooglePopupFlag = true
-                    this.validateGoogleFlag = true
                   }
                 }
               }).catch(() => {
-                this.$message.error(this.$i18n.translate('public.url_request_fail', ''))
+                this.$message.error(this.$i18n.translate('public.url_request_fail'))
               })
             })
           })
+          this.captchaStatus = 'success'
         } else {
           this.captchaStatus = 'error'
-          this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
+          this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
         }
       }).catch(() => {
         this.captchaStatus = 'error'
-        this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
+        this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
       })
     },
     init () {
@@ -210,6 +208,7 @@ export default {
 </script>
 <style lang='stylus' scoped>
   .popup {
+    z-index 100
     width 100%
     height 100%
     overflow: scroll;

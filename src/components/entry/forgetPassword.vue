@@ -40,11 +40,11 @@ export default {
         email: [
           {
             required: true,
-            message: this.$i18n.translate('user.email_required', '')
+            message: this.$i18n.translate('user.email_required')
           },
           {
             type: 'email',
-            message: this.$i18n.translate('user.email_notValid', '')
+            message: this.$i18n.translate('user.email_notValid')
           }
         ]
       },
@@ -81,7 +81,6 @@ export default {
       this.captchaStatus = 'loading'
       this.$store.dispatch('axios_captcha_server').then(res => {
         if (res.data && +res.data.error === 0) {
-          this.captchaStatus = 'success'
           window.initGeetest({
             gt: res.data.gt,
             challenge: res.data.challenge,
@@ -105,20 +104,21 @@ export default {
                 check_captcha: 1
               }).then(result => {
                 if (result.data && +result.data.error === 0) {
-                  this.$message.success(this.$i18n.translate('user.auth_email_send_success', ''))
+                  this.$message.success(this.$i18n.translate('user.auth_email_send_success'))
                 }
               }).catch(() => {
-                this.$message.error(this.$i18n.translate('public.url_request_fail', ''))
+                this.$message.error(this.$i18n.translate('public.url_request_fail'))
               })
             })
           })
+          this.captchaStatus = 'success'
         } else {
           this.captchaStatus = 'error'
-          this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
+          this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
         }
       }).catch(() => {
         this.captchaStatus = 'error'
-        this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
+        this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
       })
     },
     init () {
