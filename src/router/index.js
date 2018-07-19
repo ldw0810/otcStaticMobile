@@ -9,10 +9,10 @@ const entry = {
   forgetPassword: r => require.ensure([], () => r(require('../components/entry/forgetPassword')), 'otcMobile'),
   modifyPassword: r => require.ensure([], () => r(require('../components/entry/modifyPassword')), 'otcMobile')
 }
-// const page = {
-//   // error: r => require.ensure([], () => r(require('../components/page/error')), 'otcMobile'),
-//   // notFound: r => require.ensure([], () => r(require('../components/page/notFound')), 'otcMobile'),
-// }
+const page = {
+  error: r => require.ensure([], () => r(require('../components/page/error')), 'otcMobile'),
+  notFound: r => require.ensure([], () => r(require('../components/page/notFound')), 'otcMobile')
+}
 const routers = [
   {
     path: '/',
@@ -43,6 +43,14 @@ const routers = [
         component: entry.modifyPassword
       }
     ]
+  },
+  {
+    path: '/error',
+    component: page.error
+  },
+  {
+    path: '*',
+    component: page.notFound
   }
 ]
 const router = new VueRouter({

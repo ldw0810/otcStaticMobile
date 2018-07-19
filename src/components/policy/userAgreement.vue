@@ -573,8 +573,8 @@ export default {
         border-bottom 1px solid #000000
       }
       /deep/ .title {
-        text-align: center;
-        margin-bottom: 20px;
+        text-align center
+        margin-bottom 20px
       }
       /deep/ .sub-title {
         font-size: 18px;

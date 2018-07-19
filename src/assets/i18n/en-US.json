@@ -204,7 +204,7 @@
     "email": "Email address",
     "email_required": "Enter email address",
     "email_notValid": "Invalid email address",
-    "email_repeat": "Email address exist,please try another one",
+    "email_repeat": "Email address exist, please try another one",
     "invitationCode": "Invitation code",
     "invitationCode_required": "Enter invitation code, not necessary",
     "invitationCode_notValid": "Invalid invitation code, must consists with letters or numbers",

@@ -207,11 +207,4 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  .popup {
-    z-index 100
-    width 100%
-    height 100%
-    overflow: scroll;
-    -webkit-overflow-scrolling: touch;
-  }
 </style>

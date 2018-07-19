@@ -16,10 +16,9 @@
           el-input(class="input" v-model="form.invitationCode" :placeholder="$t('user.invitationCode_required')")
             span(slot="prepend")
               img(src="../../assets/images/icon/InviteCode-FFFFFF.svg")
-        el-form-item(prop="checkbox" class="formItem" :show-message="false")
-          el-checkbox(class="checkbox" v-model="form.checkbox")
-            span {{$t('user.terms_allowed')}}
-            a(class="showLink" @click="showAgreement") {{$t('user.terms_name')}}
+        el-form-item(prop="checkbox" class="formItem checkbox" :show-message="false")
+          el-checkbox(v-model="form.checkbox") {{$t('user.terms_allowed')}}
+            span(class="showLink" @click="showAgreement") {{$t('user.terms_name')}}
         el-form-item(class="formItem submit")
           el-button(class="submitButton" type='primary' @click="submit" :disabled="captchaStatus === 'loading'")
             slot(v-if="captchaStatus === 'loading'")
@@ -29,14 +28,15 @@
       .goDiv
         .empty
         .goButton(v-text="$t('user.register_toLogin')" @click="$router.push('/login')")
-      mt-popup(class="popup" v-model="userAgreementFlag" position="right" v-if="popupFlag")
-        slot
-          UserAgreement(@close="userAgreementFlag = false")
+      transition(name="slide-right" mode="out-in")
+        .popup(class="popup-right" v-if="popupFlag")
+          slot
+            UserAgreement(@close="popupFlag = false")
     #captcha
 </template>
 <script type="es6">
 import {Button, Checkbox, Form, FormItem, Input} from 'element-ui'
-import {Popup, Spinner} from 'mint-ui'
+import {Spinner} from 'mint-ui'
 import UserAgreement from '../policy/userAgreement'
 import Vue from 'vue'
 import {$getAxiosLanguage, $getNicknameByHash} from '../../utils'
@@ -48,7 +48,6 @@ Vue.component(FormItem.name, FormItem)
 Vue.component(Input.name, Input)
 Vue.component(Checkbox.name, Checkbox)
 Vue.component(Spinner.name, Spinner)
-Vue.component(Popup.name, Popup)
 
 export default {
   components: {
@@ -63,14 +62,25 @@ export default {
           if (!res.data.exist) {
             callback()
           } else {
+            this.emailRepeatList.push(value)
             callback(new Error(this.$i18n.translate('user.email_repeat')))
           }
         } else {
+          this.emailRepeatList.push(value)
           callback(new Error(this.$i18n.translate('user.email_repeat')))
         }
       }).catch(() => {
         callback(new Error(this.$i18n.translate('public.url_request_fail')))
       })
+    }
+    const validateEmailRepeat = (rule, value, callback) => {
+      if (this.emailRepeatList && this.emailRepeatList.length) {
+        if (this.emailRepeatList.indexOf(value) > -1) {
+          callback(new Error(this.$i18n.translate('user.email_repeat')))
+        }
+      } else {
+        callback()
+      }
     }
     const validatePassword = (rule, value, callback) => {
       if (!/[^\d].*[\d]|[\d].*[^\d]/.test(value)) {
@@ -87,7 +97,6 @@ export default {
       }
     }
     return {
-      emailDataList: [],
       form: {
         email: '',
         password: '',
@@ -103,6 +112,9 @@ export default {
           {
             type: 'email',
             message: this.$i18n.translate('user.email_notValid')
+          },
+          {
+            validator: validateEmailRepeat
           },
           {
             validator: validateEmail,
@@ -142,7 +154,7 @@ export default {
       captchaObj: '',
       captchaStatus: '',
       popupFlag: false,
-      userAgreementFlag: false
+      emailRepeatList: []
     }
   },
   watch: {
@@ -156,7 +168,6 @@ export default {
   methods: {
     showAgreement () {
       this.popupFlag = true
-      this.userAgreementFlag = true
     },
     submit () {
       if (this.captchaStatus === 'success') {
@@ -235,11 +246,24 @@ export default {
 </script>
 <style lang='stylus' scoped>
   .checkbox {
-    color: #FFFFFF;
-    margin 1vh 0
-    width 72vw
-    word-break break-all
+    margin 4vh 0 2vh
+    display flex
+    align-items center
+    justify-content center
+    /deep/ .el-form-item__content {
+      color: #FFFFFF;
+      word-break break-all
+      display flex
+      align-items center
+      .el-checkbox {
+        flex 1
+      }
+    }
     .showLink {
+      word-break:normal;
+      display:block;
+      white-space:pre-wrap;
+      overflow:hidden;
       text-decoration underline
     }
   }
