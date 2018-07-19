@@ -3,14 +3,14 @@ import store from '../store'
 import router from 'vue-router'
 import languageDataList from '../locale'
 import {$getLanguageIndex} from '../utils'
-import {Toast, Indicator} from 'mint-ui'
+import {Toast} from 'mint-ui'
 
 const configure = require('../../configure')
 
 /**
  * Responsible for all HTTP requests.
  */
-axios.defaults.timeout = 20000
+axios.defaults.timeout = configure.axios_TIMEOUT
 axios.defaults.baseURL = configure.axios_BASEURL
 
 // http request 拦截器
@@ -28,7 +28,6 @@ axios.interceptors.request.use(
 // http response 拦截器
 
 const showAxiosError = (errorCode) => {
-  Indicator.close()
   const errMsg = languageDataList[$getLanguageIndex()].data.request['' + errorCode]
   if (+errorCode) {
     if ([999999, 100039].indexOf(+errorCode) > -1) {

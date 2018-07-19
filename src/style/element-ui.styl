@@ -12,9 +12,11 @@ input
 /deep/ .el-input {
   border-bottom 1px solid #FFFFFF
 }
-/deep/ .el-form-item.is-error .el-input{
+
+/deep/ .el-form-item.is-error .el-input {
   border-bottom 1px solid #F56C6C
 }
+
 /deep/ .el-input-group__prepend {
   background transparent
   border 0
@@ -40,6 +42,7 @@ input
     placeholderStyle()
   }
 }
+
 /deep/ .el-form-item.is-success .el-input__validateIcon {
   color #FFFFFF
 }
@@ -52,9 +55,11 @@ input
 .el-message-box__input input.invalid:focus {
   inputFocus = true
 }
-/deep/ .el-form-item.is-validating .el-input__validateIcon{
+
+/deep/ .el-form-item.is-validating .el-input__validateIcon {
   color #FFFFFF
 }
+
 /*!
 checkbox
  */
@@ -62,6 +67,7 @@ checkbox
   display flex
   align-items center
 }
+
 /deep/ .el-checkbox__inner {
   background-image linear-gradient(0deg, #F2F4F7 0%, #FFFFFF 100%)
   border 1px solid #DEE0E1
@@ -87,6 +93,7 @@ checkbox
 /deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
   color #FFFFFF
 }
+
 /*!
 button
  */
@@ -96,7 +103,13 @@ button
   font-size 0.8rem
   color #00A6AE
   text-align center
-  //.el-icon-loading {
-  //  font-size 0.8rem
-  //}
+}
+
+/deep/ .el-button--primary.is-disabled,
+.el-button--primary.is-disabled:active,
+.el-button--primary.is-disabled:focus,
+.el-button--primary.is-disabled:hover {
+  color #c0c4cc
+  background-color #ebeef5
+  border-color #ebeef5
 }

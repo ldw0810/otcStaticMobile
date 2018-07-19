@@ -16,15 +16,12 @@
 </template>
 <script type="es6">
 import {Button, Form, FormItem, Input} from 'element-ui'
-import {Spinner} from 'mint-ui'
 import Vue from 'vue'
-import '../../utils/gt'
 
 Vue.component(Button.name, Button)
 Vue.component(Form.name, Form)
 Vue.component(FormItem.name, FormItem)
 Vue.component(Input.name, Input)
-Vue.component(Spinner.name, Spinner)
 
 export default {
   data () {

@@ -1,9 +1,9 @@
 <!--手机发送验证码按钮-->
 <template>
   <div class='send'>
-    <a @click="send" class='send-btn send-primary' v-if="subOnce">{{text || $t("user.auth_phone_code_send")}}</a>
-    <a disabled class='send-btn send-disabled' v-else-if="subTime > 0">{{$t("user.auth_phone_code_reSend_seconds").format(subTime)}}</a>
-    <a @click="send" class='send-btn send-primary' v-else>{{reText || $t("user.auth_phone_code_reSend")}}</a>
+    <a @click="send" class='btn primary' v-if="subOnce">{{text || $t("user.auth_phone_code_send")}}</a>
+    <a disabled class='btn disabled' v-else-if="subTime > 0">{{$t("user.auth_phone_code_reSend_seconds").format(subTime)}}</a>
+    <a @click="send" class='btn primary' v-else>{{reText || $t("user.auth_phone_code_reSend")}}</a>
   </div>
 </template>
 
@@ -69,8 +69,8 @@ export default {
     },
     init () {
       if (this.subTime && !this.subOnce) {
-        this.clear();
-        this.countDown();
+        this.clear()
+        this.countDown()
       }
     }
   },
@@ -79,26 +79,19 @@ export default {
   }
 }
 </script>
-<style lang='scss' scoped>
-  /* #sendButton {
-      width: 100px;
-      height: 50px;
-  } */
-</style>
-<style lang="less" scoped>
-  @import '~style/lib/custom';
+<style lang="stylus" scoped>
   .send {
     margin-left: 16px;
-    &-btn {
+    .btn {
       font-size: 14px;
       display: inline-flex;
       align-items: center;
       white-space: nowrap;
     }
-    &-primary {
-      color: @primary-color;
+    .primary {
+      color: $primary-color;
     }
-    &-disabled {
+    .disabled {
       color: #999;
     }
   }

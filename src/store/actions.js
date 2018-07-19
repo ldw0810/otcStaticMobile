@@ -4,10 +4,12 @@ import store from './index'
 import {Indicator} from 'mint-ui'
 
 const configure = require('../../configure')
+
 const http = {
   get: function (url, requestJson, config) {
     return new Promise((resolve, reject) => {
       axios.get(url, Object.assign({params: requestJson}, config)).then(res => {
+        Indicator.close()
         resolve(res)
       }).catch(err => {
         Indicator.close()
@@ -18,6 +20,7 @@ const http = {
   post: function (url, requestJson, config) {
     return new Promise((resolve, reject) => {
       axios.post(url, qs.stringify(Object.assign(requestJson, config))).then(res => {
+        Indicator.close()
         resolve(res)
       }).catch(err => {
         Indicator.close()
@@ -28,6 +31,7 @@ const http = {
   put: function (url, requestJson, config) {
     return new Promise((resolve, reject) => {
       axios.put(url, qs.stringify(Object.assign(requestJson, config))).then(res => {
+        Indicator.close()
         resolve(res)
       }).catch(err => {
         Indicator.close()
@@ -38,6 +42,7 @@ const http = {
   delete: function (url, requestJson, config) {
     return new Promise((resolve, reject) => {
       axios.delete(url, Object.assign({params: requestJson}, config)).then(res => {
+        Indicator.close()
         resolve(res)
       }).catch(err => {
         Indicator.close()
@@ -60,7 +65,7 @@ export default {
   },
   axios_me ({commit}, requestData = {}) {
     let source = axios.CancelToken.source()
-    store.commit('axios_source_setter', {
+    store.commit('axiosCancel_setter', {
       me: source
     })
     return new Promise((resolve, reject) => {
@@ -139,7 +144,7 @@ export default {
   },
   axios_chat ({commit}, requestData = {}) {
     let source = axios.CancelToken.source()
-    store.commit('axios_source_setter', {
+    store.commit('axiosCancel_setter', {
       chat: source
     })
     return http.get(configure.CHAT_URL, requestData, {

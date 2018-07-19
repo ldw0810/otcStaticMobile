@@ -64,9 +64,9 @@ export default {
     }
     state.showAuthEmail = value
   },
-  axios_source_setter (state, item) {
+  axiosCancel_setter (state, item) {
     for (let key in item) {
-      Vue.set(state.axios_source, key, item[key])
+      Vue.set(state.axiosCancel, key, item[key])
     }
   },
   saveToken (state, value) {

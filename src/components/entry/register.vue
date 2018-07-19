@@ -21,9 +21,10 @@
             span {{$t('user.terms_allowed')}}
             a(class="showLink" @click="showAgreement") {{$t('user.terms_name')}}
         el-form-item(class="formItem submit")
-          el-button(class="submitButton" type='primary' @click="submit" :disabled="captchaLoading")
-            slot(v-if="captchaLoading")
+          el-button(class="submitButton" type='primary' @click="submit" :disabled="captchaStatus === 'loading'")
+            slot(v-if="captchaStatus === 'loading'")
               mt-spinner(class="spinner" :type="3" color="#00A6AE" :size="14")
+            slot(v-else-if="captchaStatus === 'error'") {{$t('public.reload')}}
             slot(v-else) {{$t('public.register')}}
       .goDiv
         .empty
@@ -139,12 +140,11 @@ export default {
       },
       validatingFlag: false,
       captchaObj: '',
-      captchaLoading: false,
+      captchaStatus: '',
       popupFlag: false,
       userAgreementFlag: false
     }
   },
-  computed: {},
   watch: {
     $route: function () {
       this.init()
@@ -159,25 +159,29 @@ export default {
       this.userAgreementFlag = true
     },
     submit () {
-      this.$refs['form'].validate((valid, message) => {
-        if (valid) {
-          this.captchaObj.verify()
-        } else {
-          for (let i = 0; i < Object.keys(this.form).length; i++) {
-            let item = Object.keys(this.form)[i]
-            if (message && message['' + item] && message['' + item].length) {
-              this.$message.error(message['' + item][0]['message'])
-              break
+      if (this.captchaStatus === 'success') {
+        this.$refs['form'].validate((valid, message) => {
+          if (valid) {
+            this.captchaObj.verify()
+          } else {
+            for (let i = 0; i < Object.keys(this.form).length; i++) {
+              let item = Object.keys(this.form)[i]
+              if (message && message['' + item] && message['' + item].length) {
+                this.$message.error(message['' + item][0]['message'])
+                break
+              }
             }
           }
-        }
-      })
+        })
+      } else if (this.captchaStatus === 'error') {
+        this.initCaptcha()
+      }
     },
     initCaptcha () {
-      this.captchaLoading = true
+      this.captchaStatus = 'loading'
       this.$store.dispatch('axios_captcha_server').then(res => {
-        this.captchaLoading = false
         if (res.data && +res.data.error === 0) {
+          this.captchaStatus = 'success'
           window.initGeetest({
             gt: res.data.gt,
             challenge: res.data.challenge,
@@ -208,10 +212,18 @@ export default {
                   this.$message.success(this.$i18n.translate('user.register_success', ''))
                   this.$router.push('/login')
                 }
+              }).catch(() => {
+                this.$message.error(this.$i18n.translate('public.url_request_fail', ''))
               })
             })
           })
+        } else {
+          this.captchaStatus = 'error'
+          this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
         }
+      }).catch(() => {
+        this.captchaStatus = 'error'
+        this.$message.error(this.$i18n.translate('user.captcha_request_fail', ''))
       })
     },
     init () {
