@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>CoinLogo/OMT</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="CoinLogo/OMT" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M25,49 C38.254834,49 49,38.254834 49,25 C49,11.745166 38.254834,1 25,1 C11.745166,1 1,11.745166 1,25 C1,38.254834 11.745166,49 25,49 Z M25,50 C11.1928813,50 0,38.8071187 0,25 C0,11.1928813 11.1928813,0 25,0 C38.8071187,0 50,11.1928813 50,25 C50,38.8071187 38.8071187,50 25,50 Z" id="Oval-2" fill="#CCCCCC" fill-rule="nonzero"></path>
+        <path d="M13.6510395,26.8331011 L25,34.3990748 L36.3489605,26.8331011 L25,5.08092681 L13.6510395,26.8331011 Z M14.7350548,31.5909671 L25,46.1329728 L35.2649452,31.5909671 L25,37.5788518 L14.7350548,31.5909671 Z" id="Mask-Copy" stroke="#979797"></path>
+        <path d="M13.9013878,27 L25,34.3990748 L36.0986122,27 L25,19.6009252 L13.9013878,27 Z" id="Rectangle-3-Copy" stroke="#979797"></path>
+        <path d="M25,6 L25,34.3688965" id="Path-4" stroke="#979797"></path>
+        <path d="M24.9436035,37.6008301 L24.9436035,46.1818848" id="Path-5" stroke="#979797"></path>
+    </g>
+</svg>

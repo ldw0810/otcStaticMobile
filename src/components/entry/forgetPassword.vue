@@ -10,7 +10,7 @@
         el-form-item(class="formItem submit")
           el-button(class="submitButton" type='primary' @click="submit" :disabled="captchaStatus === 'loading'")
             slot(v-if="captchaStatus === 'loading'")
-              mt-spinner(class="spinner" :type="3" color="#00A6AE" :size="14")
+              .imageLoading
             slot(v-else-if="captchaStatus === 'error'") {{$t('public.reload')}}
             slot(v-else) {{$t('user.auth_email_send')}}
       .goDiv
@@ -20,7 +20,6 @@
 </template>
 <script type="es6">
 import {Button, Form, FormItem, Input} from 'element-ui'
-import {Spinner} from 'mint-ui'
 import Vue from 'vue'
 import '../../utils/gt'
 
@@ -28,7 +27,6 @@ Vue.component(Button.name, Button)
 Vue.component(Form.name, Form)
 Vue.component(FormItem.name, FormItem)
 Vue.component(Input.name, Input)
-Vue.component(Spinner.name, Spinner)
 
 export default {
   data () {

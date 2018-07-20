@@ -134,7 +134,17 @@ export default {
     return http.get('/api/v1/otc/ex_ad.json', requestData)
   },
   axios_currency_code ({commit}, requestData = {}) {
-    return http.get('/api/v1/currency/code.json', requestData)
+    return new Promise((resolve, reject) => {
+      http.get('/api/v1/currency/code.json', requestData).then(res => {
+        if (res.data && +res.data.error === 0) {
+          store.commit('code_setter', res.data)
+        } else {
+        }
+        resolve(res)
+      }).catch(err => {
+        reject(err)
+      })
+    })
   },
   axios_trade_price ({commit}, requestData = {}) {
     return http.get('/api/v1/currency/trade_price.json', requestData)

@@ -51,8 +51,8 @@ export default {
       font-weight normal
       &:active, &:focus, &:hover {
         color #999
-        background-color #ebeef5
-        border-color #ebeef5
+        background-color #999999
+        border-color #999999
       }
     }
   }

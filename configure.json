@@ -10,12 +10,6 @@
   "CONF_DIGITAL_CURRENCY_LIST": [
     {
       "currency": "dai",
-      "targetCurrency": "cny",
-      "buyLimit": 0,
-      "sellLimit": 50
-    },
-    {
-      "currency": "dai",
       "targetCurrency": "usd",
       "buyLimit": 0,
       "sellLimit": 50
@@ -25,6 +19,12 @@
       "targetCurrency": "dai",
       "buyLimit": 50,
       "sellLimit": 0.01
+    },
+    {
+      "currency": "omt",
+      "targetCurrency": "dai",
+      "buyLimit": 50,
+      "sellLimit": 3000
     }
   ],
   "DEFAULT_LANGUAGE": "zh-HK",

@@ -13,6 +13,9 @@ const page = {
   error: r => require.ensure([], () => r(require('../components/page/error')), 'otcMobile'),
   notFound: r => require.ensure([], () => r(require('../components/page/notFound')), 'otcMobile')
 }
+const trade = {
+  index: r => require.ensure([], () => r(require('../components/trade/index')), 'otcMobile')
+}
 const routers = [
   {
     path: '/',
@@ -24,7 +27,7 @@ const routers = [
     children: [
       {
         path: 'login',
-        alias: ['/login', '/user/login'],
+        alias: ['/login', '/user/login', '/entry'],
         component: entry.login
       },
       {
@@ -42,6 +45,12 @@ const routers = [
         alias: '/modifyPassword',
         component: entry.modifyPassword
       }
+    ]
+  },
+  {
+    path: '/trade',
+    component: trade.index,
+    children: [
     ]
   },
   {
