@@ -8,10 +8,13 @@
         .icon(:class="{'show': currencyListFlag}")
           img(src="../../assets/images/icon/PullDown-999999.svg")
       .balance {{tradePrice}}
-    mt-navbar(class="navbar" v-model="navbarIndex")
-      mt-tab-item(id="1" class="navbarItem") {{$t('public.buy')}}
-      mt-tab-item(id="2" class="navbarItem") {{$t('public.sell')}}
-      mt-tab-item(id="3" class="navbarItem") {{$t('public.order')}}
+    mt-navbar(v-model="navbarIndex" class="navbar")
+      LinkBarItem(id="0" class="navbarItem" route="/buy") {{$t('public.buy')}}
+      LinkBarItem(id="1" class="navbarItem" route="/sell") {{$t('public.sell')}}
+      LinkBarItem(id="2" class="navbarItem" route="/order") {{$t('public.order')}}
+    .page
+      transition(name="fade" mode="out-in")
+        router-view
     .popupBg(v-if="currencyListFlag" @click="currencyListFlag = false")
     transition(name="top" mode="out-in")
       .popupDiv(v-if="currencyListFlag")
@@ -23,15 +26,17 @@
 </template>
 <script type="es6">
 import Vue from 'vue'
-import {Header, Navbar, TabItem} from 'mint-ui'
+import {Navbar} from 'mint-ui'
+import LinkBarItem from '../common/linkBarItem'
 
 const configure = require('../../../configure')
 
-Vue.component(Header.name, Header)
 Vue.component(Navbar.name, Navbar)
-Vue.component(TabItem.name, TabItem)
 
 export default {
+  components: {
+    LinkBarItem
+  },
   data () {
     return {
       currencyDefaultData: {
@@ -49,6 +54,7 @@ export default {
         }
       },
       navbarIndex: 0,
+      tarbarIndex: 0,
       tradePrice: 0,
       tradePriceTimer: 0,
       tradeFee: 0,
@@ -108,17 +114,16 @@ export default {
       this.getTradePrice()
     }
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      console.log(to)
-      vm.$loading.open()
-    })
-  },
   destroyed () {
     this.tradePriceTimer && clearTimeout(this.tradePriceTimer)
   },
   mounted () {
     this.init()
+  },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.$store.dispatch('axios_currency_code')
+    })
   }
 }
 </script>
@@ -126,12 +131,12 @@ export default {
   .trade {
     .header {
       position fixed
-      z-index 101
+      z-index $zIndexPopup + 1
       top 0
       left 0
       right 0
       width 100vw
-      height 8vh
+      height $currencyHeaderHeight
       color: #000000;
       background #FFFFFF
       border-bottom 1px solid #EEEEEE
@@ -176,30 +181,51 @@ export default {
     .navbar {
       display flex
       align-items center
-      position fixed
+      position absolute
       left 0
-      top 8vh
+      top $currencyHeaderHeight
       width 100vw
-      height 5vh
+      height $navbarHeaderHeight
       background: #FFFFFF;
       border-bottom 1px solid #EEEEEE
-      .navbarItem {
-      }
+    }
+    .page {
+      position absolute
+      left 0
+      top $currencyHeaderHeight + $navbarHeaderHeight
+      width 100vw
+      height 100 - $currencyHeaderHeight - $navbarHeaderHeight - $tabbarFooterHeight
     }
     .popupBg {
       position: fixed;
-      z-index 99
+      z-index $zIndexPopup - 1
       width 100%
       height 100%
       background-color rgba(55, 55, 55, 0.6)
     }
+    /deep/ .navbarItem{
+      .mint-tab-item-label {
+        font-size 0.9rem
+      }
+      &:nth-child(1) {
+        .mint-tab-item-label {
+          color #1BB934
+        }
+      }
+      &:nth-child(2) {
+        .mint-tab-item-label {
+          color #ED1C24
+        }
+      }
+    }
     /deep/ .popupDiv {
       position: absolute;
-      z-index 100
+      z-index $zIndexPopup
       left 0
       top 8vh
       width 100%
       overflow: scroll;
+      overflow-scrolling touch
       -webkit-overflow-scrolling: touch;
       background: #fff;
       -webkit-backface-visibility: hidden;
@@ -236,12 +262,6 @@ export default {
           }
         }
       }
-    }
-  }
-
-  /deep/ .mint-tab-item-label {
-    :nth-child(1) {
-      color: red
     }
   }
 </style>

@@ -271,6 +271,7 @@ export default {
     height 100%
     background #FFFFFF
     overflow: scroll;
+    overflow-scrolling touch
     -webkit-overflow-scrolling: touch;
   }
 </style>

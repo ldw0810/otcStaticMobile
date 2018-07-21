@@ -5,15 +5,17 @@
     .content
       transition(name="fade" mode="out-in")
         router-view
-    FooterDiv
+    EntryFooter
 </template>
 
 <script type="es6">
 import LogoDiv from '../common/logo'
-import FooterDiv from '../common/footer'
+import EntryFooter from '../common/entryFooter'
+
 export default {
   components: {
-    LogoDiv, FooterDiv
+    LogoDiv,
+    EntryFooter
   },
   data () {
     return {}

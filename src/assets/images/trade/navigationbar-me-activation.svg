@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="21px" viewBox="0 0 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>navigationbar-me-activation</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M21,21 C21,14.8747448 14,16.6248177 13.125,13.9997083 L13.125,12.2496354 C13.51875,12.0545023 14.644875,10.7139464 14.763,9.66652777 C15.07275,9.64290179 15.55925,9.35851494 15.70275,8.23584316 C15.77975,7.63294304 15.4735,7.29430393 15.288,7.18754948 C15.288,7.18754948 15.75,6.30988791 15.75,5.25021876 C15.75,3.12563023 14.916125,1.31255469 13.125,1.31255469 C13.125,1.31255469 12.502875,0 10.5,0 C6.78825,0 5.25,2.38097421 5.25,5.25021876 C5.25,6.21625901 5.712,7.18754948 5.712,7.18754948 C5.5265,7.29430393 5.22025,7.63381808 5.29725,8.23584316 C5.44075,9.35851494 5.92725,9.64290179 6.237,9.66652777 C6.355125,10.7139464 7.48125,12.0545023 7.875,12.2496354 L7.875,13.9997083 C7,16.6248177 0,14.8747448 0,21 L21,21 Z" id="path-1"></path>
+        <linearGradient x1="0%" y1="0%" x2="100.028139%" y2="99.047472%" id="linearGradient-3">
+            <stop stop-color="#0BBFD5" offset="0%"></stop>
+            <stop stop-color="#6DD7B2" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icon/User">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use fill="#999999" fill-rule="nonzero" xlink:href="#path-1"></use>
+            <g id="Color/Menu" mask="url(#mask-2)" fill="url(#linearGradient-3)" fill-rule="evenodd">
+                <rect x="0" y="0" width="21" height="21"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

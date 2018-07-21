@@ -13,6 +13,8 @@
     "register": "Register",
     "login": "Login",
     "backLogin": "Back login",
+    "trade": "Trade",
+    "me": "Me",
     "success": "Success",
     "fail": "Fail",
     "loading": "Loading",

@@ -568,6 +568,7 @@ export default {
       width 100vw
       padding 5vh 8vw
       overflow: scroll;
+      overflow-scrolling touch
       -webkit-overflow-scrolling : touch;
       /deep/ .underline{
         border-bottom 1px solid #000000

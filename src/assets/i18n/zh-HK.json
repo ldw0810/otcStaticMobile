@@ -13,6 +13,8 @@
     "register": "註冊",
     "login": "登錄",
     "backLogin": "返回登錄",
+    "trade": "交易",
+    "me": "我",
     "success": "成功",
     "fail": "失敗",
     "loading": "加載中",

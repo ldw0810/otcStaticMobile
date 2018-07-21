@@ -22,13 +22,13 @@
           .goDiv(v-else)
             .empty
             .goButton(v-text="$t('public.backLogin')" @click="$emit('close', 1)")
-    Footer
+    EntryFooter
 </template>
 <script type="es6">
 import {Button, Form, FormItem, Input} from 'element-ui'
 import Vue from 'vue'
 import LogoDiv from './logo'
-import Footer from './footer'
+import EntryFooter from './entryFooter'
 import SendCode from '../common/sendCode'
 
 Vue.component(Button.name, Button)
@@ -39,7 +39,7 @@ Vue.component(Input.name, Input)
 export default {
   components: {
     LogoDiv,
-    Footer,
+    EntryFooter,
     SendCode
   },
   data () {

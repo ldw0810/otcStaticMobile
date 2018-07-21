@@ -6,13 +6,7 @@
 
 <script>
 export default {
-  name: 'App',
-  created () {
-    this.$store.dispatch('axios_currency_code')
-    if (this.$store.state.userToken) {
-      this.$store.dispatch('axios_me')
-    }
-  }
+  name: 'App'
 }
 </script>
 <style lang="stylus" scoped>
