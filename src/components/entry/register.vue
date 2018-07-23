@@ -201,6 +201,7 @@ export default {
           }, captchaObj => {
             captchaObj.appendTo(document.getElementById('captcha'))
             this.captchaObj = captchaObj
+            this.captchaStatus = 'success'
             captchaObj.onSuccess(() => {
               let result = this.captchaObj.getValidate()
               this.$loading.open()
@@ -225,7 +226,6 @@ export default {
               })
             })
           })
-          this.captchaStatus = 'success'
         } else {
           this.captchaStatus = 'error'
           this.$message.error(this.$i18n.translate('user.captcha_request_fail'))

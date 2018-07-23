@@ -1,6 +1,6 @@
 <template lang="pug">
   .mint-tab-item(@click="$parent.$emit('input', id)" :class="{ 'is-selected': $parent.value === id }")
-    router-link(:to="route")
+    router-link(:to="route" class="link")
       .mint-tab-item-icon
         slot(name="icon")
       .mint-tab-item-label
@@ -8,7 +8,8 @@
 </template>
 
 <script type="es6">
-import { TabItem } from 'mint-ui'
+import {TabItem} from 'mint-ui'
+
 /**
    * mt-tab-item
    * @module components/tab-item
@@ -30,11 +31,16 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+  .link {
+    width 100%
+    height 100%
+  }
+
   .mint-tab-item-label {
+    display flex
+    align-items center
+    justify-content center
     color #000000;
     font-size 0.8rem
-  }
-  .router-link-active .mint-tab-item-label {
-    color #00A6AE
   }
 </style>

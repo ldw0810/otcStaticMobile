@@ -1,5 +1,5 @@
 <template>
-  <div class='g-container policy'>
+  <div class='container policy'>
     <section class='policy-item'>
       <h1 class='policy-title'>OTCMAKER服务条款</h1>
       <p>在使用本网站或任何OTCMAKER服务之前，请仔细阅读完整的使用条款。本使用条款中使用的“OTCMAKER”是指XXXX有限公司，包括但不限于其所有者，董事，投资者，员工或其他相关方。根据上下文，“OTCMAKER”也可以指服务，产品，网站，内容或其他材料（统称为“OTCMAKER服务”）。若您不接受以下条款，请您立即停止注册或主动停止使用本网站的服务。根据您所居住的国家/地区，您可能无法使用本网站的所有功能。您有责任遵守您访问本网站和服务的居住国家和/或国家/地区的这些规则和法律。请注意，OTCMAKER有权对本协议进行修改，恕不另行通知补发，请您定期查看本条款，因为您继续使用该网站将被视为是不可撤销的接受任何修订。本条款不涉及OTCMAKER用户与其他用户之间因比特币交易而产生的法律关系及法律纠纷。</p>

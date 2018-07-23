@@ -12,7 +12,7 @@
               el-input(class="phoneCode" type="text" v-model="form.pinCode" :placeholder="$t('user.auth_phone_code_required')")
                 span(slot="prepend")
                   img(src="../../assets/images/icon/IdentifyingCode-FFFFFF.svg")
-              SendCode(ref="sendCode" class="sendCode")
+              SendCode(ref="sendCode" class="sendCode" @sendCode="sendPinCode")
             el-form-item(class="formItem submit")
               el-button(class="submitButton" type='primary' @click="submit") {{$t('public.complete')}}
           .goDiv(v-if="validateGoogle")
@@ -70,7 +70,7 @@ export default {
       })
     },
     loginInfo () {
-      return this.$store.state.loginInfo || {}
+      return this.$store.state.loginInfo
     }
   },
   watch: {
@@ -79,6 +79,14 @@ export default {
     }
   },
   methods: {
+    sendPinCode () {
+      this.$store.dispatch('axios_login_verify', {
+        op: 'sms',
+        code: '',
+        login_token: this.loginInfo.loginToken,
+        refresh: 1
+      })
+    },
     submit () {
       this.$refs['form'].validate((valid, message) => {
         if (valid) {

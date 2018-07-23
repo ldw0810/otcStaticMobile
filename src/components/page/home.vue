@@ -3,18 +3,27 @@
     transition(name="fade" mode="out-in")
       router-view
     mt-tabbar(v-model="tabbarIndex" class="footer" fixed)
-      LinkBarItem(id="0" route="/trade")
-        img(slot="icon" src="../../assets/images/trade/navigationbar-trade-activation.svg" v-if="tabbarIndex === 0")
-        img(slot="icon" src="../../assets/images/trade/navigationbar-trade-notactive.svg" v-else)
-        i {{$t('public.trade')}}
-      LinkBarItem(id="1" route="/asset")
-        img(slot="icon" src="../../assets/images/trade/navigationbar-assets-activation.svg" v-if="tabbarIndex === 1")
-        img(slot="icon" src="../../assets/images/trade/navigationbar-assets-notactive.svg" v-else)
-        i {{$t('public.asset')}}
-      LinkBarItem(id="2" route="/me")
-        img(slot="icon" src="../../assets/images/trade/navigationbar-me-activation.svg" v-if="tabbarIndex === 2")
-        img(slot="icon" src="../../assets/images/trade/navigationbar-me-notactive.svg" v-else)
-        i {{$t('public.me')}}
+      LinkBarItem(id="0" class="linkBarItem" route="/trade")
+        slot(v-if="+tabbarIndex === 0")
+          img(slot="icon" src="../../assets/images/trade/navigationbar-trade-activation.svg")
+          i(class="focus") {{$t('public.trade')}}
+        slot(v-else)
+          img(slot="icon" src="../../assets/images/trade/navigationbar-trade-notactive.svg")
+          i {{$t('public.trade')}}
+      LinkBarItem(id="1" class="linkBarItem" route="/asset")
+        slot(v-if="+tabbarIndex === 1")
+          img(slot="icon" src="../../assets/images/trade/navigationbar-assets-activation.svg")
+          i(class="focus") {{$t('public.asset')}}
+        slot(v-else)
+          img(slot="icon" src="../../assets/images/trade/navigationbar-assets-notactive.svg")
+          i {{$t('public.asset')}}
+      LinkBarItem(id="2" class="linkBarItem" route="/me")
+        slot(v-if="+tabbarIndex === 2")
+          img(slot="icon" src="../../assets/images/trade/navigationbar-me-activation.svg")
+          i(class="focus") {{$t('public.me')}}
+        slot(v-else)
+          img(slot="icon" src="../../assets/images/trade/navigationbar-me-notactive.svg")
+          i {{$t('public.me')}}
 </template>
 <script type="es6">
 import {Tabbar} from 'mint-ui'
@@ -33,12 +42,19 @@ export default {
       tabbarIndex: this.$route.meta.tabbarIndex || 0
     }
   },
-  computed: {
-  }
+  computed: {}
 }
 </script>
 <style lang='stylus' scoped>
-  .footer{
+  .footer {
     height $tabbarFooterHeight
+  }
+
+  .focus {
+    color #00A6AE
+  }
+
+  /deep/ .mint-tabbar > .mint-tab-item.is-selected {
+    background none
   }
 </style>

@@ -7,11 +7,13 @@
         .text {{currency.toUpperCase()}}
         .icon(:class="{'show': currencyListFlag}")
           img(src="../../assets/images/icon/PullDown-999999.svg")
-      .balance {{tradePrice}}
+      .balance
+        .number {{tradePrice | fixDecimalAuto(targetCurrency)}}
+        .targetCurrency {{targetCurrency.toUpperCase()}}
     mt-navbar(v-model="navbarIndex" class="navbar")
-      LinkBarItem(id="0" class="navbarItem" route="/buy") {{$t('public.buy')}}
-      LinkBarItem(id="1" class="navbarItem" route="/sell") {{$t('public.sell')}}
-      LinkBarItem(id="2" class="navbarItem" route="/order") {{$t('public.order')}}
+      LinkBarItem(:class="'navbarItem_' + index" v-for="(item, index) in navList" :id="index" :route="item.route" :key="index")
+        i(class="text" :class="{'focus': +navbarIndex === index}") {{item.name}}
+        mt-badge(type="error" size="small" v-if="index === navList.length - 1 && notice > 0") {{notice}}
     .page
       transition(name="fade" mode="out-in")
         router-view
@@ -26,19 +28,44 @@
 </template>
 <script type="es6">
 import Vue from 'vue'
-import {Navbar} from 'mint-ui'
+import {Navbar, Badge} from 'mint-ui'
 import LinkBarItem from '../common/linkBarItem'
 
 const configure = require('../../../configure')
 
 Vue.component(Navbar.name, Navbar)
+Vue.component(Badge.name, Badge)
 
 export default {
+  name: 'trade',
   components: {
     LinkBarItem
   },
   data () {
     return {
+      navList: [
+        {
+          name: this.$i18n.translate('public.buy'),
+          route: {
+            path: '/buy',
+            query: this.$route.query
+          }
+        },
+        {
+          name: this.$i18n.translate('public.sell'),
+          route: {
+            path: '/sell',
+            query: this.$route.query
+          }
+        },
+        {
+          name: this.$i18n.translate('public.order'),
+          route: {
+            path: '/order',
+            query: this.$route.query
+          }
+        }
+      ],
       currencyDefaultData: {
         'dai': {
           img: require('../../assets/images/trade/CoinLogo-DAI.png')
@@ -53,8 +80,7 @@ export default {
           img: require('../../assets/images/trade/CoinLogo-CAT.png')
         }
       },
-      navbarIndex: 0,
-      tarbarIndex: 0,
+      navbarIndex: this.$route.meta.navbarIndex || 0,
       tradePrice: 0,
       tradePriceTimer: 0,
       tradeFee: 0,
@@ -66,7 +92,7 @@ export default {
       return this.$store.state.code.sellable
     },
     currency () {
-      return this.$route.query.currency || (this.currencyList.length && this.currencyList[0]) || configure.CONF_DIGITAL_CURRENCY_LIST[0].currency
+      return this.$route.query.currency || this.currencyList[0] || configure.CONF_DIGITAL_CURRENCY_LIST[0].currency
     },
     targetCurrency () {
       for (let i = 0; i < configure.CONF_DIGITAL_CURRENCY_LIST.length; i++) {
@@ -74,6 +100,9 @@ export default {
           return configure.CONF_DIGITAL_CURRENCY_LIST[i].targetCurrency
         }
       }
+    },
+    notice () {
+      return +this.$store.state.userInfo.notice
     }
   },
   watch: {
@@ -94,6 +123,7 @@ export default {
       this.currencyListFlag = false
     },
     getTradePrice () {
+      this.tradePrice = 0
       this.$store.dispatch('axios_trade_price', {
         symbol: this.currency,
         target: this.targetCurrency
@@ -110,8 +140,17 @@ export default {
       this.tradePriceTimer && clearTimeout(this.tradePriceTimer)
       this.tradePriceTimer = setTimeout(this.getTradePrice, 1000 * 60 * 10)
     },
+    getNotice () {
+      this.$store.dispatch('axios_notice').then(res => {
+        if (res.data && +res.data.error === 0) {
+          this.$store.commit('userInfo_notice_setter', +res.data.notice)
+        }
+      }).catch(() => {
+      })
+    },
     init () {
       this.getTradePrice()
+      this.getNotice()
     }
   },
   destroyed () {
@@ -128,6 +167,16 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+  getNavColor(row) {
+    if row == 0 {
+      return #1BB934
+    } else if row == 1 {
+      return #ED1C24
+    } else {
+      return #000000
+    }
+  }
+
   .trade {
     .header {
       position fixed
@@ -176,6 +225,14 @@ export default {
         font-size 1rem
         margin-right 5vw
         color #ED1C24
+        .number {
+          font-weight normal
+        }
+        .targetCurrency {
+          align-self flex-end
+          margin-left 1vw
+          font-size 0.8rem
+        }
       }
     }
     .navbar {
@@ -188,6 +245,7 @@ export default {
       height $navbarHeaderHeight
       background: #FFFFFF;
       border-bottom 1px solid #EEEEEE
+
     }
     .page {
       position absolute
@@ -203,18 +261,22 @@ export default {
       height 100%
       background-color rgba(55, 55, 55, 0.6)
     }
-    /deep/ .navbarItem{
-      .mint-tab-item-label {
-        font-size 0.9rem
-      }
-      &:nth-child(1) {
-        .mint-tab-item-label {
-          color #1BB934
-        }
-      }
-      &:nth-child(2) {
-        .mint-tab-item-label {
-          color #ED1C24
+    for row in 0 1 2 {
+      .navbarItem_{row} {
+        /deep/ .mint-tab-item-label {
+          font-size 0.9rem
+          color getNavColor(row)
+          .text {
+            font-weight normal
+            display flex
+            align-items center
+            height $navbarHeaderTextHeight
+          }
+          .focus {
+            font-size 1rem
+            border-bottom 0.3vh solid
+            border-color getNavColor(row)
+          }
         }
       }
     }

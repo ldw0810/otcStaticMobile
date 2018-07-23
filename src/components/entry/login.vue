@@ -126,7 +126,7 @@ export default {
         })]).then(axios.spread((resMe, resLan) => {
         if (resMe.data && +resMe.data.error === 0 && resLan.data && +resLan.data.error === 0) {
           this.$message.success(this.$i18n.translate('user.login_success'))
-          this.$router.push(this.$route.query.redirect || '/user')
+          this.$router.push(this.$route.query.redirect || '/buy')
         }
       })).catch(() => {
         this.$message.error(this.$i18n.translate('public.url_request_fail'))
@@ -148,6 +148,7 @@ export default {
           captchaObj => {
             captchaObj.appendTo(document.getElementById('captcha'))
             this.captchaObj = captchaObj
+            this.captchaStatus = 'success'
             captchaObj.onSuccess(() => {
               let result = this.captchaObj.getValidate()
               this.$loading.open()
@@ -184,7 +185,6 @@ export default {
               })
             })
           })
-          this.captchaStatus = 'success'
         } else {
           this.captchaStatus = 'error'
           this.$message.error(this.$i18n.translate('user.captcha_request_fail'))

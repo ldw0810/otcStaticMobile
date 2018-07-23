@@ -17,7 +17,8 @@ const page = {
   notFound: r => require.ensure([], () => r(require('../components/page/notFound')), 'otcMobile')
 }
 const trade = {
-  index: r => require.ensure([], () => r(require('../components/trade/index')), 'otcMobile')
+  index: r => require.ensure([], () => r(require('../components/trade/index')), 'otcMobile'),
+  adList: r => require.ensure([], () => r(require('../components/trade/adList')), 'otcMobile')
 }
 const routers = [
   {
@@ -31,9 +32,26 @@ const routers = [
         path: 'trade',
         component: trade.index,
         meta: {
-          tarbarIndex: 0
+          tabbarIndex: 0
         },
-        children: []
+        children: [
+          {
+            path: 'buy',
+            alias: ['/buy'],
+            component: trade.adList,
+            meta: {
+              navbarIndex: 0
+            }
+          },
+          {
+            path: 'sell',
+            alias: ['/sell'],
+            component: trade.adList,
+            meta: {
+              navbarIndex: 1
+            }
+          }
+        ]
       }
     ]
   },
@@ -77,6 +95,10 @@ const router = new VueRouter({
   routes: routers
 })
 router.beforeEach((to, from, next) => {
+  Indicator.open({
+    text: '',
+    spinnerType: 'snake'
+  })
   if (to.meta.needLogin && !store.state.userToken) { // 用户界面都需要登录
     next({
       path: '/login'
@@ -87,10 +109,7 @@ router.beforeEach((to, from, next) => {
 })
 router.afterEach((to, from) => {
   if (to.meta.initAxios) { // initAxios 初始化页面时有接口请求
-    Indicator.open({
-      text: '',
-      spinnerType: 'snake'
-    })
+    Indicator.close()
   }
   window.scrollTo(0, 0)
   if (window.gtag) {

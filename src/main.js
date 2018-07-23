@@ -21,6 +21,10 @@ Vue.use(VueLazyLoad, {
   loading: require('../src/assets/images/public/logo.svg'),
   attempt: 1
 })
+// 存储token
+if (localStorage.getItem('userToken') && !store.state.userToken) {
+  store.commit('saveToken', localStorage.getItem('userToken'))
+}
 // 自动设置语言
 for (let i = 0; i < languageDataList.length; i++) {
   Vue.i18n.add(languageDataList[i].language, languageDataList[i].data)
