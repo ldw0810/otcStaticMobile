@@ -11,6 +11,7 @@ import {$title} from '../../utils'
 export default {
   name: 'notFound',
   created () {
+    this.$loading.close()
     $title(this.$t('public.not_found'))
   }
 }

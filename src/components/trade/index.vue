@@ -11,7 +11,7 @@
         .number {{tradePrice | fixDecimalAuto(targetCurrency)}}
         .targetCurrency {{targetCurrency.toUpperCase()}}
     mt-navbar(v-model="navbarIndex" class="navbar")
-      LinkBarItem(:class="'navbarItem_' + index" v-for="(item, index) in navList" :id="index" :route="item.route" :key="index")
+      LinkBarItem(:class="'navbarItem_' + index" v-for="(item, index) in navList" :id="index" :route="getNavbarRoute(index)" :key="index")
         i(class="text" :class="{'focus': +navbarIndex === index}") {{item.name}}
         mt-badge(type="error" size="small" v-if="index === navList.length - 1 && notice > 0") {{notice}}
     .page
@@ -46,24 +46,15 @@ export default {
       navList: [
         {
           name: this.$i18n.translate('public.buy'),
-          route: {
-            path: '/buy',
-            query: this.$route.query
-          }
+          path: '/buy'
         },
         {
           name: this.$i18n.translate('public.sell'),
-          route: {
-            path: '/sell',
-            query: this.$route.query
-          }
+          path: '/sell'
         },
         {
           name: this.$i18n.translate('public.order'),
-          route: {
-            path: '/order',
-            query: this.$route.query
-          }
+          path: '/order'
         }
       ],
       currencyDefaultData: {
@@ -111,7 +102,14 @@ export default {
     }
   },
   methods: {
+    getNavbarRoute (index) {
+      return {
+        path: this.navList[index].path,
+        query: this.$route.query
+      }
+    },
     changeCurrency (tempCurrency) {
+      console.log('tempCurrency' + tempCurrency)
       if (tempCurrency && tempCurrency !== this.currency) {
         this.$router.push({
           path: this.$route.path,
@@ -121,6 +119,9 @@ export default {
         })
       }
       this.currencyListFlag = false
+    },
+    getCurrencyCode () {
+      this.$store.dispatch('axios_currency_code')
     },
     getTradePrice () {
       this.tradePrice = 0
@@ -149,6 +150,7 @@ export default {
       })
     },
     init () {
+      this.getCurrencyCode()
       this.getTradePrice()
       this.getNotice()
     }
@@ -158,11 +160,6 @@ export default {
   },
   mounted () {
     this.init()
-  },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      vm.$store.dispatch('axios_currency_code')
-    })
   }
 }
 </script>

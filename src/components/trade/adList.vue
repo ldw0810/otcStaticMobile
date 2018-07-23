@@ -10,19 +10,20 @@
               .name {{ad.member.nickname}}
               .pack
                 .tradeNumber {{$t("order.order_trade_count", {'0': ad.member.stat.trade_count})}}
+                .border |
                 .goodRate {{$t("order.order_praise_rate")}}: {{ad.member.stat.good_rate}}%
                 .icon
                   img(src="../../assets/images/trade/C-Alipay.png" v-if="!ad.member.bank")
                   img(src="../../assets/images/trade/C-Card.png" v-else-if="ad.member.bank")
-            el-button(class="operation" :class="{'sell': adType === 1}" type='primary' @click="submit")
-              i(v-if="adType === 0") {{$t('public.buy')}}
-              i(v-if="adType === 1") {{$t('public.sell')}}
-          .price
-            .number {{ad.current_price | fixDecimalAuto(ad.target_currency)}}
-            .text
-          .limit
-            .number {{ad.min_limit | fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | fixDecimalAuto( ad.target_currency)}}
-            .text {{$t('order.order_limit')}}
+            el-button(class="operation" :class="{'sell': adType === 1}" type='primary' @click="submit(ad.id)") {{adType === 0 ? $t('public.buy') : $t('public.sell')}}
+          .contentDown
+            .price
+              .number {{ad.current_price | fixDecimalAuto(ad.target_currency)}}
+              .text {{$t('order.order_unit_price', {'0': currency.toUpperCase()})}}
+            .border
+            .limit
+              .number {{ad.min_limit | fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | fixDecimalAuto( ad.target_currency)}}
+              .text {{$t('order.order_limit')}}
     EmptyList(class="emptyDiv" :text='emptyMessage' :loading="adsLoading" v-else)
 </template>
 <script type="es6">
@@ -46,7 +47,6 @@ export default {
   data () {
     return {
       allLoaded: false,
-      adType: !this.$route.meta.navbarIndex ? 0 : 1,
       ads: {
         list: [],
         page: 1,
@@ -64,6 +64,9 @@ export default {
     }
   },
   computed: {
+    adType () {
+      return !this.$route.meta.navbarIndex ? 0 : 1
+    },
     emptyMessage () {
       if (+this.adType === 0) {
         return this.$i18n.translate('public.no_buy_ad', {
@@ -134,7 +137,6 @@ export default {
       }
     },
     init () {
-      this.adType = this.$route.meta.adType || 0
       this.getAdList()
     }
   },
@@ -153,6 +155,110 @@ export default {
         border-top: 1px solid #EEEEEE
         border-bottom: 1px solid #EEEEEE
         background #FFFFFF
+        .wrapper {
+          display flex
+          flex-direction column
+          align-items center
+          height 16.88vh
+          .content {
+            flex 1
+            display flex
+            align-items center
+            width 100vw
+            margin-left 2.5vw
+            .avatar {
+            }
+            .info {
+              flex 1
+              margin-left 2.5vw
+              .name {
+                font-size 0.8rem
+                font-weight normal
+                color #333333
+              }
+              .pack {
+                display flex
+                align-items center
+                font-size 0.8rem
+                color #999999
+                .tradeNumber {
+
+                }
+                .border {
+                  margin 0 2vw
+                }
+                .goodRate {
+
+                }
+                .icon {
+                  width 2.5vh
+                  height 2.5vh
+                  margin-left 2.5vw
+                  img {
+                    object-fit: cover;
+                    object-position: 0 0;
+                    width: 100%;
+                    height: 100%;
+                  }
+                }
+              }
+            }
+            .operation {
+              display flex
+              align-items center
+              justify-content center
+              min-width 18vw
+              height 2vh
+              margin-right 5vw
+              color #FFFFFF
+              background-image: linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%);
+              box-shadow: 0 0.5vh 0.5vh 0 rgba(102,187,191,0.14);
+              border-radius: 0.25vh;
+              /deep/ span {
+                margin-top -0.85vh
+              }
+            }
+          }
+          .contentDown {
+            flex 1
+            display flex
+            align-items center
+            width 100vw
+            font-weight normal
+            .price {
+              flex 2
+              padding-left 5vw
+              .number {
+                font-weight normal
+                font-size 0.9rem
+              }
+              .text {
+                font-size 0.8rem
+                color #CCCCCC
+              }
+            }
+            .border {
+              display flex
+              align-items center
+              width 1px
+              height 4vh
+              background #EEEEEE
+            }
+            .limit {
+              flex 3
+              padding-left 5vw
+              font-weight normal
+              .number {
+                font-weight normal
+                font-size 0.9rem
+              }
+              .text {
+                font-size 0.8rem
+                color #CCCCCC
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -16,7 +16,7 @@ export default {
     },
     text: {
       type: String,
-      default: '您没有未完成的订单'
+      default: ''
     },
     iconType: {
       type: Number,

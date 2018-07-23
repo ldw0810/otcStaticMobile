@@ -11,6 +11,7 @@ import {$title} from '../../utils'
 export default {
   name: 'error',
   created () {
+    this.$loading.close()
     $title(this.$t('public.server_maintenance'))
   }
 }

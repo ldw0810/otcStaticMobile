@@ -487,7 +487,7 @@
     "ad_local_trading_tip": "To fill in the remark with address information in a face to face transaction"
   },
   "order": {
-    "order_unit": "Unit({0})",
+    "order_unit_price": "Unit price ({0})",
     "remark_required": "Please enter the order related content",
     "order_unfinished": "Processing",
     "order_finished": "Completed",

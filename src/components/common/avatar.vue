@@ -1,6 +1,7 @@
 <template lang="pug">
-  .avator(:class="{'avator-online': status, 'avator-offline': !status}" :style="{width: size + 'vh', height: size + 'vh'}")
-    span(class='status' v-if='isStatus')
+  .avatar
+    .status(v-if='isStatus' :class="{'online': status, 'offline': !status}")
+    .icon(:style="{width: size + 'vh', height: size + 'vh'}")
 </template>
 <script type="es6">
 export default {
@@ -26,33 +27,36 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  $avatorImage = "../../assets/images/trade/DefaultHead.jpg";
-  .avator {
+  $avatarImage = "../../assets/images/trade/DefaultHead.jpg";
+  .avatar {
+    display flex
+    align-items center
+  }
+
+  .status {
+    border-radius: 50%;
+    width: 1.5vh;
+    height: 1.5vh;
+    border: 1px solid #fff;
+    margin-right 1vw
+  }
+
+  .online {
+    background-image: linear-gradient(to bottom, #b5eb45, #7ed321);
+  }
+
+  .offline {
+    background-image: linear-gradient(0deg, #D2D2D2 0%, #AEAEAE 100%);
+  }
+
+  .icon {
     flex-shrink: 0;
     position: relative;
     width: 50px;
     height: 50px;
     border: 2px solid #fff;
     border-radius: 50%;
-    background: url($avatorImage) no-repeat center;
+    background: url($avatarImage) no-repeat center;
     background-size: cover;
-  }
-
-  .Status {
-    position: absolute;
-    right: 0;
-    top: 0;
-    border-radius: 50%;
-    width: 12px;
-    height: 12px;
-    border: 1px solid #fff;
-  }
-
-  .avator-online .status {
-    background-image: linear-gradient(to bottom, #b5eb45, #7ed321);
-  }
-
-  .avator-offline .status {
-    background-image: linear-gradient(to bottom, #d2d2d2, #aeaeae);
   }
 </style>
