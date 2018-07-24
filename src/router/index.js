@@ -19,7 +19,11 @@ const page = {
 const trade = {
   index: r => require.ensure([], () => r(require('../components/trade/index')), 'otcMobile'),
   adList: r => require.ensure([], () => r(require('../components/trade/adList')), 'otcMobile'),
+  adDetail: r => require.ensure([], () => r(require('../components/trade/adDetail')), 'otcMobile'),
   order: r => require.ensure([], () => r(require('../components/trade/order')), 'otcMobile')
+}
+const me = {
+  userCenter: r => require.ensure([], () => r(require('../components/me/userCenter')), 'otcMobile')
 }
 const routers = [
   {
@@ -61,8 +65,19 @@ const routers = [
             }
           }
         ]
+      },
+      {
+        path: 'me',
+        meta: {
+          tabbarIndex: 2
+        },
+        component: me.userCenter
       }
     ]
+  },
+  {
+    path: '/detail',
+    component: trade.adDetail
   },
   {
     path: '/entry',

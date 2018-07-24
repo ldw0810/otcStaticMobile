@@ -5,28 +5,7 @@
       .item(v-for="(ad, index) in ads.list" :key="index")
         .wrapper
           .content
-            Avatar(class="avatar" :status='ad.member.online')
-            .info
-              .name {{ad.member.nickname}}
-              .pack
-                .tradeNumber {{$t("order.order_trade_count", {'0': ad.member.stat.trade_count})}}
-                .border |
-                .goodRate {{$t("order.order_praise_rate")}}: {{ad.member.stat.good_rate}}%
-                .icon
-                  img(src="../../assets/images/trade/C-Alipay.png" v-if="!ad.member.bank")
-                  img(src="../../assets/images/trade/C-Card.png" v-else-if="ad.member.bank")
-            el-button(class="operation" :class="{'sell': adType === 1}" type='primary' @click="submit(ad.id)") {{adType === 0 ? $t('public.buy') : $t('public.sell')}}
-          .contentDown
-            .price
-              .number {{ad.current_price | fixDecimalAuto(ad.target_currency)}}
-              .text {{$t('order.order_unit_price', {'0': currency.toUpperCase()})}}
-            .border
-            .limit
-              .number {{ad.min_limit | fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | fixDecimalAuto( ad.target_currency)}}
-              .text {{$t('order.order_limit')}}
-        .wrapper
-          .content
-            Avatar(class="avatar" :status='ad.member.online')
+            Avatar(class="avatar" :status='ad.member.online' :statusType="1")
             .info
               .name {{ad.member.nickname}}
               .pack
@@ -141,6 +120,7 @@ export default {
         }
       }).catch(() => {
         this.adsLoading = false
+        this.$message.error(this.$i18n.translate('public.url_request_fail'))
       })
     },
     getAdListMore () {
@@ -172,6 +152,7 @@ export default {
           }
         }).catch(() => {
           this.adsLoading = false
+          this.$message.error(this.$i18n.translate('public.url_request_fail'))
         })
       }
     },

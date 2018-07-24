@@ -317,7 +317,10 @@
     "user_phone_verify_tip": "验证成功即送200 OMT",
     "password_weak": "弱",
     "password_middle": "中",
-    "password_strong": "强"
+    "password_strong": "强",
+    "user_settings": "账户设置",
+    "user_change_language": "切换语言",
+    "user_invite_friends": "邀请好友"
   },
   "asset": {
     "asset_resend_email": "重发邮件",
@@ -491,6 +494,7 @@
     "remark_required": "请输入订单相关内容",
     "order_unfinished": "未完成订单",
     "order_finished": "已完成订单",
+    "order_closed": "订单已关闭",
     "order_trader": "交易对象",
     "order_id": "订单编号",
     "order_type": "订单类型",

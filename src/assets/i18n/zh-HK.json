@@ -317,7 +317,10 @@
     "user_phone_verify_tip": "驗證成功即送200 OMT",
     "password_weak": "弱",
     "password_middle": "中",
-    "password_strong": "強"
+    "password_strong": "強",
+    "user_settings": "賬戶設置",
+    "user_change_language": "切換語言",
+    "user_invite_friends": "邀請好友"
   },
   "asset": {
     "asset_resend_email": "重發郵件",
@@ -491,6 +494,7 @@
     "remark_required": "請輸入訂單相關內容",
     "order_unfinished": "未完成訂單",
     "order_finished": "已完成訂單",
+    "order_closed": "訂單已關閉",
     "order_trader": "交易對象",
     "order_id": "訂單編號",
     "order_type": "訂單類型",

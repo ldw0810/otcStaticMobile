@@ -4,8 +4,12 @@
     .footer
       el-button(class="submitButton" type='primary' @click="submit") {{$t('public.confirm')}}
 </template>
-<script>
+<script type="es6">
 import {$getLanguage} from '../../utils'
+import {Button} from 'element-ui'
+import Vue from 'vue'
+
+Vue.component(Button.name, Button)
 
 const language = {}
 language['zh-CN'] = `<h1 class='title'>用户协议</h1><p class='underline'></p>
@@ -575,16 +579,16 @@ export default {
       }
       /deep/ .title {
         text-align center
-        margin-bottom 20px
+        margin-bottom 2vh
       }
       /deep/ .sub-title {
-        font-size: 18px;
-        margin-bottom: 15px;
-        margin-top: 20px;
+        font-size: 1.2rem
+        margin-bottom: 1.5vh;
+        margin-top: 2vh
         font-weight: 600;
       }
       /deep/ p {
-        margin-bottom: 10px;
+        margin-bottom 1vh
       }
     }
     .footer{

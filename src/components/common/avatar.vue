@@ -1,7 +1,8 @@
 <template lang="pug">
   .avatar
-    .status(v-if='isStatus' :class="{'online': status, 'offline': !status}")
+    .status(v-if='statusType === 1' :class="{'online': status, 'offline': !status}")
     .icon(:style="{width: size + 'vh', height: size + 'vh'}")
+      span(v-if="statusType === 2" class="afterStatus")
 </template>
 <script type="es6">
 export default {
@@ -10,9 +11,9 @@ export default {
       type: Number,
       default: 5
     },
-    isStatus: {
-      type: Boolean,
-      default: true
+    statusType: {
+      type: Number,
+      default: 0
     },
     status: {
       type: Boolean,
@@ -58,5 +59,21 @@ export default {
     border-radius: 50%;
     background: url($avatarImage) no-repeat center;
     background-size: cover;
+  }
+  .afterStatus {
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-radius: 50%;
+    width: 2vh;
+    height: 2vh;
+    border: 1px solid #fff;
+  }
+  .online .afterStatus {
+    background-image: linear-gradient(to bottom, #b5eb45, #7ed321);
+  }
+
+  .offline .afterStatus {
+    background-image: linear-gradient(to bottom, #d2d2d2, #aeaeae);
   }
 </style>

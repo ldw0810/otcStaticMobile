@@ -317,7 +317,10 @@
     "user_phone_verify_tip": "Verify your phone to get 200 OMT",
     "password_weak": "weak",
     "password_middle": "middle",
-    "password_strong": "strong"
+    "password_strong": "strong",
+    "user_settings": "User Settings",
+    "user_change_language": "Change language",
+    "user_invite_friends": "Invite friends"
   },
   "asset": {
     "asset_resend_email": "Resend",
@@ -491,6 +494,7 @@
     "remark_required": "Please enter the order related content",
     "order_unfinished": "Processing",
     "order_finished": "Completed",
+    "order_closed": "Order closed",
     "order_trader": "Partner",
     "order_id": "Order ID",
     "order_type": "Type",
