@@ -15,7 +15,7 @@ export default {
     width 100vw;
     height $headerHeight
     background: rgba(0, 0, 0, 0.05);
-    z-index: 99;
+    z-index: $zIndexPopup - 1;
     display: flex;
     align-items: center;
     .btn {

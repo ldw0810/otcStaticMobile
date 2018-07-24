@@ -18,7 +18,8 @@ const page = {
 }
 const trade = {
   index: r => require.ensure([], () => r(require('../components/trade/index')), 'otcMobile'),
-  adList: r => require.ensure([], () => r(require('../components/trade/adList')), 'otcMobile')
+  adList: r => require.ensure([], () => r(require('../components/trade/adList')), 'otcMobile'),
+  order: r => require.ensure([], () => r(require('../components/trade/order')), 'otcMobile')
 }
 const routers = [
   {
@@ -49,6 +50,14 @@ const routers = [
             component: trade.adList,
             meta: {
               navbarIndex: 1
+            }
+          },
+          {
+            path: 'order',
+            alias: ['/order'],
+            component: trade.order,
+            meta: {
+              navbarIndex: 2
             }
           }
         ]

@@ -1,8 +1,29 @@
 <template lang="pug">
-  .adList
-    mt-loadmore(:top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore")
+  .adList(:style="{'-webkit-overflow-scrolling': scrollMode}")
+    mt-loadmore(:top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :auto-fill="false" ref="loadmore")
     .itemList(v-if="ads.list.length")
       .item(v-for="(ad, index) in ads.list" :key="index")
+        .wrapper
+          .content
+            Avatar(class="avatar" :status='ad.member.online')
+            .info
+              .name {{ad.member.nickname}}
+              .pack
+                .tradeNumber {{$t("order.order_trade_count", {'0': ad.member.stat.trade_count})}}
+                .border |
+                .goodRate {{$t("order.order_praise_rate")}}: {{ad.member.stat.good_rate}}%
+                .icon
+                  img(src="../../assets/images/trade/C-Alipay.png" v-if="!ad.member.bank")
+                  img(src="../../assets/images/trade/C-Card.png" v-else-if="ad.member.bank")
+            el-button(class="operation" :class="{'sell': adType === 1}" type='primary' @click="submit(ad.id)") {{adType === 0 ? $t('public.buy') : $t('public.sell')}}
+          .contentDown
+            .price
+              .number {{ad.current_price | fixDecimalAuto(ad.target_currency)}}
+              .text {{$t('order.order_unit_price', {'0': currency.toUpperCase()})}}
+            .border
+            .limit
+              .number {{ad.min_limit | fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | fixDecimalAuto( ad.target_currency)}}
+              .text {{$t('order.order_limit')}}
         .wrapper
           .content
             Avatar(class="avatar" :status='ad.member.online')
@@ -46,6 +67,7 @@ export default {
   },
   data () {
     return {
+      scrollMode: 'auto',
       allLoaded: false,
       ads: {
         list: [],
@@ -94,9 +116,13 @@ export default {
   },
   methods: {
     loadTop () {
+      console.log('loadTop')
+      this.getAdList()
       this.$refs.loadmore.onTopLoaded()
     },
     loadBottom () {
+      console.log('loadBottom')
+      this.getAdListMore()
       this.$refs.loadmore.onBottomLoaded()
     },
     getAdList () {
@@ -116,6 +142,38 @@ export default {
       }).catch(() => {
         this.adsLoading = false
       })
+    },
+    getAdListMore () {
+      this.pageIndex = this.ads.page + 1
+      if (this.pageIndex > this.ads.total_pages) {
+        this.allLoaded = true
+        this.pageIndex = this.ads.page
+      } else {
+        const currentAdsList = this.ads.list
+        this.adsLoading = true
+        this.$store.dispatch('axios_ads', {
+          limit: +this.ads.per_page,
+          page: +this.pageIndex,
+          op_type: +this.adType === 0 ? 'sell' : 'buy',
+          currency: this.currency
+        }).then(res => {
+          this.adsLoading = false
+          if (res.data && +res.data.error === 0) {
+            this.ads = {
+              list: currentAdsList.concat(res.data.list),
+              page: res.data.page,
+              per_page: res.data.per_page,
+              total_count: res.data.total_count,
+              total_pages: res.data.total_pages
+            }
+            this.$nextTick(() => {
+              this.scrollMode = 'touch'
+            })
+          }
+        }).catch(() => {
+          this.adsLoading = false
+        })
+      }
     },
     submit (id) {
       if (!this.$store.state.userToken) {
