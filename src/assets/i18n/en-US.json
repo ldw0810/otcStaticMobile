@@ -199,6 +199,7 @@
     "login_success": "Login success",
     "login_auth": "Two-factor Authentication",
     "login_toRegister": "Register",
+    "auth_email": "Verify email",
     "auth_email_send": "Send verification email",
     "auth_email_send_success": "Verification email sent success",
     "auth_email_send_fail": "Verification email sent fail",

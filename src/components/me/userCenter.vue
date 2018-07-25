@@ -10,7 +10,7 @@
       .border |
       .goodRate {{$t('order.order_praise_rate')}}: {{userInfo.stat.good_rate}}%
     mt-cell(:title="$t('user.authentication_email')" @click.native="goLink('email')" :is-link="!userInfo.activated")
-      span {{!userInfo.activated ? ($t('user.authentication_wait') + ' ' + $t('user.authentication_email_reSend')) : $t('user.authenticated')}}
+      span {{!userInfo.activated ? ($t('user.authentication_wait') + '(' + $t('user.authentication_email_reSend') + ')') : $t('user.authenticated')}}
     mt-cell(:title="$t('user.authentication_phone')" @click.native="goLink('phone')" :is-link="!userInfo.mobile")
       span {{!userInfo.mobile ? $t('user.unAuthenticated') : ($t('user.authenticated') + '(' + userInfo.phone_number + ')')}}
     mt-cell(:title="$t('user.user_settings')" to="/me/settings" is-link)
@@ -63,7 +63,6 @@ export default {
           this.$router.push('/me/authPhone')
         }
       } else if (itemStr === 'logout') {
-        this.$store.dispatch('axios_logout')
         this.$store.commit('delToken')
         this.$router.push('/login')
       }
@@ -107,14 +106,15 @@ export default {
   }
 
   .name {
+    width 100vw
+    text-align center
     padding-top 1vh
-    display flex
-    align-items center
-    justify-content center
     font-weight normal
     font-size 1.5rem
     color #333333
     text-overflow ellipsis
+    overflow hidden
+    white-space nowrap
   }
 
   .info {

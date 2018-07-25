@@ -81,9 +81,8 @@ export default {
 </script>
 <style lang="stylus" scoped>
   .send {
-    margin-left: 16px;
     .btn {
-      font-size: 14px;
+      font-size: 0.9rem;
       display: inline-flex;
       align-items: center;
       white-space: nowrap;

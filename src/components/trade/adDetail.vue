@@ -1,6 +1,6 @@
 <template lang="pug">
   .adDetail
-    Header(fixed :leftLink="backLink" :rightText="$t('order.order_trade_notice')" @rightClick="popupFlag = true" :title="(adType === 0 ? $t('public.buy') : $t('public.sell')) + currency.toUpperCase()")
+    <!--HeaderBar(fixed :leftLink="backLink" :rightText="$t('order.order_trade_notice')" @rightClick="popupFlag = true" :title="(adType === 0 ? $t('public.buy') : $t('public.sell')) + currency.toUpperCase()")-->
     .user
       .wrapper
         Avatar(class="avatar" :status='ad.member.online' :statusType="2")
@@ -44,7 +44,6 @@
 import Policy from '../policy/policy'
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
-import Header from '../common/header'
 import {Loadmore} from 'mint-ui'
 import {Button, Form, FormItem, Input} from 'element-ui'
 import Vue from 'vue'
@@ -61,7 +60,6 @@ Vue.component(Input.name, Input)
 export default {
   name: 'adDetail',
   components: {
-    Header,
     Policy,
     Avatar,
     EmptyList
