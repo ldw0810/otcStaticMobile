@@ -30,11 +30,11 @@ export default {
   },
   data () {
     return {
-      domain: `${configure.ZENDESK_DOMAIN_URL}/hc/${$getAxiosLanguage()}`,
+      domain: `${configure.ZENDESK_DOMAIN_URL}/hc/${$getAxiosLanguage()}`
     }
   },
   computed: {
-    urlList() {
+    urlList () {
       return [
         {
           name: this.$t('public.about_us'),
