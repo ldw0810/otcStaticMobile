@@ -49,7 +49,7 @@ import {Button, Form, FormItem, Input} from 'element-ui'
 import Vue from 'vue'
 import {$dividedBy, $multipliedBy, $fixDecimalAuto} from '../../utils'
 
-const configure = require('../../../configure')
+// const configure = require('../../../configure')
 
 Vue.component(Loadmore.name, Loadmore)
 Vue.component(Button.name, Button)
@@ -65,21 +65,21 @@ export default {
     EmptyList
   },
   data () {
-    const validateNumberLimitCheck = (rule, value, callback) => {
-      if (+this.ad.min_limit > +this.ad.order_limit) {
-        callback(new Error(this.$i18n.translate('ad.ad_ceiling_number_notValid')))
-      } else if (+value < this.ad.min_limit) {
-        callback(new Error(this.$i18n.translate('ad.ad_min_number_required', {
-          '0': this.ad.min_limit
-        })))
-      } else if (+value > this.ad.order_limit) {
-        callback(new Error(this.$i18n.translate('ad.ad_ceiling_limit', {
-          '0': this.ad.order_limit
-        })))
-      } else {
-        callback()
-      }
-    }
+    // const validateNumberLimitCheck = (rule, value, callback) => {
+    //   if (+this.ad.min_limit > +this.ad.order_limit) {
+    //     callback(new Error(this.$i18n.translate('ad.ad_ceiling_number_notValid')))
+    //   } else if (+value < this.ad.min_limit) {
+    //     callback(new Error(this.$i18n.translate('ad.ad_min_number_required', {
+    //       '0': this.ad.min_limit
+    //     })))
+    //   } else if (+value > this.ad.order_limit) {
+    //     callback(new Error(this.$i18n.translate('ad.ad_ceiling_limit', {
+    //       '0': this.ad.order_limit
+    //     })))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     return {
       ad: {
         member: {

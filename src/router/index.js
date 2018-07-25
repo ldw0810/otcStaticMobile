@@ -26,6 +26,7 @@ const me = {
   userCenter: r => require.ensure([], () => r(require('../components/me/userCenter')), 'otcMobile'),
   authEmail: r => require.ensure([], () => r(require('../components/me/authEmail')), 'otcMobile'),
   about: r => require.ensure([], () => r(require('../components/me/about')), 'otcMobile'),
+  changeLanguage: r => require.ensure([], () => r(require('../components/me/changeLanguage')), 'otcMobile')
 }
 const routers = [
   {
@@ -82,14 +83,16 @@ const routers = [
     component: trade.adDetail
   },
   {
-    path: '/authEmail',
-    alias: '/me/authEmail',
+    path: '/me/authEmail',
     component: me.authEmail
   },
   {
-    path: '/about',
-    alias: '/me/about',
+    path: '/me/about',
     component: me.about
+  },
+  {
+    path: '/me/changeLanguage',
+    component: me.changeLanguage
   },
   {
     path: '/entry',

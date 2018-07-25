@@ -12,7 +12,6 @@
     .footer {{$t('public.copyright')}}
 </template>
 <script type="es6">
-import SendCode from '../common/sendCode'
 import {Header, Button, Cell} from 'mint-ui'
 import Vue from 'vue'
 import {$getAxiosLanguage} from '../../utils'
@@ -24,10 +23,7 @@ Vue.component(Button.name, Button)
 Vue.component(Cell.name, Cell)
 
 export default {
-  name: 'authEmail',
-  components: {
-    SendCode
-  },
+  name: 'about',
   data () {
     return {
       domain: `${configure.ZENDESK_DOMAIN_URL}/hc/${$getAxiosLanguage()}`
