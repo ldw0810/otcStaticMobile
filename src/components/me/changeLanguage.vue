@@ -4,12 +4,12 @@
       router-link(to="/me" slot="left")
         mt-button(icon="back")
     .content
-      mt-cell(:title="item.name" @click.native="goLink(index)" v-for="(item, index) in languageList" :key="index" is-link)
+      mt-cell(:title="item.name" @click.native="changeLanguage(index)" v-for="(item, index) in languageList" :key="index" is-link)
 </template>
 <script type="es6">
 import {Header, Button, Cell} from 'mint-ui'
 import Vue from 'vue'
-import {$getLanguageIndex, $getAxiosLanguage} from '../../utils'
+import {$getLanguageIndex} from '../../utils'
 import languageData from '../../locale'
 
 Vue.component(Header.name, Header)
@@ -27,7 +27,7 @@ export default {
     isCurrentLanguage (index) {
       return +index === $getLanguageIndex()
     },
-    goLink (index) {
+    changeLanguage (index) {
       const language = this.languageList[+index] && this.languageList[+index].language
       let ln = language
       if (this.$store.state.userToken) {
@@ -37,7 +37,7 @@ export default {
           ln = 'en'
         }
         this.$store.dispatch('axios_language', {
-          ln: $getAxiosLanguage()
+          ln: ln
         }).then(res => {
           if (res.data && +res.data.error === 0) {
             localStorage.setItem('language', language)

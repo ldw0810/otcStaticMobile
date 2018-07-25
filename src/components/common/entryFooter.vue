@@ -2,7 +2,7 @@
   .footer
     .copyright {{$t('public.copyright')}}
     .menuBar
-      .menu(v-for="(footerItem, index) in footerList" @click="goFooter(index)" v-text="footerItem.name" :key="index")
+      .menu(v-for="(item, index) in footerList" @click.native="goFooter(index)" :key="index") {{item.name}}
       .language(@click="showAction") {{languageList[languageSelectIndex].name}}
     mt-actionsheet(v-model="actionFlag" :actions="actions")
 </template>
@@ -10,80 +10,81 @@
 import Vue from 'vue'
 import {Actionsheet} from 'mint-ui'
 import languageDataList from '../../locale'
+import {$getLanguageIndex} from '../../utils'
+
 Vue.component(Actionsheet.name, Actionsheet)
+
 const configure = require('../../../configure')
 
 const domain = `${configure.ZENDESK_DOMAIN_URL}/hc/${(window.localStorage.getItem('language') || 'zh-TW').replace('HK', 'TW').toLowerCase()}`
-export default{
+export default {
   data () {
     return {
-      footerList: [
-        {
-          name: this.$i18n.translate('public.about'),
-          url: `${domain}/articles/360001934074`
-        },
-        {
-          name: this.$i18n.translate('public.explain'),
-          url: `${domain}/articles/360001929453`
-        },
-        {
-          name: this.$i18n.translate('public.helpCenter'),
-          url: `${domain}/categories/360000187674`
-        }
-      ],
       languageList: languageDataList,
       actionFlag: false,
-      actions: languageDataList.map((item, index) => {
-        return {
-          name: item.name,
-          method: this.changeLanguage
-        }
-      })
+      languageSelectIndex: $getLanguageIndex()
     }
   },
   computed: {
-    languageSelectIndex () {
-      let index = 0
-      for (let i = 0; i < this.languageList.length; i++) {
-        if (this.languageList[i].language === (localStorage.getItem('language') || configure.DEFAULT_LANGUAGE)) {
-          index = i
+    footerList () {
+      return [{
+        name: this.$i18n.translate('public.about'),
+        url: `${domain}/articles/360001934074`
+      },
+      {
+        name: this.$i18n.translate('public.explain'),
+        url: `${domain}/articles/360001929453`
+      },
+      {
+        name: this.$i18n.translate('public.helpCenter'),
+        url: `${domain}/categories/360000187674`
+      }]
+    },
+    actions () {
+      return languageDataList.map((item, index) => {
+        return {
+          name: item.name,
+          index: index,
+          method: this.changeLanguage
         }
-      }
-      return index
+      })
     }
   },
   methods: {
     showAction () {
       this.actionFlag = true
     },
-    changeLanguage (actions, index) {
-      if (+index !== this.languageSelectIndex) {
-        const language = this.languageList[+index] && this.languageList[+index].language
-        let ln = language
-        if (this.$store.state.userToken) {
-          if (['zh-HK', 'zh-TW'].indexOf(ln) > -1) {
-            ln = 'zh-TW'
-          } else if (ln !== 'zh-CN') {
-            ln = 'en'
-          }
-          this.$store.dispatch('axios_language', {
-            ln: ln
-          }).then(res => {
-            if (res.data && +res.data.error === 0) {
-              window.localStorage.setItem('language', language)
-              this.$router.go(0)
-            } else {
-            }
-          }).catch(() => {
-          })
-        } else {
-          localStorage.setItem('language', language)
-          this.$i18n.set(language)
-          this.$router.go(0)
+    changeLanguage (item) {
+      const index = +item.index || 0
+      const language = this.languageList[+index] && this.languageList[+index].language
+      let ln = language
+      if (this.$store.state.userToken) {
+        if (ln === 'zh-HK') {
+          ln = 'zh-TW'
+        } else if (ln !== 'zh-CN') {
+          ln = 'en'
         }
+        this.$store.dispatch('axios_language', {
+          ln: ln
+        }).then(res => {
+          if (res.data && +res.data.error === 0) {
+            this.languageSelectIndex = index
+            localStorage.setItem('language', language)
+            this.$i18n.set(language)
+            this.actionFlag = false
+          } else {
+            return false
+          }
+        }).catch(() => {
+          return false
+        })
+      } else {
+        localStorage.setItem('language', language)
+        this.$i18n.set(language)
+        this.languageSelectIndex = index
+        this.actionFlag = false
       }
     },
-
     goFooter (index) {
       if (this.footerList[index].url) {
         if (this.$store.state.userToken) {
