@@ -61,12 +61,4 @@ export default {
     flex 1
     margin-top $mintHeaderHeight + 1
   }
-  .footer {
-    height 5vh
-    display flex
-    align-items center
-    justify-content center
-    font-size 0.8rem
-    color #999999
-  }
 </style>

@@ -52,9 +52,6 @@ export default {
   inviteBannerList_setter (state, value) {
     state.inviteBannerList = value
   },
-  banks_setter (state, value) {
-    state.banks = value
-  },
   code_setter (state, value) {
     state.code = value
   },

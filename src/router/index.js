@@ -29,6 +29,8 @@ const me = {
   changeLanguage: r => require.ensure([], () => r(require('../components/me/changeLanguage')), 'otcMobile'),
   settings: r => require.ensure([], () => r(require('../components/me/settings')), 'otcMobile'),
   addCollection: r => require.ensure([], () => r(require('../components/me/addCollection')), 'otcMobile'),
+  addAlipay: r => require.ensure([], () => r(require('../components/me/addAlipay')), 'otcMobile'),
+  addBankcard: r => require.ensure([], () => r(require('../components/me/addBankcard')), 'otcMobile'),
 }
 const routers = [
   {
@@ -103,6 +105,14 @@ const routers = [
   {
     path: '/me/addCollection',
     component: me.addCollection
+  },
+  {
+    path: '/me/addCollection/addAlipay',
+    component: me.addAlipay
+  },
+  {
+    path: '/me/addCollection/addBankcard',
+    component: me.addBankcard
   },
   {
     path: '/entry',

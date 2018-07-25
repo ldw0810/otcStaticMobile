@@ -40,7 +40,6 @@ export default {
   collection_refresh: 0, // 是否刷新收款方式
   homeCarouselList: [], // 首页carousel
   inviteBannerList: [], // 邀请页面的banner
-  banks: [],
   userToken: null, // 登录后header必携带
   showAuthEmail: false,
   axiosCancel: {}, // axios的CancelToken

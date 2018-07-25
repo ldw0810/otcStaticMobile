@@ -1,29 +1,128 @@
 <template lang="pug">
-  .addCollection
-    mt-header(:title="$t('user.receivables_add')" fixed)
-      router-link(to="/me/settings" slot="left")
+  .addAlipay
+    mt-header(:title="$t('user.alipay_add')" fixed)
+      router-link(:to="backLink" slot="left")
         mt-button(icon="back")
     .content
-      mt-cell(:title="$t('user.alipay_title')" to="/me/addCollection/addAlipay" is-link)
-      mt-cell(:title="$t('user.bankCard_title_1')" to="/me/addCollection/addBankcard" is-link)
+      mt-field(:label="$t('user.alipay_userName')" :placeholder="$t('user.alipay_userName_required')" v-model="form.username" :state="formState.username" @input="checkState('username')")
+      mt-field(:label="$t('user.alipay_account')" :placeholder="$t('user.alipay_account_required')" v-model="form.account" :state="formState.account" @input="checkState('account')")
+      mt-field(:label="$t('user.alipay_reAccount')" :placeholder="$t('user.alipay_reAccount_required')" v-model="form.reAccount" :state="formState.reAccount" @input="checkState('reAccount')")
+    .submit(class="mintSubmit")
+      mt-button(@click="submit" :disabled="!formStateAll") {{$t('public.confirm')}}
 </template>
 <script type="es6">
-import {Header, Button, Cell} from 'mint-ui'
+import {Button, Field, Header} from 'mint-ui'
 import Vue from 'vue'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
-Vue.component(Cell.name, Cell)
+Vue.component(Field.name, Field)
 
 export default {
-  name: 'addCollection',
+  name: 'addAlipay',
   data () {
     return {
+      form: {
+        username: '',
+        account: '',
+        reAccount: ''
+      },
+      formState: {
+        username: '',
+        account: '',
+        reAccount: ''
+      },
+      formMessage: {
+        username: '',
+        account: '',
+        reAccount: ''
+      }
+    }
+  },
+  computed: {
+    backLink () {
+      return this.isFromCollectionList ? '/me/collectionList' : '/me/addCollection'
+    },
+    isFromCollectionList () {
+      return this.$route.query.isFromCollectionList
+    },
+    formStateAll () {
+      const tempStateList = Object.keys(this.formState)
+      for (let i = 0; i < tempStateList.length; i++) {
+        if (this.formState[tempStateList[i]] === '') {
+          return false
+        }
+      }
+      return true
+    },
+    formMessageAll () {
+      const tempMessageList = Object.keys(this.formMessage)
+      for (let i = 0; i < tempMessageList.length; i++) {
+        if (this.formMessage[tempMessageList[i]] !== '') {
+          return this.formMessage[tempMessageList[i]]
+        }
+      }
+      return ''
     }
   },
   methods: {
+    checkAllState () {
+      Object.keys(this.formState).forEach((item) => {
+        this.checkState(item)
+      })
+    },
+    checkState (value) {
+      if (value === 'username') {
+        this.formState.username = this.form.username ? 'success' : ''
+      } else if (value === 'account') {
+        if (this.form.reAccount) {
+          if (this.form.reAccount === this.form.account) {
+            this.formState.reAccount = 'success'
+            this.formMessage.reAccount = ''
+          } else {
+            this.formState.reAccount = 'error'
+            this.formMessage.reAccount = this.$i18n.translate('user.alipay_account_different')
+          }
+        } else {
+          this.formState.account = this.form.account ? 'success' : ''
+        }
+      } else if (value === 'reAccount') {
+        if (this.form.reAccount) {
+          if (this.form.reAccount === this.form.account) {
+            this.formState.reAccount = 'success'
+            this.formMessage.reAccount = ''
+          } else {
+            this.formState.reAccount = 'error'
+            this.formMessage.reAccount = this.$i18n.translate('user.alipay_account_different')
+          }
+        } else {
+          this.formState.reAccount = ''
+        }
+      }
+    },
+    submit () {
+      if (this.formMessageAll) {
+        this.$message.error(this.formMessageAll)
+      } else {
+        this.$loading.open()
+        this.$store.dispatch('axios_add_receiving', {
+          name: this.form.username,
+          account: this.form.account
+        }).then(res => {
+          this.$loading.close()
+          if (res.data && +res.data.error === 0) {
+            this.$message.success(this.$i18n.translate('user.receivables_add_success'))
+            this.$router.push(this.backLink)
+          }
+        }).catch(() => {
+          this.$loading.close()
+          this.$message.error(this.$i18n.translate('user.receivables_add_fail'))
+        })
+      }
+    },
     init () {
       this.$loading.close()
+      this.checkAllState()
     }
   },
   mounted () {
@@ -32,24 +131,18 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  .addCollection {
+  .addAlipay {
     width 100vw
     height 100vh
     background #fafafa
     overflow hidden
-    display flex
-    flex-direction column
   }
+
   .content {
-    flex 1
     margin-top $mintHeaderHeight + 1
   }
-  .footer {
-    height 5vh
-    display flex
-    align-items center
-    justify-content center
-    font-size 0.8rem
-    color #999999
+
+  .submit {
+    margin-top 2.5vh
   }
 </style>
