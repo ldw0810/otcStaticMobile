@@ -264,6 +264,7 @@
     "default": "默认",
     "default_notValid": "设为默认",
     "receivables": "收款方式",
+    "receivables_add": "添加收款方式",
     "default_receivables": "默认收款方式",
     "default_receivables_add": "添加默认收款方式",
     "receivables_request_fail": "用户收款方式列表获取失败",

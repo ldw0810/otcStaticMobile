@@ -264,6 +264,7 @@
     "default": "Default",
     "default_notValid": "Set default",
     "receivables": "Transaction account",
+    "receivables_add": "Add transaction account",
     "default_receivables": "Default transaction account",
     "default_receivables_add": "Add default transaction account",
     "receivables_request_fail": "Transaction account list request fail",

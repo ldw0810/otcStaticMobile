@@ -27,7 +27,8 @@ const me = {
   authEmail: r => require.ensure([], () => r(require('../components/me/authEmail')), 'otcMobile'),
   about: r => require.ensure([], () => r(require('../components/me/about')), 'otcMobile'),
   changeLanguage: r => require.ensure([], () => r(require('../components/me/changeLanguage')), 'otcMobile'),
-  settings: r => require.ensure([], () => r(require('../components/me/settings')), 'otcMobile')
+  settings: r => require.ensure([], () => r(require('../components/me/settings')), 'otcMobile'),
+  addCollection: r => require.ensure([], () => r(require('../components/me/addCollection')), 'otcMobile'),
 }
 const routers = [
   {
@@ -98,6 +99,10 @@ const routers = [
   {
     path: '/me/settings',
     component: me.settings
+  },
+  {
+    path: '/me/addCollection',
+    component: me.addCollection
   },
   {
     path: '/entry',
