@@ -63,7 +63,7 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  .about {
+  .changeLanguage {
     width 100vw
     height 100vh
     background #fafafa

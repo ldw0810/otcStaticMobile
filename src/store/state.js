@@ -29,11 +29,11 @@ export default {
       good_rate: '0'
     },
     default_collection: {
-      kind: '', // alipay || bank
-      account: '',
-      bank: '',
-      bank_name: '',
-      account_display: ''
+      // kind: '', // alipay || bank
+      // account: '',
+      // bank: '',
+      // bank_name: '',
+      // account_display: ''
     }
   },
   code: {

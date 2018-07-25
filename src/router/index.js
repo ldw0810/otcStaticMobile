@@ -26,7 +26,8 @@ const me = {
   userCenter: r => require.ensure([], () => r(require('../components/me/userCenter')), 'otcMobile'),
   authEmail: r => require.ensure([], () => r(require('../components/me/authEmail')), 'otcMobile'),
   about: r => require.ensure([], () => r(require('../components/me/about')), 'otcMobile'),
-  changeLanguage: r => require.ensure([], () => r(require('../components/me/changeLanguage')), 'otcMobile')
+  changeLanguage: r => require.ensure([], () => r(require('../components/me/changeLanguage')), 'otcMobile'),
+  settings: r => require.ensure([], () => r(require('../components/me/settings')), 'otcMobile')
 }
 const routers = [
   {
@@ -93,6 +94,10 @@ const routers = [
   {
     path: '/me/changeLanguage',
     component: me.changeLanguage
+  },
+  {
+    path: '/me/settings',
+    component: me.settings
   },
   {
     path: '/entry',

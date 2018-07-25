@@ -13,77 +13,77 @@
       SendCode(ref="sendCode" class="submitButton" :text="$t('user.authentication_email_reSend_link')" :reText="$t('user.authentication_email_reSend_link')" :time="remainTime" :maxTime="maxTime" :once="!+remainTime" @sendCode="sendEmail")
 </template>
 <script type="es6">
-  import SendCode from '../common/sendCode'
-  import {Header, Button} from 'mint-ui'
-  import Vue from 'vue'
+import SendCode from '../common/sendCode'
+import {Header, Button} from 'mint-ui'
+import Vue from 'vue'
 
-  Vue.component(Header.name, Header)
-  Vue.component(Button.name, Button)
+Vue.component(Header.name, Header)
+Vue.component(Button.name, Button)
 
-  export default {
-    name: 'authEmail',
-    components: {
-      SendCode
-    },
-    data () {
-      return {
-        remainTime: 120,
-        maxTime: 120
-      }
-    },
-    watch: {
-      'userInfo.id' (value) {
-        if (value) {
-          this.$loading.close()
-        }
-      },
-      'userInfo.activated' (value) {
-        if (value) {
-          this.$router.push('/me')
-        }
-      }
-    },
-    computed: {
-      userInfo: function () {
-        return this.$store.state.userInfo
-      }
-    },
-    methods: {
-      sendEmail () {
-        return new Promise((resolve, reject) => {
-          this.$loading.open()
-          this.$store.dispatch('axios_send_activation', {
-            email: this.email
-          }).then((res) => {
-            this.$loading.close()
-            if (res.data && +res.data.error === 0) {
-              this.$message.success(this.$i18n.translate('user.auth_email_send_success'))
-              this.remainTime = +res.data.remain || 120
-            } else {
-              this.$message.error(this.$i18n.translate('user.auth_email_send_fail'))
-            }
-            resolve()
-          }).catch(() => {
-            this.$loading.close()
-            this.$message.error(this.$i18n.translate('user.auth_email_send_fail'))
-            resolve()
-          })
-        })
-      },
-      getMe () {
-        this.$store.dispatch('axios_me')
-      },
-      init () {
-        this.sendEmail().then(() => {
-          this.$refs.sendCode.init()
-        })
-        this.getMe()
-      }
-    },
-    mounted () {
-      this.init()
+export default {
+  name: 'authEmail',
+  components: {
+    SendCode
+  },
+  data () {
+    return {
+      remainTime: 120,
+      maxTime: 120
     }
+  },
+  watch: {
+    'userInfo.id' (value) {
+      if (value) {
+        this.$loading.close()
+      }
+    },
+    'userInfo.activated' (value) {
+      if (value) {
+        this.$router.push('/me')
+      }
+    }
+  },
+  computed: {
+    userInfo: function () {
+      return this.$store.state.userInfo
+    }
+  },
+  methods: {
+    sendEmail () {
+      return new Promise((resolve, reject) => {
+        this.$loading.open()
+        this.$store.dispatch('axios_send_activation', {
+          email: this.email
+        }).then((res) => {
+          this.$loading.close()
+          if (res.data && +res.data.error === 0) {
+            this.$message.success(this.$i18n.translate('user.auth_email_send_success'))
+            this.remainTime = +res.data.remain || 120
+          } else {
+            this.$message.error(this.$i18n.translate('user.auth_email_send_fail'))
+          }
+          resolve()
+        }).catch(() => {
+          this.$loading.close()
+          this.$message.error(this.$i18n.translate('user.auth_email_send_fail'))
+          resolve()
+        })
+      })
+    },
+    getMe () {
+      this.$store.dispatch('axios_me')
+    },
+    init () {
+      this.sendEmail().then(() => {
+        this.$refs.sendCode.init()
+      })
+      this.getMe()
+    }
+  },
+  mounted () {
+    this.init()
   }
+}
 </script>
 <style lang='stylus' scoped>
   buttonHeight = 15vh
