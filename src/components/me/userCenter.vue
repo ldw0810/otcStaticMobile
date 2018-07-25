@@ -34,16 +34,6 @@ export default {
   data () {
     return {}
   },
-  watch: {
-    $route: function () {
-      this.init()
-    },
-    'userInfo.id' (value) {
-      if (value) {
-        this.$loading.close()
-      }
-    }
-  },
   computed: {
     userInfo () {
       return this.$store.state.userInfo

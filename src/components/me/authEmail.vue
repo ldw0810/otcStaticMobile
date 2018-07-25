@@ -32,11 +32,6 @@ export default {
     }
   },
   watch: {
-    'userInfo.id' (value) {
-      if (value) {
-        this.$loading.close()
-      }
-    },
     'userInfo.activated' (value) {
       if (value) {
         this.$router.push('/me')
@@ -44,7 +39,7 @@ export default {
     }
   },
   computed: {
-    userInfo: function () {
+    userInfo () {
       return this.$store.state.userInfo
     }
   },
@@ -71,7 +66,11 @@ export default {
       })
     },
     getMe () {
-      this.$store.dispatch('axios_me')
+      if (!this.userInfo.id) {
+        this.$store.dispatch('axios_me')
+      } else {
+        this.$loading.close()
+      }
     },
     init () {
       this.sendEmail().then(() => {

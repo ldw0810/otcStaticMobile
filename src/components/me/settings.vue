@@ -4,7 +4,7 @@
       router-link(to="/me" slot="left")
         mt-button(icon="back")
     .content
-      mt-cell(:title="$t('user.default_receivables')" :to="haveCollection ? '/me/collectionList' : '/me/addCollection'" :value="haveCollection ? $t('public.add') : $t('public.modify')" is-link)
+      mt-cell(:title="$t('user.default_receivables')" :to="haveDefaultCollection ? '/me/collectionList' : '/me/addCollection'" :value="haveDefaultCollection ? $t('public.modify') : $t('public.add')" is-link)
       mt-cell(:title="$t('user.modify_password')" to="/me/modifyPassword" :value="$t('public.modify')" is-link)
       mt-cell(:title="$t('user.auth_phone')" to="/me/authPhone" :value="userInfo.mobile ? $t('public.disable') : $t('public.enable')" is-link)
       mt-cell(:title="$t('user.auth_google')" to="/me/authGoogle" :value="userInfo.app_two_factor ? $t('public.disable') : $t('public.enable')" is-link)
@@ -24,23 +24,20 @@ export default {
     }
   },
   computed: {
-    haveCollection () {
-      return Object.keys(this.userInfo.default_collection).length
+    haveDefaultCollection () {
+      return this.userInfo.default_collection.kind
     },
-    userInfo: function () {
+    userInfo () {
       return this.$store.state.userInfo
-    }
-  },
-  watch: {
-    'userInfo.id' (value) {
-      if (value) {
-        this.$loading.close()
-      }
     }
   },
   methods: {
     getMe () {
-      this.$store.dispatch('axios_me')
+      if (!this.userInfo.id) {
+        this.$store.dispatch('axios_me')
+      } else {
+        this.$loading.close()
+      }
     },
     init () {
       this.getMe()

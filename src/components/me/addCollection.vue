@@ -4,7 +4,7 @@
       router-link(to="/me/settings" slot="left")
         mt-button(icon="back")
     .content
-      mt-cell(:title="$t('user.alipay_title')" to="/me/addCollection/addAlipay" is-link)
+      mt-cell(:title="$t('user.alipay_title')" to="/me/addCollection/addAlipay" is-link v-if="!haveAlipay")
       mt-cell(:title="$t('user.bankCard_title_1')" to="/me/addCollection/addBankcard" is-link)
 </template>
 <script type="es6">
@@ -21,9 +21,33 @@ export default {
     return {
     }
   },
+  computed: {
+    collection () {
+      return this.$store.state.collection || []
+    },
+    haveAlipay () {
+      if (this.collection.length) {
+        for (let i = 0; i < this.collection.length; i++) {
+          if (!this.collection[i].bank) {
+            return true
+          }
+        }
+      }
+      return false
+    }
+  },
   methods: {
+    getReceivingList () {
+      this.$store.dispatch('axios_get_receiving').then(res => {
+        if (res.data && +res.data.error === 0) {
+          this.$store.commit('collection_setter', res.data.list || [])
+        }
+      }).catch(() => {
+        this.$message.error(this.$i18n.translate('user.receivables_request_fail'))
+      })
+    },
     init () {
-      this.$loading.close()
+      this.getReceivingList()
     }
   },
   mounted () {
