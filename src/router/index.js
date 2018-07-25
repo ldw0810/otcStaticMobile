@@ -25,6 +25,7 @@ const trade = {
 const me = {
   userCenter: r => require.ensure([], () => r(require('../components/me/userCenter')), 'otcMobile'),
   authEmail: r => require.ensure([], () => r(require('../components/me/authEmail')), 'otcMobile'),
+  about: r => require.ensure([], () => r(require('../components/me/about')), 'otcMobile'),
 }
 const routers = [
   {
@@ -84,6 +85,11 @@ const routers = [
     path: '/authEmail',
     alias: '/me/authEmail',
     component: me.authEmail
+  },
+  {
+    path: '/about',
+    alias: '/me/about',
+    component: me.about
   },
   {
     path: '/entry',

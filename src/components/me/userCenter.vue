@@ -143,15 +143,4 @@ export default {
       color #ED1C24
     }
   }
-
-  /deep/ .mint-cell-text {
-    font-size 1rem
-    font-weight normal
-    color #333333
-  }
-
-  /deep/ .mint-cell-value {
-    font-size 0.85rem
-    color #999999
-  }
 </style>
