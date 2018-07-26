@@ -32,6 +32,7 @@ export default {
     payable: ['cny', 'usd'],
     sellable: []
   },
+  bankList: [],
   countryList: [],
   collectionList: [],
   collection_refresh: 0, // 是否刷新收款方式

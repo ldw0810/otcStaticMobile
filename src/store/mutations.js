@@ -34,6 +34,9 @@ export default {
   userInfo_notice_setter (state, value) {
     state.userInfo.notice = value
   },
+  bankList_setter (state, value) {
+    state.bankList = value
+  },
   countryList_setter (state, value) {
     state.countryList = value
   },

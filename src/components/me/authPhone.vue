@@ -5,19 +5,23 @@
         mt-button(icon="back")
     .wrapper(v-if="userInfo.id")
       .content
-        mt-cell(:title="country[0] + ' +' + country[2]" @click.native="showCountry" :is-link="!userInfo.mobile")
-        mt-field(type="tel" :label="$t('user.auth_phone_number')" :placeholder="$t('user.auth_phone_number_required')" v-model="form.phoneNumber" :state="formState.phoneNumber" @input="checkState('phoneNumber')")
+        mt-cell(:title="country[0] + ' +' + country[2]" @click.native="countryFlag = true" is-link v-if="!userInfo.mobile")
+        mt-field(type="tel" :label="$t('user.auth_phone_number')" :placeholder="$t('user.auth_phone_number_required')" v-model="form.phoneNumber" :state="formState.phoneNumber" :disabled="userInfo.mobile" @input="checkState('phoneNumber')")
       .submit(class="mintSubmit")
         mt-button(@click="submit" :disabled="!formStateAll") {{$t('user.auth_phone_code_send')}}
     transition(name="slide-right" mode="out-in")
-      .popup(class="popup-right" v-if="popupFlag")
+      .popup(class="popup-right" v-if="countryFlag")
         slot
-          SelectCountry(@close="popupFlag = false" @success="changeCountry")
+          SelectCountry(@close="countryFlag = false" @success="changeCountry")
+      .popup(class="popup-right" v-if="authPhoneCodeFlag")
+        slot
+          AuthPhoneCode(@close="authPhoneCodeFlag = false" :userInfo="userInfo" :country="country[1]" :phoneNumber="form.phoneNumber")
 </template>
 <script type="es6">
 import {Button, Cell, Field, Header} from 'mint-ui'
 import Vue from 'vue'
 import SelectCountry from './selectCountry'
+import AuthPhoneCode from './authPhoneCode'
 
 Vue.component(Header.name, Header)
 Vue.component(Cell.name, Cell)
@@ -26,12 +30,12 @@ Vue.component(Field.name, Field)
 
 export default {
   name: 'authPhone',
-  components: {SelectCountry},
+  components: {AuthPhoneCode, SelectCountry},
   data () {
     return {
       country: ['China', 'CN', '86'],
       form: {
-        phoneNumber: ''
+        phoneNumber: this.userInfo.phone_number || ''
       },
       formState: {
         phoneNumber: ''
@@ -39,7 +43,17 @@ export default {
       formMessage: {
         phoneNumber: ''
       },
-      popupFlag: false
+      countryFlag: false,
+      authPhoneCodeFlag: false
+    }
+  },
+  watch: {
+    'userInfo.mobile' (value) {
+      if (value) {
+        this.form.phoneNumber = this.userInfo.phone_number
+      } else {
+        this.form.phoneNumber = ''
+      }
     }
   },
   computed: {
@@ -87,11 +101,6 @@ export default {
         }
       }
     },
-    showCountry () {
-      if (!this.userInfo.mobile) {
-        this.popupFlag = true
-      }
-    },
     changeCountry (value) {
       this.country = value
     },
@@ -110,7 +119,7 @@ export default {
         }).then(res => {
           this.$loading.close()
           if (res.data && +res.data.error === 0) {
-            this.$router.push('/authPhoneCode')
+            this.authPhoneCodeFlag = true
           }
         }).catch(() => {
           this.$loading.close()
