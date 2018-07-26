@@ -35,6 +35,7 @@ const me = {
   modifyPassword: r => require.ensure([], () => r(require('../components/me/modifyPassword'))),
   authPhone: r => require.ensure([], () => r(require('../components/me/authPhone'))),
   addGoogle: r => require.ensure([], () => r(require('../components/me/addGoogle'))),
+  authGoogle: r => require.ensure([], () => r(require('../components/me/authGoogle')))
 }
 const routers = [
   {
@@ -133,6 +134,10 @@ const routers = [
   {
     path: '/me/addGoogle',
     component: me.addGoogle
+  },
+  {
+    path: '/me/authGoogle',
+    component: me.authGoogle
   },
   {
     path: '/entry',
