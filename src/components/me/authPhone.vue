@@ -89,17 +89,22 @@ export default {
     },
     checkState (value) {
       if (value === 'phoneNumber') {
-        if (this.form.phoneNumber) {
-          if (!/^[0-9]+.?[0-9]*$/.test(this.form.phoneNumber)) {
-            this.formState.phoneNumber = 'error'
-            this.formMessage.phoneNumber = this.$i18n.translate('validate.must_be_number')
+        if (this.userInfo.mobile) {
+          this.formState.phoneNumber = this.form.phoneNumber ? 'success' : ''
+          this.formMessage.phoneNumber = ''
+        } else {
+          if (this.form.phoneNumber) {
+            if (!/^[0-9]+.?[0-9]*$/.test(this.form.phoneNumber)) {
+              this.formState.phoneNumber = 'error'
+              this.formMessage.phoneNumber = this.$i18n.translate('validate.must_be_number')
+            } else {
+              this.formState.phoneNumber = 'success'
+              this.formMessage.phoneNumber = ''
+            }
           } else {
-            this.formState.phoneNumber = 'success'
+            this.formState.phoneNumber = ''
             this.formMessage.phoneNumber = ''
           }
-        } else {
-          this.formState.phoneNumber = ''
-          this.formMessage.phoneNumber = ''
         }
       }
     },
@@ -113,8 +118,8 @@ export default {
       if (this.formMessageAll) {
         this.$message.error(this.formMessageAll)
       } else {
+        this.$loading.open()
         if (!this.userInfo.mobile) {
-          this.$loading.open()
           this.$store.dispatch('axios_sms_auth', {
             commit: 'send_code',
             country: this.country[1],
@@ -129,7 +134,15 @@ export default {
             this.$message.error(this.$i18n.translate('user.auth_phone_code_send_fail'))
           })
         } else {
-          this.authPhoneCodeFlag = true
+          this.$store.dispatch('axios_refresh', {
+            refresh: 1
+          }).then(res => {
+            if (res.data && +res.data.error === 0) {
+              this.authPhoneCodeFlag = true
+            }
+          }).catch(() => {
+            this.$message.error(this.$t('user.auth_phone_code_send_fail'))
+          })
         }
       }
     },
