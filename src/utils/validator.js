@@ -1,7 +1,5 @@
 import languageData from '../locale'
-import {$getLanguage} from './index';
-
-const configure = require('../../configure')
+import {$getLanguage} from './index'
 
 const language = languageData.find(
   item => item.language === $getLanguage()
@@ -47,17 +45,17 @@ export const VALI_ADDRESS_LABEL = {
 // 发广告备注信息
 export const VALI_AD_REMARK = {
   max: 500,
-  message: language.validate.max_length.format(500)
+  message: language.validate.max_length.replace('{0}', 500)
 }
 // 聊天输入框
 export const VALI_CHAT = {
   max: 200,
-  message: language.validate.max_length.format(1000)
+  message: language.validate.max_length.replace('{0}', 1000)
 }
 // 付款留言
 export const VALI_PAYMENT_INFO = {
   max: 200,
-  message: language.validate.max_length.format(200)
+  message: language.validate.max_length.replace('{0}', 200)
 }
 //
 export const VALI_NUMBER = {

@@ -18,8 +18,6 @@ import {Button, Field, Header, Actionsheet} from 'mint-ui'
 import Vue from 'vue'
 import {VALI_CARD_HOLDER, VALI_CARD_NUMBER} from '../../utils/validator'
 
-const configure = require('../../../configure')
-
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
