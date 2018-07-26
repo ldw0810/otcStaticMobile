@@ -35,7 +35,7 @@ export default {
     return {
       country: ['China', 'CN', '86'],
       form: {
-        phoneNumber: this.userInfo.phone_number || ''
+        phoneNumber: this.$store.state.userInfo.phone_number || ''
       },
       formState: {
         phoneNumber: ''
@@ -51,6 +51,8 @@ export default {
     'userInfo.mobile' (value) {
       if (value) {
         this.form.phoneNumber = this.userInfo.phone_number
+        this.formState.phoneNumber = 'success'
+        this.formMessage.phoneNumber = ''
       } else {
         this.form.phoneNumber = ''
       }
@@ -111,20 +113,24 @@ export default {
       if (this.formMessageAll) {
         this.$message.error(this.formMessageAll)
       } else {
-        this.$loading.open()
-        this.$store.dispatch('axios_sms_auth', {
-          commit: 'send_code',
-          country: this.country[1],
-          mobile: this.form.phoneNumber
-        }).then(res => {
-          this.$loading.close()
-          if (res.data && +res.data.error === 0) {
-            this.authPhoneCodeFlag = true
-          }
-        }).catch(() => {
-          this.$loading.close()
-          this.$message.error(this.$i18n.translate('user.auth_phone_code_send_fail'))
-        })
+        if (!this.userInfo.mobile) {
+          this.$loading.open()
+          this.$store.dispatch('axios_sms_auth', {
+            commit: 'send_code',
+            country: this.country[1],
+            mobile: this.form.phoneNumber
+          }).then(res => {
+            this.$loading.close()
+            if (res.data && +res.data.error === 0) {
+              this.authPhoneCodeFlag = true
+            }
+          }).catch(() => {
+            this.$loading.close()
+            this.$message.error(this.$i18n.translate('user.auth_phone_code_send_fail'))
+          })
+        } else {
+          this.authPhoneCodeFlag = true
+        }
       }
     },
     init () {
@@ -160,5 +166,8 @@ export default {
     overflow: scroll;
     overflow-scrolling touch
     -webkit-overflow-scrolling: touch;
+  }
+  /deep/ .mint-field-core {
+    height 6vh
   }
 </style>

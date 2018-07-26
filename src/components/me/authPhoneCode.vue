@@ -5,6 +5,7 @@
         mt-button(icon="back" @click="goBack")
     .wrapper
       .content
+        mt-field(type="password" :label="$t('user.password')" :placeholder="$t('user.password_required')" v-model="form.password" :state="formState.password" @input="checkState('password')" v-if="userInfo.mobile")
         mt-field(type="text" :label="$t('user.auth_phone_code')" :placeholder="$t('user.auth_phone_code_required')" v-model="form.pinCode" :state="formState.pinCode" @input="checkState('pinCode')")
       .submit(class="mintSubmit")
         mt-button(@click="submit" :disabled="!formStateAll") {{$t('public.confirm')}}
@@ -27,12 +28,15 @@ export default {
   data () {
     return {
       form: {
+        password: '',
         pinCode: ''
       },
       formState: {
+        password: '',
         pinCode: ''
       },
       formMessage: {
+        password: '',
         pinCode: ''
       }
     }
@@ -67,38 +71,54 @@ export default {
       })
     },
     checkState (value) {
-      if (value === 'pinCode') {
+      if (value === 'password') {
+        this.formState.password = this.form.password ? 'success' : ''
+      } else if (value === 'pinCode') {
         this.formState.pinCode = this.form.pinCode ? 'success' : ''
       }
-    },
-    getMe () {
-      this.$store.dispatch('axios_me')
     },
     submit () {
       if (this.formMessageAll) {
         this.$message.error(this.formMessageAll)
       } else {
         this.$loading.open()
-        this.$store.dispatch('axios_sms_auth', {
-          commit: 'auth',
-          country: this.country,
-          mobile: this.phoneNumber,
-          code: this.form.pinCode
-        }).then(res => {
-          this.$loading.close()
-          if (res.data && +res.data.error === 0) {
-            !this.userInfo.mobile ? this.$message.success(this.$i18n.translate('user.auth_phone_bind_success')) : this.$message.success(this.$i18n.translate('user.auth_phone_unbind_success'))
-            this.$router.push('/me/settings')
-          }
-        }).catch(() => {
-          this.$loading.close()
-          !this.userInfo.mobile ? this.$message.success(this.$i18n.translate('user.auth_phone_bind_fail')) : this.$message.success(this.$i18n.translate('user.auth_phone_unbind_fail'))
-        })
+        if (this.userInfo.mobile) {
+          this.$store.dispatch('axios_unbind_sms', {
+            password: this.form.password,
+            code: this.form.pinCode
+          }).then(res => {
+            this.$loading.close()
+            if (res.data && +res.data.error === 0) {
+              this.$message.success(this.$t('user.auth_phone_unbind_success'))
+              this.$router.push('/me/settings')
+            }
+          }).catch(() => {
+            this.$loading.close()
+            this.$message.error(this.$t('user.auth_phone_unbind_fail'))
+          })
+        } else {
+          this.$store.dispatch('axios_sms_auth', {
+            commit: 'auth',
+            country: this.country,
+            mobile: this.phoneNumber,
+            code: this.form.pinCode
+          }).then(res => {
+            this.$loading.close()
+            if (res.data && +res.data.error === 0) {
+              this.$message.success(this.$i18n.translate('user.auth_phone_bind_success'))
+              this.$router.push('/me/settings')
+            }
+          }).catch(() => {
+            this.$loading.close()
+            this.$message.success(this.$i18n.translate('user.auth_phone_bind_fail'))
+          })
+        }
       }
     },
     init () {
-      if (!this.userInfo) {
-        this.getMe()
+      if (!this.userInfo.mobile) {
+        this.formState.password = 'success'
+        this.formMessage.password = ''
       }
       this.checkAllState()
     }
