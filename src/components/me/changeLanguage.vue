@@ -28,6 +28,7 @@ export default {
       return +index === $getLanguageIndex()
     },
     changeLanguage (index) {
+      this.$loading.open()
       const language = this.languageList[+index] && this.languageList[+index].language
       let ln = language
       if (this.$store.state.userToken) {
@@ -42,15 +43,19 @@ export default {
           if (res.data && +res.data.error === 0) {
             localStorage.setItem('language', language)
             this.$i18n.set(language)
+            this.$loading.close()
           } else {
+            this.$loading.close()
             return false
           }
         }).catch(() => {
+          this.$loading.close()
           return false
         })
       } else {
         localStorage.setItem('language', language)
         this.$i18n.set(language)
+        this.$loading.close()
       }
     },
     init () {

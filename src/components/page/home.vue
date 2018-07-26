@@ -3,7 +3,7 @@
     transition(name="fade" mode="out-in")
       router-view
     mt-tabbar(v-model="tabbarIndex" class="footer" fixed)
-      LinkBarItem(id="0" class="linkBarItem" route="/trade")
+      LinkBarItem(id="0" class="linkBarItem" route="/buy" @click.native="goTrade")
         slot(v-if="+tabbarIndex === 0")
           img(slot="icon" src="../../assets/images/trade/navigationbar-trade-activation.svg")
           i(class="focus") {{$t('public.trade')}}
@@ -42,7 +42,11 @@ export default {
       tabbarIndex: this.$route.meta.tabbarIndex || 0
     }
   },
-  computed: {}
+  methods: {
+    goTrade () {
+      this.$router.push(this.$store.state.tradePath)
+    }
+  }
 }
 </script>
 <style lang='stylus' scoped>

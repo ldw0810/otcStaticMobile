@@ -1,13 +1,7 @@
 import Vue from 'vue'
 export default {
-  header_index_setter (state, value) {
-    state.header_index = value
-  },
-  layer_index_setter (state, value) {
-    state.layer_index = value
-  },
-  user_sider_index_setter (state, value) {
-    state.user_sider_index = value
+  tradePath_setter (state, value) {
+    state.tradePath = value
   },
   pinCodeValue_setter (state, value) {
     state.pinCodeValue = value.toUpperCase()
@@ -39,6 +33,9 @@ export default {
   },
   userInfo_notice_setter (state, value) {
     state.userInfo.notice = value
+  },
+  countryList_setter (state, value) {
+    state.countryList = value
   },
   collectionList_setter (state, value) {
     state.collectionList = value

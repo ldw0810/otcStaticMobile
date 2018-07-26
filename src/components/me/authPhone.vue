@@ -1,82 +1,152 @@
 <template lang="pug">
-  .authEmail(v-if="userInfo.id")
-    mt-header(:title="$t('user.auth_email')" fixed)
-      router-link(to="/me" slot="left")
+  .authPhone
+    mt-header(:title="userInfo.mobile ? $t('user.auth_phone_del') : $t('user.auth_phone_add')" fixed)
+      router-link(to="/me/settings" slot="left")
         mt-button(icon="back")
-    .content
-      .icon
-        img(src="../../assets/images/icon/Email-999999.svg")
-      .text {{$t('user.authentication_email_beenSend')}}
-      .email {{userInfo.email}}
-      .info {{$t('user.authentication_email_beenSend_info')}}
-    .submit
-      SendCode(ref="sendCode" class="submitButton" :text="$t('user.authentication_email_reSend_link')" :reText="$t('user.authentication_email_reSend_link')" :time="remainTime" :maxTime="maxTime" :once="!+remainTime" @sendCode="sendEmail")
+    .wrapper(v-if="userInfo.id && countryList.length")
+      .content
+        mt-cell(:title="item.name" @click.native="changeLanguage(index)" is-link)
+        mt-field(type="tel" :label="$t('user.password_old')" :placeholder="$t('user.password_old_required')" v-model="form.oldPassword" :state="formState.oldPassword" @input="checkState('oldPassword')")
+      .submit(class="mintSubmit")
+        mt-button(@click="submit" :disabled="!formStateAll") {{$t('public.confirm')}}
+      mt-actionsheet(v-model="actionFlag" :actions="actionList")
 </template>
 <script type="es6">
-import SendCode from '../common/sendCode'
-import {Header, Button} from 'mint-ui'
+import {Header, Button, Field, Actionsheet} from 'mint-ui'
 import Vue from 'vue'
+import {VALI_PASSWORD_NUMBER} from '../../utils/validator'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
+Vue.component(Field.name, Field)
+Vue.component(Actionsheet.name, Actionsheet)
 
 export default {
-  name: 'authEmail',
-  components: {
-    SendCode
-  },
+  name: 'modifyPassword',
   data () {
     return {
-      remainTime: 120,
-      maxTime: 120
-    }
-  },
-  watch: {
-    'userInfo.activated' (value) {
-      if (value) {
-        this.$router.push('/me')
+      form: {
+        oldPassword: '',
+        newPassword: '',
+        rePassword: ''
+      },
+      formState: {
+        oldPassword: '',
+        newPassword: '',
+        rePassword: ''
+      },
+      formMessage: {
+        oldPassword: '',
+        newPassword: '',
+        rePassword: ''
       }
     }
   },
   computed: {
-    userInfo () {
-      return this.$store.state.userInfo
+    countryList () {
+      return this.$store.state.countryList || []
+    },
+    formStateAll () {
+      const tempStateList = Object.keys(this.formState)
+      for (let i = 0; i < tempStateList.length; i++) {
+        if (this.formState[tempStateList[i]] === '') {
+          return false
+        }
+      }
+      return true
+    },
+    formMessageAll () {
+      const tempMessageList = Object.keys(this.formMessage)
+      for (let i = 0; i < tempMessageList.length; i++) {
+        if (this.formMessage[tempMessageList[i]] !== '') {
+          return this.formMessage[tempMessageList[i]]
+        }
+      }
+      return ''
     }
   },
   methods: {
-    sendEmail () {
-      return new Promise((resolve, reject) => {
-        this.$loading.open()
-        this.$store.dispatch('axios_send_activation', {
-          email: this.email
-        }).then((res) => {
-          this.$loading.close()
-          if (res.data && +res.data.error === 0) {
-            this.$message.success(this.$i18n.translate('user.auth_email_send_success'))
-            this.remainTime = +res.data.remain || 120
-          } else {
-            this.$message.error(this.$i18n.translate('user.auth_email_send_fail'))
-          }
-          resolve()
-        }).catch(() => {
-          this.$loading.close()
-          this.$message.error(this.$i18n.translate('user.auth_email_send_fail'))
-          resolve()
-        })
+    checkAllState () {
+      Object.keys(this.formState).forEach((item) => {
+        this.checkState(item)
       })
     },
-    getMe () {
-      if (!this.userInfo.id) {
-        this.$store.dispatch('axios_me')
+    checkState (value) {
+      if (value === 'oldPassword') {
+        this.formState.oldPassword = this.form.oldPassword ? 'success' : ''
+      } else if (value === 'newPassword') {
+        if (this.form.rePassword) {
+          if (this.form.rePassword === this.form.newPassword) {
+            this.formState.rePassword = 'success'
+            this.formMessage.rePassword = ''
+          } else {
+            this.formState.rePassword = 'error'
+            this.formMessage.rePassword = this.$i18n.translate('user.password_different')
+          }
+        } else {
+          if (this.form.newPassword) {
+            if (this.form.newPassword.length > VALI_PASSWORD_NUMBER.max || this.form.newPassword.length < VALI_PASSWORD_NUMBER.min || !/[^\d].*[\d]|[\d].*[^\d]/.test(this.form.newPassword)) {
+              this.formState.newPassword = 'error'
+              this.formMessage.newPassword = VALI_PASSWORD_NUMBER.message
+            } else {
+              this.formState.newPassword = 'success'
+              this.formMessage.newPassword = ''
+            }
+          } else {
+            this.formState.newPassword = ''
+            this.formMessage.newPassword = ''
+          }
+        }
+      } else if (value === 'rePassword') {
+        if (this.form.rePassword) {
+          if (this.form.rePassword === this.form.newPassword) {
+            this.formState.rePassword = 'success'
+            this.formMessage.rePassword = ''
+          } else {
+            this.formState.rePassword = 'error'
+            this.formMessage.rePassword = this.$i18n.translate('user.password_different')
+          }
+        } else {
+          this.formState.rePassword = ''
+          this.formMessage.rePassword = ''
+        }
+      }
+    },
+    getCountryList () {
+      if (!this.countryList.length) {
+        this.$store.dispatch('axios_national_list').then(res => {
+          if (res && +res.data.error === 0) {
+            this.countryList = res.data.country || []
+          }
+        }).catch(() => {
+          this.$message.error(this.$t('user.country_response_none'))
+        })
+      }
+    },
+    submit () {
+      if (this.formMessageAll) {
+        this.$message.error(this.formMessageAll)
       } else {
-        this.$loading.close()
+        this.$loading.open()
+        this.$store.dispatch('axios_update_password', {
+          old_password: this.form.oldPassword,
+          password: this.form.newPassword,
+          password_confirmation: this.form.rePassword
+        }).then(res => {
+          this.$loading.close()
+          if (res.data && +res.data.error === 0) {
+            this.$message.success(this.$t('user.password_modify_success'))
+            this.$router.push('/me/settings')
+          }
+        }).catch(() => {
+          this.$loading.close()
+          this.$message.error(this.$t('user.password_modify_fail'))
+        })
       }
     },
     init () {
-      this.sendEmail().then(() => {
-        this.$refs.sendCode.init()
-      })
-      this.getMe()
+      this.$loading.close()
+      this.checkAllState()
     }
   },
   mounted () {
@@ -85,48 +155,18 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  buttonHeight = 15vh
-  .authEmail {
+  .modifyPassword {
     width 100vw
     height 100vh
     background #fafafa
     overflow hidden
-    .content {
-      width 100vw
-      height 100 - $mintHeaderHeight - buttonHeight
-      margin-top $mintHeaderHeight
-      display flex
-      flex-direction column
-      align-items center
-      justify-content center
-      div {
-        margin-bottom 2.5vh
-        font-size 1rem
-      }
-      .icon {
-        width 8vh
-        height 6vh
-        img {
-          object-fit: cover;
-          object-position: 0 0;
-          width: 100%;
-          height: 100%;
-        }
-      }
-      .email {
-        font-weight normal
-      }
-    }
-    .submit {
-      display flex
-      align-items flex-start
-      justify-content center
-      height buttonHeight
-      .submitButton {
-        height 5vh
-        background-image: linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%);
-        box-shadow: 0 5px 5px 0 rgba(102, 187, 191, 0.14);
-      }
-    }
+  }
+
+  .content {
+    margin-top $mintHeaderHeight + 1
+  }
+
+  .submit {
+    margin-top 2.5vh
   }
 </style>

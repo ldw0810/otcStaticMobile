@@ -109,7 +109,6 @@ export default {
       }
     },
     changeCurrency (tempCurrency) {
-      console.log('tempCurrency' + tempCurrency)
       if (tempCurrency && tempCurrency !== this.currency) {
         this.$router.push({
           path: this.$route.path,
@@ -150,6 +149,7 @@ export default {
       })
     },
     init () {
+      this.$store.commit('tradePath_setter', this.$route.fullPath)
       this.getCurrencyCode()
       this.getTradePrice()
       this.getNotice()

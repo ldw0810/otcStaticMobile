@@ -1,13 +1,14 @@
 <template lang="pug">
-  .settings(v-if="userInfo.id")
+  .settings
     mt-header(:title="$t('user.user_settings')" fixed)
       router-link(to="/me" slot="left")
         mt-button(icon="back")
-    .content
-      mt-cell(:title="$t('user.default_receivables')" :to="collectionList.length ? '/me/collectionList' : '/me/addCollection'" :value="collectionList.length ? $t('public.modify') : $t('public.add')" is-link)
-      mt-cell(:title="$t('user.modify_password')" to="/me/modifyPassword" :value="$t('public.modify')" is-link)
-      mt-cell(:title="$t('user.auth_phone')" to="/me/authPhone" :value="userInfo.mobile ? $t('public.disable') : $t('public.enable')" is-link)
-      mt-cell(:title="$t('user.auth_google')" to="/me/authGoogle" :value="userInfo.app_two_factor ? $t('public.disable') : $t('public.enable')" is-link)
+    .wrapper(v-if="userInfo.id")
+      .content
+        mt-cell(:title="$t('user.default_receivables')" :to="collectionList.length ? '/me/collectionList' : '/me/addCollection'" :value="collectionList.length ? $t('public.modify') : $t('public.add')" is-link)
+        mt-cell(:title="$t('user.modify_password')" to="/me/modifyPassword" :value="$t('public.modify')" is-link)
+        mt-cell(:title="$t('user.auth_phone')" to="/me/authPhone" :value="userInfo.mobile ? $t('public.disable') : $t('public.enable')" is-link)
+        mt-cell(:title="$t('user.auth_google')" to="/me/authGoogle" :value="userInfo.app_two_factor ? $t('public.disable') : $t('public.enable')" is-link)
 </template>
 <script type="es6">
 import {Header, Button, Cell} from 'mint-ui'

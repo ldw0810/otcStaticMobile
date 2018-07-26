@@ -1,16 +1,17 @@
 <template lang="pug">
-  .authEmail(v-if="userInfo.id")
+  .authEmail
     mt-header(:title="$t('user.auth_email')" fixed)
       router-link(to="/me" slot="left")
         mt-button(icon="back")
-    .content
-      .icon
-        img(src="../../assets/images/icon/Email-999999.svg")
-      .text {{$t('user.authentication_email_beenSend')}}
-      .email {{userInfo.email}}
-      .info {{$t('user.authentication_email_beenSend_info')}}
-    .submit
-      SendCode(ref="sendCode" class="submitButton" :text="$t('user.authentication_email_reSend_link')" :reText="$t('user.authentication_email_reSend_link')" :time="remainTime" :maxTime="maxTime" :once="!+remainTime" @sendCode="sendEmail")
+    .wrapper(v-if="userInfo.id")
+      .content
+        .icon
+          img(src="../../assets/images/icon/Email-999999.svg")
+        .text {{$t('user.authentication_email_beenSend')}}
+        .email {{userInfo.email}}
+        .info {{$t('user.authentication_email_beenSend_info')}}
+      .submit
+        SendCode(ref="sendCode" class="submitButton" :text="$t('user.authentication_email_reSend_link')" :reText="$t('user.authentication_email_reSend_link')" :time="remainTime" :maxTime="maxTime" :once="!+remainTime" @sendCode="sendEmail")
 </template>
 <script type="es6">
 import SendCode from '../common/sendCode'

@@ -95,12 +95,10 @@ export default {
   },
   methods: {
     loadTop () {
-      console.log('loadTop')
       this.getAdList()
       this.$refs.loadmore.onTopLoaded()
     },
     loadBottom () {
-      console.log('loadBottom')
       this.getAdListMore()
       this.$refs.loadmore.onBottomLoaded()
     },

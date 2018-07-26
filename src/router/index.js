@@ -5,34 +5,35 @@ import store from '../store'
 
 Vue.use(VueRouter)
 const entry = {
-  index: r => require.ensure([], () => r(require('../components/entry/index')), 'otcMobile'),
-  register: r => require.ensure([], () => r(require('../components/entry/register')), 'otcMobile'),
-  login: r => require.ensure([], () => r(require('../components/entry/login')), 'otcMobile'),
-  forgetPassword: r => require.ensure([], () => r(require('../components/entry/forgetPassword')), 'otcMobile'),
-  modifyPassword: r => require.ensure([], () => r(require('../components/entry/modifyPassword')), 'otcMobile')
+  index: r => require.ensure([], () => r(require('../components/entry/index'))),
+  register: r => require.ensure([], () => r(require('../components/entry/register'))),
+  login: r => require.ensure([], () => r(require('../components/entry/login'))),
+  forgetPassword: r => require.ensure([], () => r(require('../components/entry/forgetPassword'))),
+  modifyPassword: r => require.ensure([], () => r(require('../components/entry/modifyPassword')))
 }
 const page = {
-  home: r => require.ensure([], () => r(require('../components/page/home')), 'otcMobile'),
-  error: r => require.ensure([], () => r(require('../components/page/error')), 'otcMobile'),
-  notFound: r => require.ensure([], () => r(require('../components/page/notFound')), 'otcMobile')
+  home: r => require.ensure([], () => r(require('../components/page/home'))),
+  error: r => require.ensure([], () => r(require('../components/page/error'))),
+  notFound: r => require.ensure([], () => r(require('../components/page/notFound')))
 }
 const trade = {
-  index: r => require.ensure([], () => r(require('../components/trade/index')), 'otcMobile'),
-  adList: r => require.ensure([], () => r(require('../components/trade/adList')), 'otcMobile'),
-  adDetail: r => require.ensure([], () => r(require('../components/trade/adDetail')), 'otcMobile'),
-  order: r => require.ensure([], () => r(require('../components/trade/order')), 'otcMobile')
+  index: r => require.ensure([], () => r(require('../components/trade/index'))),
+  adList: r => require.ensure([], () => r(require('../components/trade/adList'))),
+  adDetail: r => require.ensure([], () => r(require('../components/trade/adDetail'))),
+  order: r => require.ensure([], () => r(require('../components/trade/order')))
 }
 const me = {
-  userCenter: r => require.ensure([], () => r(require('../components/me/userCenter')), 'otcMobile'),
-  authEmail: r => require.ensure([], () => r(require('../components/me/authEmail')), 'otcMobile'),
-  about: r => require.ensure([], () => r(require('../components/me/about')), 'otcMobile'),
-  changeLanguage: r => require.ensure([], () => r(require('../components/me/changeLanguage')), 'otcMobile'),
-  settings: r => require.ensure([], () => r(require('../components/me/settings')), 'otcMobile'),
-  addCollection: r => require.ensure([], () => r(require('../components/me/addCollection')), 'otcMobile'),
-  addAlipay: r => require.ensure([], () => r(require('../components/me/addAlipay')), 'otcMobile'),
-  addBankcard: r => require.ensure([], () => r(require('../components/me/addBankcard')), 'otcMobile'),
-  collectionList: r => require.ensure([], () => r(require('../components/me/collectionList')), 'otcMobile'),
-  modifyPassword: r => require.ensure([], () => r(require('../components/me/modifyPassword')), 'otcMobile'),
+  userCenter: r => require.ensure([], () => r(require('../components/me/userCenter'))),
+  authEmail: r => require.ensure([], () => r(require('../components/me/authEmail'))),
+  about: r => require.ensure([], () => r(require('../components/me/about'))),
+  changeLanguage: r => require.ensure([], () => r(require('../components/me/changeLanguage'))),
+  settings: r => require.ensure([], () => r(require('../components/me/settings'))),
+  addCollection: r => require.ensure([], () => r(require('../components/me/addCollection'))),
+  addAlipay: r => require.ensure([], () => r(require('../components/me/addAlipay'))),
+  addBankcard: r => require.ensure([], () => r(require('../components/me/addBankcard'))),
+  collectionList: r => require.ensure([], () => r(require('../components/me/collectionList'))),
+  modifyPassword: r => require.ensure([], () => r(require('../components/me/modifyPassword'))),
+  authPhone: r => require.ensure([], () => r(require('../components/me/authPhone'))),
 }
 const routers = [
   {
@@ -123,6 +124,10 @@ const routers = [
   {
     path: '/me/modifyPassword',
     component: me.modifyPassword
+  },
+  {
+    path: '/me/authPhone',
+    component: me.authPhone
   },
   {
     path: '/entry',
