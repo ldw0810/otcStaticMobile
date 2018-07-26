@@ -213,6 +213,8 @@
     "auth_phone_add": "開啟手機驗證",
     "auth_phone_del": "停用手機驗證",
     "auth_phone_info": "提現，修改密碼，及安全設置時用以收取驗證短信修改",
+    "auth_phone_number": "手機號碼",
+    "auth_phone_number_required": "請輸入您的手機號碼",
     "auth_phone_code": "手機驗證碼",
     "auth_phone_code_required": "請輸入手機驗證碼",
     "auth_phone_code_send": "發送驗證碼",

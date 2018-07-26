@@ -213,6 +213,8 @@
     "auth_phone_add": "开启手机验证",
     "auth_phone_del": "停用手机验证",
     "auth_phone_info": "提现，修改密码，及安全设置时用以收取验证短信修改",
+    "auth_phone_number": "手机号码",
+    "auth_phone_number_required": "请输入您的手机号码",
     "auth_phone_code": "手机验证码",
     "auth_phone_code_required": "请输入手机验证码",
     "auth_phone_code_send": "发送验证码",

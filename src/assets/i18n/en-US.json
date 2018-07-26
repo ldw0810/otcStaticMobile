@@ -213,6 +213,8 @@
     "auth_phone_add": "Enable phone verification",
     "auth_phone_del": "Disable phone verification",
     "auth_phone_info": "Will be used for withdraw, login, reset password",
+    "auth_phone_number": "Phone number",
+    "auth_phone_number_required": "Please enter your phone number",
     "auth_phone_code": "Pincode",
     "auth_phone_code_required": "Enter pincode",
     "auth_phone_code_send": "Send pincode",

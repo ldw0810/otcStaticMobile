@@ -3,48 +3,48 @@
     mt-header(:title="userInfo.mobile ? $t('user.auth_phone_del') : $t('user.auth_phone_add')" fixed)
       router-link(to="/me/settings" slot="left")
         mt-button(icon="back")
-    .wrapper(v-if="userInfo.id && countryList.length")
+    .wrapper(v-if="userInfo.id")
       .content
-        mt-cell(:title="item.name" @click.native="changeLanguage(index)" is-link)
-        mt-field(type="tel" :label="$t('user.password_old')" :placeholder="$t('user.password_old_required')" v-model="form.oldPassword" :state="formState.oldPassword" @input="checkState('oldPassword')")
+        mt-cell(:title="country[0] + ' +' + country[2]" @click.native="showCountry" :is-link="!userInfo.mobile")
+        mt-field(type="tel" :label="$t('user.auth_phone_number')" :placeholder="$t('user.auth_phone_number_required')" v-model="form.phoneNumber" :state="formState.phoneNumber" @input="checkState('phoneNumber')")
       .submit(class="mintSubmit")
-        mt-button(@click="submit" :disabled="!formStateAll") {{$t('public.confirm')}}
-      mt-actionsheet(v-model="actionFlag" :actions="actionList")
+        mt-button(@click="submit" :disabled="!formStateAll") {{$t('user.auth_phone_code_send')}}
+    transition(name="slide-right" mode="out-in")
+      .popup(class="popup-right" v-if="popupFlag")
+        slot
+          SelectCountry(@close="popupFlag = false" @success="changeCountry")
 </template>
 <script type="es6">
-import {Header, Button, Field, Actionsheet} from 'mint-ui'
+import {Button, Cell, Field, Header} from 'mint-ui'
 import Vue from 'vue'
-import {VALI_PASSWORD_NUMBER} from '../../utils/validator'
+import SelectCountry from './selectCountry'
 
 Vue.component(Header.name, Header)
+Vue.component(Cell.name, Cell)
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
-Vue.component(Actionsheet.name, Actionsheet)
 
 export default {
-  name: 'modifyPassword',
+  name: 'authPhone',
+  components: {SelectCountry},
   data () {
     return {
+      country: ['China', 'CN', '86'],
       form: {
-        oldPassword: '',
-        newPassword: '',
-        rePassword: ''
+        phoneNumber: ''
       },
       formState: {
-        oldPassword: '',
-        newPassword: '',
-        rePassword: ''
+        phoneNumber: ''
       },
       formMessage: {
-        oldPassword: '',
-        newPassword: '',
-        rePassword: ''
-      }
+        phoneNumber: ''
+      },
+      popupFlag: false
     }
   },
   computed: {
-    countryList () {
-      return this.$store.state.countryList || []
+    userInfo () {
+      return this.$store.state.userInfo
     },
     formStateAll () {
       const tempStateList = Object.keys(this.formState)
@@ -72,80 +72,54 @@ export default {
       })
     },
     checkState (value) {
-      if (value === 'oldPassword') {
-        this.formState.oldPassword = this.form.oldPassword ? 'success' : ''
-      } else if (value === 'newPassword') {
-        if (this.form.rePassword) {
-          if (this.form.rePassword === this.form.newPassword) {
-            this.formState.rePassword = 'success'
-            this.formMessage.rePassword = ''
+      if (value === 'phoneNumber') {
+        if (this.form.phoneNumber) {
+          if (!/^[0-9]+.?[0-9]*$/.test(this.form.phoneNumber)) {
+            this.formState.phoneNumber = 'error'
+            this.formMessage.phoneNumber = this.$i18n.translate('validate.must_be_number')
           } else {
-            this.formState.rePassword = 'error'
-            this.formMessage.rePassword = this.$i18n.translate('user.password_different')
+            this.formState.phoneNumber = 'success'
+            this.formMessage.phoneNumber = ''
           }
         } else {
-          if (this.form.newPassword) {
-            if (this.form.newPassword.length > VALI_PASSWORD_NUMBER.max || this.form.newPassword.length < VALI_PASSWORD_NUMBER.min || !/[^\d].*[\d]|[\d].*[^\d]/.test(this.form.newPassword)) {
-              this.formState.newPassword = 'error'
-              this.formMessage.newPassword = VALI_PASSWORD_NUMBER.message
-            } else {
-              this.formState.newPassword = 'success'
-              this.formMessage.newPassword = ''
-            }
-          } else {
-            this.formState.newPassword = ''
-            this.formMessage.newPassword = ''
-          }
-        }
-      } else if (value === 'rePassword') {
-        if (this.form.rePassword) {
-          if (this.form.rePassword === this.form.newPassword) {
-            this.formState.rePassword = 'success'
-            this.formMessage.rePassword = ''
-          } else {
-            this.formState.rePassword = 'error'
-            this.formMessage.rePassword = this.$i18n.translate('user.password_different')
-          }
-        } else {
-          this.formState.rePassword = ''
-          this.formMessage.rePassword = ''
+          this.formState.phoneNumber = ''
+          this.formMessage.phoneNumber = ''
         }
       }
     },
-    getCountryList () {
-      if (!this.countryList.length) {
-        this.$store.dispatch('axios_national_list').then(res => {
-          if (res && +res.data.error === 0) {
-            this.countryList = res.data.country || []
-          }
-        }).catch(() => {
-          this.$message.error(this.$t('user.country_response_none'))
-        })
+    showCountry () {
+      if (!this.userInfo.mobile) {
+        this.popupFlag = true
       }
+    },
+    changeCountry (value) {
+      this.country = value
+    },
+    getMe () {
+      this.$store.dispatch('axios_me')
     },
     submit () {
       if (this.formMessageAll) {
         this.$message.error(this.formMessageAll)
       } else {
         this.$loading.open()
-        this.$store.dispatch('axios_update_password', {
-          old_password: this.form.oldPassword,
-          password: this.form.newPassword,
-          password_confirmation: this.form.rePassword
+        this.$store.dispatch('axios_sms_auth', {
+          commit: 'send_code',
+          country: this.country[1],
+          mobile: this.form.phoneNumber
         }).then(res => {
           this.$loading.close()
           if (res.data && +res.data.error === 0) {
-            this.$message.success(this.$t('user.password_modify_success'))
-            this.$router.push('/me/settings')
+            this.$router.push('/authPhoneCode')
           }
         }).catch(() => {
           this.$loading.close()
-          this.$message.error(this.$t('user.password_modify_fail'))
+          this.$message.error(this.$i18n.translate('user.auth_phone_code_send_fail'))
         })
       }
     },
     init () {
-      this.$loading.close()
+      this.getMe()
       this.checkAllState()
     }
   },
@@ -155,7 +129,7 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  .modifyPassword {
+  .authPhone {
     width 100vw
     height 100vh
     background #fafafa
@@ -168,5 +142,14 @@ export default {
 
   .submit {
     margin-top 2.5vh
+  }
+
+  .popup {
+    width 100%
+    height 100%
+    background #FFFFFF
+    overflow: scroll;
+    overflow-scrolling touch
+    -webkit-overflow-scrolling: touch;
   }
 </style>
