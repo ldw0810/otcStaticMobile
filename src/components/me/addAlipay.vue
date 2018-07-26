@@ -74,9 +74,11 @@ export default {
             this.formMessage.username = VALI_ALIPAY_NAME.message
           } else {
             this.formState.username = 'success'
+            this.formMessage.username = ''
           }
         } else {
           this.formState.username = ''
+          this.formMessage.username = ''
         }
       } else if (value === 'account') {
         if (this.form.reAccount) {
@@ -94,9 +96,11 @@ export default {
               this.formMessage.account = VALI_ALIPAY_ACCOUNT.message
             } else {
               this.formState.account = 'success'
+              this.formMessage.account = ''
             }
           } else {
             this.formState.account = ''
+            this.formMessage.account = ''
           }
         }
       } else if (value === 'reAccount') {
@@ -110,6 +114,7 @@ export default {
           }
         } else {
           this.formState.reAccount = ''
+          this.formMessage.reAccount = ''
         }
       }
     },

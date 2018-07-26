@@ -97,9 +97,11 @@ export default {
             this.formMessage.username = VALI_CARD_HOLDER.message
           } else {
             this.formState.username = 'success'
+            this.formMessage.username = ''
           }
         } else {
           this.formState.username = ''
+          this.formMessage.username = ''
         }
       } else if (value === 'bank') {
         this.formState.bank = this.form.bank ? 'success' : ''
@@ -119,9 +121,11 @@ export default {
               this.formMessage.account = VALI_CARD_NUMBER.message
             } else {
               this.formState.account = 'success'
+              this.formMessage.account = ''
             }
           } else {
             this.formState.account = ''
+            this.formMessage.account = ''
           }
         }
       } else if (value === 'reAccount') {
@@ -135,6 +139,7 @@ export default {
           }
         } else {
           this.formState.reAccount = ''
+          this.formMessage.reAccount = ''
         }
       }
     },

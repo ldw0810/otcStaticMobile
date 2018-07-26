@@ -32,6 +32,7 @@ const me = {
   addAlipay: r => require.ensure([], () => r(require('../components/me/addAlipay')), 'otcMobile'),
   addBankcard: r => require.ensure([], () => r(require('../components/me/addBankcard')), 'otcMobile'),
   collectionList: r => require.ensure([], () => r(require('../components/me/collectionList')), 'otcMobile'),
+  modifyPassword: r => require.ensure([], () => r(require('../components/me/modifyPassword')), 'otcMobile'),
 }
 const routers = [
   {
@@ -118,6 +119,10 @@ const routers = [
   {
     path: '/me/collectionList',
     component: me.collectionList
+  },
+  {
+    path: '/me/modifyPassword',
+    component: me.modifyPassword
   },
   {
     path: '/entry',

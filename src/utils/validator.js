@@ -36,6 +36,12 @@ export const VALI_CARD_NUMBER = {
   max: 19,
   message: language.validate.card_number_range
 }
+// 密码
+export const VALI_PASSWORD_NUMBER = {
+  min: 6,
+  max: 100,
+  message: language.validate.password_range
+}
 // 提现地址标签
 export const VALI_ADDRESS_LABEL = {
   min: 2,

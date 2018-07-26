@@ -678,6 +678,7 @@
     "alipay_account_range": "Must consists with 4-40 characters",
     "card_holder_range": "Must consists with 2-20 characters",
     "card_number_range": "Must consists with 16-19 numbers",
+    "password_range": "Password must consists with 6-100 letters and numbers",
     "address_label": "Must 2-16 characters",
     "max_length": "Must consists with 0 - {0} characters",
     "must_be_number": "Must be numbers"

@@ -40,6 +40,7 @@ import UserAgreement from '../policy/userAgreement'
 import Vue from 'vue'
 import {$getAxiosLanguage, $getNicknameByHash} from '../../utils'
 import '../../utils/gt'
+import {VALI_PASSWORD_NUMBER} from '../../utils/validator'
 
 Vue.component(Button.name, Button)
 Vue.component(Form.name, Form)
@@ -125,9 +126,9 @@ export default {
             message: this.$i18n.translate('user.password_required')
           },
           {
-            min: 6,
-            max: 100,
-            message: this.$i18n.translate('user.password_minLength')
+            min: VALI_PASSWORD_NUMBER.min,
+            max: VALI_PASSWORD_NUMBER.max,
+            message: this.$i18n.translate('validate.password_range')
           },
           {
             validator: validatePassword
