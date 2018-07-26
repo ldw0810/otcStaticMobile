@@ -1,7 +1,7 @@
 <template lang="pug">
   .addAlipay
     mt-header(:title="$t('user.alipay_add')" fixed)
-      router-link(:to="backLink" slot="left")
+      router-link(to="/me/addCollection" slot="left")
         mt-button(icon="back")
     .content
       mt-field(:label="$t('user.alipay_userName')" :placeholder="$t('user.alipay_userName_required')" v-model="form.username" :state="formState.username" @input="checkState('username')")
@@ -13,6 +13,7 @@
 <script type="es6">
 import {Button, Field, Header} from 'mint-ui'
 import Vue from 'vue'
+import {VALI_ALIPAY_NAME, VALI_ALIPAY_ACCOUNT} from '../../utils/validator'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
@@ -40,12 +41,6 @@ export default {
     }
   },
   computed: {
-    backLink () {
-      return this.isFromCollectionList ? '/me/collectionList' : '/me/addCollection'
-    },
-    isFromCollectionList () {
-      return this.$route.query.isFromCollectionList
-    },
     formStateAll () {
       const tempStateList = Object.keys(this.formState)
       for (let i = 0; i < tempStateList.length; i++) {
@@ -73,7 +68,16 @@ export default {
     },
     checkState (value) {
       if (value === 'username') {
-        this.formState.username = this.form.username ? 'success' : ''
+        if (this.form.username) {
+          if (this.form.username.length > VALI_ALIPAY_NAME.max || this.form.username.length < VALI_ALIPAY_NAME.min) {
+            this.formState.username = 'error'
+            this.formMessage.username = VALI_ALIPAY_NAME.message
+          } else {
+            this.formState.username = 'success'
+          }
+        } else {
+          this.formState.username = ''
+        }
       } else if (value === 'account') {
         if (this.form.reAccount) {
           if (this.form.reAccount === this.form.account) {
@@ -84,7 +88,16 @@ export default {
             this.formMessage.reAccount = this.$i18n.translate('user.alipay_account_different')
           }
         } else {
-          this.formState.account = this.form.account ? 'success' : ''
+          if (this.form.account) {
+            if (this.form.account.length > VALI_ALIPAY_ACCOUNT.max || this.form.account.length < VALI_ALIPAY_ACCOUNT.min) {
+              this.formState.account = 'error'
+              this.formMessage.account = VALI_ALIPAY_ACCOUNT.message
+            } else {
+              this.formState.account = 'success'
+            }
+          } else {
+            this.formState.account = ''
+          }
         }
       } else if (value === 'reAccount') {
         if (this.form.reAccount) {
@@ -112,7 +125,7 @@ export default {
           this.$loading.close()
           if (res.data && +res.data.error === 0) {
             this.$message.success(this.$i18n.translate('user.receivables_add_success'))
-            this.$router.push(this.backLink)
+            this.$router.push('/me/collectionList')
           }
         }).catch(() => {
           this.$loading.close()

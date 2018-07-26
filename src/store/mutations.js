@@ -40,11 +40,8 @@ export default {
   userInfo_notice_setter (state, value) {
     state.userInfo.notice = value
   },
-  collection_setter (state, value) {
-    state.collection = value
-  },
-  collection_close_poptip (state, value) {
-    state.collection[value].visible = false
+  collectionList_setter (state, value) {
+    state.collectionList = value
   },
   homeCarouselList_setter (state, value) {
     state.homeCarouselList = value

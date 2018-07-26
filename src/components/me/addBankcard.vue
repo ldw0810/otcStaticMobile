@@ -1,7 +1,7 @@
 <template lang="pug">
   .addBankcard
     mt-header(:title="$t('user.bankCard_add')" fixed)
-      router-link(:to="backLink" slot="left")
+      router-link(to="/me/addCollection" slot="left")
         mt-button(icon="back")
     .content
       mt-field(:label="$t('user.bankCard_userName')" :placeholder="$t('user.bankCard_userName_required')" v-model="form.username" :state="formState.username" @input="checkState('username')")
@@ -16,6 +16,9 @@
 <script type="es6">
 import {Button, Field, Header, Actionsheet} from 'mint-ui'
 import Vue from 'vue'
+import {VALI_CARD_HOLDER, VALI_CARD_NUMBER} from '../../utils/validator'
+
+const configure = require('../../../configure')
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
@@ -50,12 +53,6 @@ export default {
     }
   },
   computed: {
-    backLink () {
-      return this.isFromCollectionList ? '/me/collectionList' : '/me/addCollection'
-    },
-    isFromCollectionList () {
-      return this.$route.query.isFromCollectionList
-    },
     formStateAll () {
       const tempStateList = Object.keys(this.formState)
       for (let i = 0; i < tempStateList.length; i++) {
@@ -96,7 +93,16 @@ export default {
     },
     checkState (value) {
       if (value === 'username') {
-        this.formState.username = this.form.username ? 'success' : ''
+        if (this.form.username) {
+          if (this.form.username.length > VALI_CARD_HOLDER.max || this.form.username.length < VALI_CARD_HOLDER.min) {
+            this.formState.username = 'error'
+            this.formMessage.username = VALI_CARD_HOLDER.message
+          } else {
+            this.formState.username = 'success'
+          }
+        } else {
+          this.formState.username = ''
+        }
       } else if (value === 'bank') {
         this.formState.bank = this.form.bank ? 'success' : ''
       } else if (value === 'account') {
@@ -109,7 +115,16 @@ export default {
             this.formMessage.reAccount = this.$i18n.translate('user.bankCard_number_different')
           }
         } else {
-          this.formState.account = this.form.account ? 'success' : ''
+          if (this.form.account) {
+            if (this.form.account.length > VALI_CARD_NUMBER.max || this.form.account.length < VALI_CARD_NUMBER.min) {
+              this.formState.account = 'error'
+              this.formMessage.account = VALI_CARD_NUMBER.message
+            } else {
+              this.formState.account = 'success'
+            }
+          } else {
+            this.formState.account = ''
+          }
         }
       } else if (value === 'reAccount') {
         if (this.form.reAccount) {
@@ -138,7 +153,7 @@ export default {
           this.$loading.close()
           if (res.data && +res.data.error === 0) {
             this.$message.success(this.$i18n.translate('user.receivables_add_success'))
-            this.$router.push(this.backLink)
+            this.$router.push('/me/collectionList')
           }
         }).catch(() => {
           this.$loading.close()
