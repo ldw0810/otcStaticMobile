@@ -29,6 +29,9 @@ const trade = {
   adDetail: r => require.ensure([], () => r(require('../components/trade/adDetail'))),
   order: r => require.ensure([], () => r(require('../components/trade/order')))
 }
+const asset = {
+  index: r => require.ensure([], () => r(require('../components/asset/index'))),
+}
 const me = {
   userCenter: r => require.ensure([], () => r(require('../components/me/userCenter'))),
   authEmail: r => require.ensure([], () => r(require('../components/me/authEmail'))),
@@ -85,6 +88,13 @@ const routers = [
             }
           }
         ]
+      },
+      {
+        path: 'asset',
+        meta: {
+          tabbarIndex: 1
+        },
+        component: asset.index
       },
       {
         path: 'me',

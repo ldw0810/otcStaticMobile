@@ -22,7 +22,7 @@
         .content(v-html='$t("public.invite_rules_content")')
     .popupBg(v-if="popImageFlag" @click="popImageFlag = false")
     transition(name="fade" mode="out-in")
-      .popup
+      .popup(v-if="popImageFlag")
         QrCode(v-if="qrCodeFlag" ref="qrCode" class="pop-qrCode" :value='qrCodeConfig.value' :size='qrCodeConfig.size')
         .img(ref="popImage")
         .footer
@@ -31,13 +31,18 @@
 <script type="es6">
 import {$getLanguage} from '../../utils'
 import QrCode from 'qrcode.vue'
+import {Button} from 'mint-ui'
+import Vue from 'vue'
+
+Vue.component(Button.name, Button)
 
 const configure = require('../../../configure')
-
-const domain = `${configure.ZENDESK_DOMAIN_URL}/hc/${(window.localStorage.getItem('language') || 'zh-TW').replace('HK', 'TW').toLowerCase()}`
+const language = $getLanguage()
+const domain = `${configure.ZENDESK_DOMAIN_URL}/hc/${(language.replace('HK', 'TW').toLowerCase())}`
+const CONF_INVITE_IMAGE = require(`../../assets/images/me/invite_${language.toLowerCase()}.jpg`)
 
 export default {
-  name: '',
+  name: 'invite',
   components: {
     QrCode
   },
@@ -60,11 +65,15 @@ export default {
       return this.$t('public.invite_content') + '\n' + this.linkUrl
     },
     linkUrl () {
-      return window.location.href.replace('invite', 'user/register?invitationCode=' + this.$store.state.userInfo.invite)
+      if (location.href.indexOf('/me/invite') > -1) {
+        return location.href.split('/me/invite')[0] + '/register?inviteCode=' + this.$store.state.userInfo.invite
+      } else {
+        return location.href.split('/invite')[0] + '/register?inviteCode=' + this.$store.state.userInfo.invite
+      }
     },
     qrCodeConfig () {
       return {
-        value: window.location.href.replace('invite', 'user/register?invitationCode=' + this.$store.state.userInfo.invite),
+        value: this.linkUrl,
         imagePath: require('../../assets/images/me/QC-Code-BG.png'),
         filter: 'canvas',
         size: 245
@@ -81,22 +90,10 @@ export default {
       this.$message.success(this.$t('public.invite_copy_success'))
     },
     getInviteDetail () {
-      this.$store.dispatch('ajax_invited_detail').then(res => {
+      this.$store.dispatch('axios_invited_detail').then(res => {
         if (res.data && +res.data.error === 0) {
           this.inviteAmount = +res.data.amount || 0
           this.inviteCount = +res.data.count || 0
-        } else {
-        }
-      }).catch(() => {
-      })
-    },
-    getInvitedActivity () {
-      this.$store.dispatch('ajax_invited_activity').then(res => {
-        if (res.data && +res.data.error === 0) {
-          for (let i = 0; i < this.inviteTopArray.length; i++) {
-            this.$set(this.inviteTopArray, i, Object.assign(this.inviteTopArray[i], res.data.list[i]))
-          }
-        } else {
         }
       }).catch(() => {
       })
@@ -115,17 +112,17 @@ export default {
     },
     goArticle () {
       if (this.$store.state.userToken) {
-        this.$store.dispatch('ajax_zendesk').then(res => {
+        this.$store.dispatch('axios_zendesk').then(res => {
           if (res.data && +res.data.error === 0) {
-            window.location.href = `${configure.ZENDESK_DOMAIN_URL}/access/jwt?jwt=${res.data.token}&return_to=${encodeURI(this.articlesLink)}`
+            location.href = `${configure.ZENDESK_DOMAIN_URL}/access/jwt?jwt=${res.data.token}&return_to=${encodeURI(this.articlesLink)}`
           } else {
-            window.location.href = `${domain}/categories/360001929553`
+            location.href = `${domain}/categories/360001929553`
           }
         }).catch(() => {
-          window.location.href = `${domain}/categories/360001929553`
+          location.href = `${domain}/categories/360001929553`
         })
       } else {
-        window.location.href = this.articlesLink
+        location.href = this.articlesLink
       }
     },
     showImage () {
@@ -133,7 +130,7 @@ export default {
     },
     goBanner (url) {
       if (url && url.length) {
-        window.location.href = url
+        location.href = url
       }
     },
     convertCanvasToImage (canvas) {
