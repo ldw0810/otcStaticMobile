@@ -40,12 +40,24 @@ export default {
   data () {
     return {
       tabbarIndex: this.$route.meta.tabbarIndex || 0
+
+    }
+  },
+  watch: {
+    $route: function () {
+      this.init()
     }
   },
   methods: {
     goTrade () {
       this.$router.push(this.$store.state.tradePath)
+    },
+    init () {
+      this.tabbarIndex = this.$route.meta.tabbarIndex || 0
     }
+  },
+  mounted () {
+    this.init()
   }
 }
 </script>

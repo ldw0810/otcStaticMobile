@@ -149,6 +149,7 @@ export default {
       })
     },
     init () {
+      this.navbarIndex = this.$route.meta.navbarIndex || 0
       this.$store.commit('tradePath_setter', this.$route.fullPath)
       this.getCurrencyCode()
       this.getTradePrice()
