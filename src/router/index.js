@@ -2,8 +2,15 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import {Indicator} from 'mint-ui'
 import store from '../store'
+import languageData from '../locale'
+import {$getLanguage, $title} from '../utils'
+
+const language = languageData.find(
+  item => item.language === $getLanguage()
+).data
 
 Vue.use(VueRouter)
+
 const entry = {
   index: r => require.ensure([], () => r(require('../components/entry/index'))),
   register: r => require.ensure([], () => r(require('../components/entry/register'))),
@@ -167,10 +174,16 @@ const routers = [
   },
   {
     path: '/error',
+    meta: {
+      error: 2
+    },
     component: page.error
   },
   {
     path: '*',
+    meta: {
+      error: 1
+    },
     component: page.notFound
   }
 ]
@@ -183,6 +196,16 @@ router.beforeEach((to, from, next) => {
     text: '',
     spinnerType: 'snake'
   })
+  // 页面标题
+  if (to.meta.error !== from.meta.error) {
+    if (to.meta.error === 1) {
+      $title(language.public.not_found)
+    } else if (to.meta.error === 2) {
+      $title(language.public.server_maintenance)
+    } else {
+      $title()
+    }
+  }
   if (to.meta.needLogin && !store.state.userToken) { // 用户界面都需要登录
     next({
       path: '/login'

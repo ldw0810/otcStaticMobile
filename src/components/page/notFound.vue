@@ -6,13 +6,11 @@
         .btn(@click="$router.push('/')") {{$t('public.return_home')}}
 </template>
 <script type="es6">
-import {$title} from '../../utils'
 
 export default {
   name: 'notFound',
   created () {
     this.$loading.close()
-    $title(this.$t('public.not_found'))
   }
 }
 </script>
