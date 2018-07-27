@@ -48,11 +48,11 @@ export default {
         pinCode: [
           {
             required: true,
-            message: this.$i18n.translate('user.auth_google_code_required')
+            message: this.$t('user.auth_google_code_required')
           },
           {
             type: 'number',
-            message: this.$i18n.translate('validate.must_be_number')
+            message: this.$t('validate.must_be_number')
           }
         ]
       }
@@ -91,7 +91,7 @@ export default {
               this.$emit('close', 1)
             }
           }).catch(() => {
-            this.$message.error(this.$i18n.translate('public.url_request_fail'))
+            this.$message.error(this.$t('public.url_request_fail'))
           })
         } else {
           for (let i = 0; i < Object.keys(this.form).length; i++) {

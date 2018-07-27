@@ -62,20 +62,20 @@ export default {
             callback()
           } else {
             this.emailRepeatList.push(value)
-            callback(new Error(this.$i18n.translate('user.email_repeat')))
+            callback(new Error(this.$t('user.email_repeat')))
           }
         } else {
           this.emailRepeatList.push(value)
-          callback(new Error(this.$i18n.translate('user.email_repeat')))
+          callback(new Error(this.$t('user.email_repeat')))
         }
       }).catch(() => {
-        callback(new Error(this.$i18n.translate('public.url_request_fail')))
+        callback(new Error(this.$t('public.url_request_fail')))
       })
     }
     const validateEmailRepeat = (rule, value, callback) => {
       if (this.emailRepeatList && this.emailRepeatList.length) {
         if (this.emailRepeatList.indexOf(value) > -1) {
-          callback(new Error(this.$i18n.translate('user.email_repeat')))
+          callback(new Error(this.$t('user.email_repeat')))
         }
       } else {
         callback()
@@ -83,14 +83,14 @@ export default {
     }
     const validatePassword = (rule, value, callback) => {
       if (!/[^\d].*[\d]|[\d].*[^\d]/.test(value)) {
-        callback(new Error(this.$i18n.translate('user.password_minLength')))
+        callback(new Error(this.$t('user.password_minLength')))
       } else {
         callback()
       }
     }
     const validateInviteCode = (rule, value, callback) => {
       if (!/^[0-9a-zA-Z]*$/g.test(value)) {
-        callback(new Error(this.$i18n.translate('user.invitationCode_notValid')))
+        callback(new Error(this.$t('user.invitationCode_notValid')))
       } else {
         callback()
       }
@@ -106,11 +106,11 @@ export default {
         email: [
           {
             required: true,
-            message: this.$i18n.translate('user.email_required')
+            message: this.$t('user.email_required')
           },
           {
             type: 'email',
-            message: this.$i18n.translate('user.email_notValid')
+            message: this.$t('user.email_notValid')
           },
           {
             validator: validateEmailRepeat
@@ -123,12 +123,12 @@ export default {
         password: [
           {
             required: true,
-            message: this.$i18n.translate('user.password_required')
+            message: this.$t('user.password_required')
           },
           {
             min: VALI_PASSWORD_NUMBER.min,
             max: VALI_PASSWORD_NUMBER.max,
-            message: this.$i18n.translate('validate.password_range')
+            message: this.$t('validate.password_range')
           },
           {
             validator: validatePassword
@@ -219,21 +219,21 @@ export default {
                 check_captcha: 1
               }).then(result => {
                 if (result.data && +result.data.error === 0) {
-                  this.$message.success(this.$i18n.translate('user.register_success'))
+                  this.$message.success(this.$t('user.register_success'))
                   this.$router.push('/login')
                 }
               }).catch(() => {
-                this.$message.error(this.$i18n.translate('public.url_request_fail'))
+                this.$message.error(this.$t('public.url_request_fail'))
               })
             })
           })
         } else {
           this.captchaStatus = 'error'
-          this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
+          this.$message.error(this.$t('user.captcha_request_fail'))
         }
       }).catch(() => {
         this.captchaStatus = 'error'
-        this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
+        this.$message.error(this.$t('user.captcha_request_fail'))
       })
     },
     init () {

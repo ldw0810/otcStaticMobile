@@ -60,22 +60,22 @@ export default {
         email: [
           {
             required: true,
-            message: this.$i18n.translate('user.email_required')
+            message: this.$t('user.email_required')
           },
           {
             type: 'email',
-            message: this.$i18n.translate('user.email_notValid')
+            message: this.$t('user.email_notValid')
           }
         ],
         password: [
           {
             required: true,
-            message: this.$i18n.translate('user.password_required')
+            message: this.$t('user.password_required')
           },
           {
             min: VALI_PASSWORD_NUMBER.min,
             max: VALI_PASSWORD_NUMBER.max,
-            message: this.$i18n.translate('validate.password_range')
+            message: this.$t('validate.password_range')
           },
         ]
       },
@@ -126,11 +126,11 @@ export default {
           ln: $getAxiosLanguage()
         })]).then(axios.spread((resMe, resLan) => {
         if (resMe.data && +resMe.data.error === 0 && resLan.data && +resLan.data.error === 0) {
-          this.$message.success(this.$i18n.translate('user.login_success'))
+          this.$message.success(this.$t('user.login_success'))
           this.$router.push(this.$route.query.redirect || '/buy')
         }
       })).catch(() => {
-        this.$message.error(this.$i18n.translate('public.url_request_fail'))
+        this.$message.error(this.$t('public.url_request_fail'))
       })
     },
     initCaptcha () {
@@ -182,17 +182,17 @@ export default {
                   }
                 }
               }).catch(() => {
-                this.$message.error(this.$i18n.translate('public.url_request_fail'))
+                this.$message.error(this.$t('public.url_request_fail'))
               })
             })
           })
         } else {
           this.captchaStatus = 'error'
-          this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
+          this.$message.error(this.$t('user.captcha_request_fail'))
         }
       }).catch(() => {
         this.captchaStatus = 'error'
-        this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
+        this.$message.error(this.$t('user.captcha_request_fail'))
       })
     },
     init () {

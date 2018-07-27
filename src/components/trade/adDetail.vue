@@ -67,13 +67,13 @@ export default {
   data () {
     // const validateNumberLimitCheck = (rule, value, callback) => {
     //   if (+this.ad.min_limit > +this.ad.order_limit) {
-    //     callback(new Error(this.$i18n.translate('ad.ad_ceiling_number_notValid')))
+    //     callback(new Error(this.$t('ad.ad_ceiling_number_notValid')))
     //   } else if (+value < this.ad.min_limit) {
-    //     callback(new Error(this.$i18n.translate('ad.ad_min_number_required', {
+    //     callback(new Error(this.$t('ad.ad_min_number_required', {
     //       '0': this.ad.min_limit
     //     })))
     //   } else if (+value > this.ad.order_limit) {
-    //     callback(new Error(this.$i18n.translate('ad.ad_ceiling_limit', {
+    //     callback(new Error(this.$t('ad.ad_ceiling_limit', {
     //       '0': this.ad.order_limit
     //     })))
     //   } else {
@@ -173,17 +173,17 @@ export default {
         if (res.data && +res.data.error === 0) {
           this.ad = res.data.info
           if (this.ad.member.id === this.userInfo.id) {
-            this.$message.error(this.$i18n.translate('order.order_join_own_otc_ad'))
+            this.$message.error(this.$t('order.order_join_own_otc_ad'))
             this.$router.push(this.backLink)
           } else if (res.data.info.status === 'closed') {
-            this.$message.error(this.$i18n.translate('order.order_closed'))
+            this.$message.error(this.$t('order.order_closed'))
             this.$router.push(this.backLink)
           }
         } else if (+res.data.error === 100021) {
           this.$router.push(this.backLink)
         }
       }).catch(() => {
-        this.$message.error(this.$i18n.translate('public.url_request_fail'))
+        this.$message.error(this.$t('public.url_request_fail'))
       })
     },
     submit (id) {

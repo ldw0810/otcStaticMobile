@@ -45,15 +45,15 @@ export default {
     return {
       navList: [
         {
-          name: this.$i18n.translate('public.buy'),
+          name: this.$t('public.buy'),
           path: '/buy'
         },
         {
-          name: this.$i18n.translate('public.sell'),
+          name: this.$t('public.sell'),
           path: '/sell'
         },
         {
-          name: this.$i18n.translate('public.order'),
+          name: this.$t('public.order'),
           path: '/order'
         }
       ],
@@ -132,10 +132,10 @@ export default {
           this.tradePrice = res.data.price || 0
           this.tradeFee = res.data.otc_fee || 0
         } else {
-          this.$message.error(this.$i18n.translate('ad.ad_reference_price_request_fail'))
+          this.$message.error(this.$t('ad.ad_reference_price_request_fail'))
         }
       }).catch(() => {
-        this.$message.error(this.$i18n.translate('ad.ad_reference_price_request_fail'))
+        this.$message.error(this.$t('ad.ad_reference_price_request_fail'))
       })
       this.tradePriceTimer && clearTimeout(this.tradePriceTimer)
       this.tradePriceTimer = setTimeout(this.getTradePrice, 1000 * 60 * 10)

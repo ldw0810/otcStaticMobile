@@ -53,15 +53,15 @@ export default {
         }).then((res) => {
           this.$loading.close()
           if (res.data && +res.data.error === 0) {
-            this.$message.success(this.$i18n.translate('user.auth_email_send_success'))
+            this.$message.success(this.$t('user.auth_email_send_success'))
             this.remainTime = +res.data.remain || 120
           } else {
-            this.$message.error(this.$i18n.translate('user.auth_email_send_fail'))
+            this.$message.error(this.$t('user.auth_email_send_fail'))
           }
           resolve()
         }).catch(() => {
           this.$loading.close()
-          this.$message.error(this.$i18n.translate('user.auth_email_send_fail'))
+          this.$message.error(this.$t('user.auth_email_send_fail'))
           resolve()
         })
       })

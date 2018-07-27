@@ -105,12 +105,12 @@ export default {
           }).then(res => {
             this.$loading.close()
             if (res.data && +res.data.error === 0) {
-              this.$message.success(this.$i18n.translate('user.auth_phone_bind_success'))
+              this.$message.success(this.$t('user.auth_phone_bind_success'))
               this.$router.push('/me/settings')
             }
           }).catch(() => {
             this.$loading.close()
-            this.$message.success(this.$i18n.translate('user.auth_phone_bind_fail'))
+            this.$message.success(this.$t('user.auth_phone_bind_fail'))
           })
         }
       }

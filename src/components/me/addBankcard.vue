@@ -113,7 +113,7 @@ export default {
             this.formMessage.reAccount = ''
           } else {
             this.formState.reAccount = 'error'
-            this.formMessage.reAccount = this.$i18n.translate('user.bankCard_number_different')
+            this.formMessage.reAccount = this.$t('user.bankCard_number_different')
           }
         } else {
           if (this.form.account) {
@@ -136,7 +136,7 @@ export default {
             this.formMessage.reAccount = ''
           } else {
             this.formState.reAccount = 'error'
-            this.formMessage.reAccount = this.$i18n.translate('user.bankCard_number_different')
+            this.formMessage.reAccount = this.$t('user.bankCard_number_different')
           }
         } else {
           this.formState.reAccount = ''
@@ -156,12 +156,12 @@ export default {
         }).then(res => {
           this.$loading.close()
           if (res.data && +res.data.error === 0) {
-            this.$message.success(this.$i18n.translate('user.receivables_add_success'))
+            this.$message.success(this.$t('user.receivables_add_success'))
             this.$router.push('/me/collectionList')
           }
         }).catch(() => {
           this.$loading.close()
-          this.$message.error(this.$i18n.translate('user.receivables_add_fail'))
+          this.$message.error(this.$t('user.receivables_add_fail'))
         })
       }
     },

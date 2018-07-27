@@ -28,7 +28,7 @@ export default {
   data () {
     const validatePassword = (rule, value, callback) => {
       if (!/[^\d].*[\d]|[\d].*[^\d]/.test(value)) {
-        callback(new Error(this.$i18n.translate('user.password_minLength')))
+        callback(new Error(this.$t('user.password_minLength')))
       } else {
         callback()
       }
@@ -49,12 +49,12 @@ export default {
         password: [
           {
             required: true,
-            message: this.$i18n.translate('user.password_required')
+            message: this.$t('user.password_required')
           },
           {
             min: VALI_PASSWORD_NUMBER.min,
             max: VALI_PASSWORD_NUMBER.max,
-            message: this.$i18n.translate('validate.password_range')
+            message: this.$t('validate.password_range')
           },
           {
             validator: validatePassword
@@ -63,7 +63,7 @@ export default {
         rePassword: [
           {
             required: true,
-            message: this.$i18n.translate('user.rePassword_required')
+            message: this.$t('user.rePassword_required')
           },
           {
             validator: validateRePassword
@@ -89,7 +89,7 @@ export default {
           }).then(res => {
             this.loading = false
             if (res.data && +res.data.error === 0) {
-              this.$message.success(this.$i18n.translate('user.password_modify_success'))
+              this.$message.success(this.$t('user.password_modify_success'))
               this.router.push('/login')
             }
           })

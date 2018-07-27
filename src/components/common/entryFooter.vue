@@ -28,15 +28,15 @@ export default {
   computed: {
     footerList () {
       return [{
-        name: this.$i18n.translate('public.about'),
+        name: this.$t('public.about'),
         url: `${domain}/articles/360001934074`
       },
       {
-        name: this.$i18n.translate('public.explain'),
+        name: this.$t('public.explain'),
         url: `${domain}/articles/360001929453`
       },
       {
-        name: this.$i18n.translate('public.helpCenter'),
+        name: this.$t('public.helpCenter'),
         url: `${domain}/categories/360000187674`
       }]
     },

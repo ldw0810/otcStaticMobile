@@ -1,12 +1,12 @@
 <template lang="pug">
   .authGoogle
-    mt-header(:title="userInfo.mobile ? $t('user.auth_phone_del') : $t('user.auth_phone_add')" fixed)
-      router-link(to="/me/settings" slot="left")
+    mt-header(:title="userInfo.app_two_factor ? $t('user.auth_google_del') : $t('user.auth_google_add')" fixed)
+      router-link(:to="userInfo.app_two_factor ? '/me/settings' : '/me/addGoogle'" slot="left")
         mt-button(icon="back")
     .wrapper(v-if="userInfo.id")
       .content
-        mt-field(type="tel" :label="$t('user.auth_phone_number')" :placeholder="$t('user.auth_phone_number_required')" v-model="form.phoneNumber" :state="formState.phoneNumber" :disabled="userInfo.mobile" @input="checkState('phoneNumber')")
-        mt-field(type="tel" :label="$t('user.auth_phone_number')" :placeholder="$t('user.auth_phone_number_required')" v-model="form.phoneNumber" :state="formState.phoneNumber" :disabled="userInfo.mobile" @input="checkState('phoneNumber')")
+        mt-field(type="password" :label="$t('user.password')" :placeholder="$t('user.password_required')" v-model="form.password" :state="formState.password" @input="checkState('password')")
+        mt-field(type="text" :label="$t('user.auth_google_code')" :placeholder="$t('user.auth_google_code_required')" v-model="form.googleCode" :state="formState.googleCode" @input="checkState('googleCode')")
       .submit(class="mintSubmit")
         mt-button(@click="submit" :disabled="!formStateAll") {{$t('public.confirm')}}
 </template>
@@ -16,6 +16,7 @@ import Vue from 'vue'
 
 Vue.component(Header.name, Header)
 Vue.component(Cell.name, Cell)
+
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
 
@@ -24,26 +25,16 @@ export default {
   data () {
     return {
       form: {
-        phoneNumber: this.$store.state.userInfo.phone_number || ''
+        password: '',
+        googleCode: ''
       },
       formState: {
-        phoneNumber: ''
+        password: '',
+        googleCode: ''
       },
       formMessage: {
-        phoneNumber: ''
-      },
-      countryFlag: false,
-      authGoogleCodeFlag: false
-    }
-  },
-  watch: {
-    'userInfo.mobile' (value) {
-      if (value) {
-        this.form.phoneNumber = this.userInfo.phone_number
-        this.formState.phoneNumber = 'success'
-        this.formMessage.phoneNumber = ''
-      } else {
-        this.form.phoneNumber = ''
+        password: '',
+        googleCode: ''
       }
     }
   },
@@ -77,28 +68,13 @@ export default {
       })
     },
     checkState (value) {
-      if (value === 'phoneNumber') {
-        if (this.userInfo.mobile) {
-          this.formState.phoneNumber = this.form.phoneNumber ? 'success' : ''
-          this.formMessage.phoneNumber = ''
-        } else {
-          if (this.form.phoneNumber) {
-            if (!/^[0-9]+.?[0-9]*$/.test(this.form.phoneNumber)) {
-              this.formState.phoneNumber = 'error'
-              this.formMessage.phoneNumber = this.$i18n.translate('validate.must_be_number')
-            } else {
-              this.formState.phoneNumber = 'success'
-              this.formMessage.phoneNumber = ''
-            }
-          } else {
-            this.formState.phoneNumber = ''
-            this.formMessage.phoneNumber = ''
-          }
-        }
+      if (value === 'password') {
+        this.formState.password = this.form.password ? 'success' : ''
+        this.formMessage.password = ''
+      } else if (value === 'googleCode') {
+        this.formState.googleCode = this.form.googleCode ? 'success' : ''
+        this.formMessage.googleCode = ''
       }
-    },
-    changeCountry (value) {
-      this.country = value
     },
     getMe () {
       this.$store.dispatch('axios_me')
@@ -108,29 +84,30 @@ export default {
         this.$message.error(this.formMessageAll)
       } else {
         this.$loading.open()
-        if (!this.userInfo.mobile) {
-          this.$store.dispatch('axios_sms_auth', {
-            commit: 'send_code',
-            country: this.country[1],
-            mobile: this.form.phoneNumber
+        if (this.app_two_factor) {
+          this.$store.dispatch('axios_unbind_google', {
+            password: this.form.password,
+            code: this.form.googleCode
           }).then(res => {
-            this.$loading.close()
             if (res.data && +res.data.error === 0) {
-              this.authGoogleCodeFlag = true
+              this.$message.success(this.$t('user.auth_google_del_success'))
+              this.$router.push('/me/settings')
             }
           }).catch(() => {
-            this.$loading.close()
-            this.$message.error(this.$i18n.translate('user.auth_phone_code_send_fail'))
+            this.$message.error(this.$t('user.auth_google_del_fail'))
           })
         } else {
-          this.$store.dispatch('axios_refresh', {
-            refresh: 1
+          this.$store.dispatch('axios_bind_google', {
+            otp_secret: this.$store.state.googleKey,
+            password: this.form.password,
+            code: this.form.googleCode
           }).then(res => {
             if (res.data && +res.data.error === 0) {
-              this.authGoogleCodeFlag = true
+              this.$message.success(this.$t('user.auth_google_add_success'))
+              this.$router.push('/me/settings')
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_phone_code_send_fail'))
+            this.$message.error(this.$t('user.auth_google_add_fail'))
           })
         }
       }

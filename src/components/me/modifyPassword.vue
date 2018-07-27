@@ -76,7 +76,7 @@ export default {
             this.formMessage.rePassword = ''
           } else {
             this.formState.rePassword = 'error'
-            this.formMessage.rePassword = this.$i18n.translate('user.password_different')
+            this.formMessage.rePassword = this.$t('user.password_different')
           }
         } else {
           if (this.form.newPassword) {
@@ -99,7 +99,7 @@ export default {
             this.formMessage.rePassword = ''
           } else {
             this.formState.rePassword = 'error'
-            this.formMessage.rePassword = this.$i18n.translate('user.password_different')
+            this.formMessage.rePassword = this.$t('user.password_different')
           }
         } else {
           this.formState.rePassword = ''

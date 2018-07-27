@@ -47,7 +47,7 @@ export default {
       }
       selection.addRange(range)
       document.execCommand('copy')
-      this.$message.success(this.$i18n.translate('public.invite_copy_success'))
+      this.$message.success(this.$t('public.invite_copy_success'))
     },
     submit () {
       this.$router.push('/me/authGoogle')
@@ -63,7 +63,7 @@ export default {
           this.$router.push('/me/settings')
         }
       }).catch(() => {
-        this.$message.error(this.$i18n.translate('user.auth_google_request_fail'))
+        this.$message.error(this.$t('user.auth_google_request_fail'))
       })
     },
     init () {

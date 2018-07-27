@@ -42,10 +42,10 @@ export default {
   methods: {
     getCellSwipeRight (index) {
       return [{
-        content: this.$i18n.translate('public.delete'),
+        content: this.$t('public.delete'),
         style: {background: 'red', color: '#fff'},
         handler: () => {
-          MessageBox.confirm(this.$i18n.translate('public.confirm_delete')).then(() => {
+          MessageBox.confirm(this.$t('public.confirm_delete')).then(() => {
             this.delCollection(index)
           })
         }
@@ -58,7 +58,7 @@ export default {
       }).then(res => {
         this.$loading.close()
         if (res.data && +res.data.error === 0) {
-          this.$message.success(this.$i18n.translate('user.receivables_del_success'))
+          this.$message.success(this.$t('user.receivables_del_success'))
           let list = this.collectionList
           list.splice(index, 1)
           this.getDefaultCollectionIndex()
@@ -66,7 +66,7 @@ export default {
         }
       }).catch(() => {
         this.$loading.close()
-        this.$message.error(this.$i18n.translate('user.receivables_del_fail'))
+        this.$message.error(this.$t('user.receivables_del_fail'))
       })
     },
     setDefaultCollection (index) {
@@ -94,7 +94,7 @@ export default {
         }).catch(() => {
           this.defaultCollectionIndex = oldIndex
           this.$loading.close()
-          this.$message.error(this.$i18n.translate('user.receivables_set_default_fail'))
+          this.$message.error(this.$t('user.receivables_set_default_fail'))
         })
       }
     },
@@ -110,7 +110,7 @@ export default {
           this.getDefaultCollectionIndex()
         }
       }).catch(() => {
-        this.$message.error(this.$i18n.translate('user.receivables_request_fail'))
+        this.$message.error(this.$t('user.receivables_request_fail'))
       })
     },
     submit () {

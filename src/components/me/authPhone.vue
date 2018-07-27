@@ -96,7 +96,7 @@ export default {
           if (this.form.phoneNumber) {
             if (!/^[0-9]+.?[0-9]*$/.test(this.form.phoneNumber)) {
               this.formState.phoneNumber = 'error'
-              this.formMessage.phoneNumber = this.$i18n.translate('validate.must_be_number')
+              this.formMessage.phoneNumber = this.$t('validate.must_be_number')
             } else {
               this.formState.phoneNumber = 'success'
               this.formMessage.phoneNumber = ''
@@ -131,7 +131,7 @@ export default {
             }
           }).catch(() => {
             this.$loading.close()
-            this.$message.error(this.$i18n.translate('user.auth_phone_code_send_fail'))
+            this.$message.error(this.$t('user.auth_phone_code_send_fail'))
           })
         } else {
           this.$store.dispatch('axios_refresh', {

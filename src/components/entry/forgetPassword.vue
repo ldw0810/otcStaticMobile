@@ -33,7 +33,7 @@ export default {
     const validateEmailNotValid = (rule, value, callback) => {
       if (this.emailNotValidList && this.emailNotValidList.length) {
         if (this.emailNotValidList.indexOf(value) > -1) {
-          callback(new Error(this.$i18n.translate('request.100040')))
+          callback(new Error(this.$t('request.100040')))
         }
       } else {
         callback()
@@ -47,11 +47,11 @@ export default {
         email: [
           {
             required: true,
-            message: this.$i18n.translate('user.email_required')
+            message: this.$t('user.email_required')
           },
           {
             type: 'email',
-            message: this.$i18n.translate('user.email_notValid')
+            message: this.$t('user.email_notValid')
           },
           {
             validator: validateEmailNotValid
@@ -116,22 +116,22 @@ export default {
                 check_captcha: 1
               }).then(result => {
                 if (result.data && +result.data.error === 0) {
-                  this.$message.success(this.$i18n.translate('user.auth_email_send_success'))
+                  this.$message.success(this.$t('user.auth_email_send_success'))
                 } else if (result.data && +result.data.error === 100040) {
                   this.emailNotValidList.push(this.form.email)
                 }
               }).catch(() => {
-                this.$message.error(this.$i18n.translate('public.url_request_fail'))
+                this.$message.error(this.$t('public.url_request_fail'))
               })
             })
           })
         } else {
           this.captchaStatus = 'error'
-          this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
+          this.$message.error(this.$t('user.captcha_request_fail'))
         }
       }).catch(() => {
         this.captchaStatus = 'error'
-        this.$message.error(this.$i18n.translate('user.captcha_request_fail'))
+        this.$message.error(this.$t('user.captcha_request_fail'))
       })
     },
     init () {

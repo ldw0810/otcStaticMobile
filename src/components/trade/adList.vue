@@ -70,11 +70,11 @@ export default {
     },
     emptyMessage () {
       if (+this.adType === 0) {
-        return this.$i18n.translate('public.no_buy_ad', {
+        return this.$t('public.no_buy_ad', {
           '0': this.currency.toUpperCase()
         })
       } else if (+this.adType === 1) {
-        return this.$i18n.translate('public.no_sell_ad', {
+        return this.$t('public.no_sell_ad', {
           '0': this.currency.toUpperCase()
         })
       }
@@ -118,7 +118,7 @@ export default {
         }
       }).catch(() => {
         this.adsLoading = false
-        this.$message.error(this.$i18n.translate('public.url_request_fail'))
+        this.$message.error(this.$t('public.url_request_fail'))
       })
     },
     getAdListMore () {
@@ -150,7 +150,7 @@ export default {
           }
         }).catch(() => {
           this.adsLoading = false
-          this.$message.error(this.$i18n.translate('public.url_request_fail'))
+          this.$message.error(this.$t('public.url_request_fail'))
         })
       }
     },

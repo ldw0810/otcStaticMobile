@@ -51,7 +51,7 @@ export default {
         pinCode: [
           {
             required: true,
-            message: this.$i18n.translate('user.auth_phone_code_required')
+            message: this.$t('user.auth_phone_code_required')
           }
         ]
       }
@@ -65,7 +65,7 @@ export default {
       return this.$store.state.userInfo_app_two_factor_setter
     },
     tipText () {
-      return this.$i18n.translate('user.auth_phone_code_will_send', {
+      return this.$t('user.auth_phone_code_will_send', {
         '0': this.loginInfo.mobile
       })
     },
@@ -106,7 +106,7 @@ export default {
             }
           }).catch(() => {
             this.$refs.sendCode.refresh()
-            this.$message.error(this.$i18n.translate('public.url_request_fail'))
+            this.$message.error(this.$t('public.url_request_fail'))
           })
         } else {
           for (let i = 0; i < Object.keys(this.form).length; i++) {

@@ -46,7 +46,7 @@ export default {
           this.$store.commit('collectionList_setter', res.data.list || [])
         }
       }).catch(() => {
-        this.$message.error(this.$i18n.translate('user.receivables_request_fail'))
+        this.$message.error(this.$t('user.receivables_request_fail'))
       })
     },
     init () {
