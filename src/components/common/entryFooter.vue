@@ -2,7 +2,7 @@
   .footer
     .copyright {{$t('public.copyright')}}
     .menuBar
-      .menu(v-for="(item, index) in footerList" @click.native="goFooter(index)" :key="index") {{item.name}}
+      .menu(v-for="(item, index) in footerList" @click="goFooter(index)" :key="index") {{item.name}}
       .language(@click="showAction") {{languageList[languageSelectIndex].name}}
     mt-actionsheet(v-model="actionFlag" :actions="actions")
 </template>

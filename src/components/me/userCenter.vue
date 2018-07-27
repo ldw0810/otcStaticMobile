@@ -15,7 +15,7 @@
       span {{!userInfo.mobile ? $t('user.unAuthenticated') : ($t('user.authenticated') + '(' + userInfo.phone_number + ')')}}
     mt-cell(:title="$t('user.user_settings')" to="/me/settings" is-link)
     mt-cell(:title="$t('user.user_change_language')" to="/me/changeLanguage" is-link)
-    mt-cell(:title="$t('user.user_invite_friends')" to="/me/invite" is-link)
+    mt-cell(:title="$t('user.user_invite_friends')" to="/invite" is-link)
     mt-cell(:title="$t('public.about')" to="/me/about" is-link)
     mt-cell(class="logout" :title="$t('public.logout')" @click.native="goLink('logout')")
 </template>

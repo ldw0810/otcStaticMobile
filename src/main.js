@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router/index'
 import vuexI18n from 'vuex-i18n'
+import VueClipboard from 'vue-clipboard2'
 import VueLazyLoad from 'vue-lazyload'
 import store from './store'
 import {$getLanguage} from './utils'
@@ -15,6 +16,7 @@ import './style/index.styl'
 Vue.config.productionTip = false
 Vue.use(install)
 Vue.use(vuexI18n.plugin, store)
+Vue.use(VueClipboard)
 Vue.use(VueLazyLoad, {
   preLoad: 1.3,
   error: require('../src/assets/images/public/logo.svg'),

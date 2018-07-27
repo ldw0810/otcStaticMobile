@@ -11,7 +11,7 @@
             img(src="../../assets/images/me/AppStore.png")
       .step_2
         .text {{$t('user.add_auth_google_step2') + ': ' + $t('user.add_auth_google_saveKey')}}
-        .key(id="googleKey" @click="copyKey") {{googleKey}}
+        .key(id="googleKey" v-clipboard:copy="googleKey" v-clipboard:success="copySuccess") {{googleKey}}
         .key_tip {{$t('user.add_auth_google_keyInfo')}}
     .footer(class="mintSubmit")
       mt-button(@click="submit") {{$t('user.add_auth_google_commit')}}
@@ -38,15 +38,7 @@ export default {
     goLink () {
       window.open('https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8')
     },
-    copyKey () {
-      const range = document.createRange()
-      range.selectNode(document.getElementById('googleKey'))
-      const selection = window.getSelection()
-      if (selection.rangeCount > 0) {
-        selection.removeAllRanges()
-      }
-      selection.addRange(range)
-      document.execCommand('copy')
+    copySuccess () {
       this.$message.success(this.$t('public.invite_copy_success'))
     },
     submit () {

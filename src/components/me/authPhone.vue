@@ -35,7 +35,7 @@ export default {
     return {
       country: ['China', 'CN', '86'],
       form: {
-        phoneNumber: this.$store.state.userInfo.phone_number || ''
+        phoneNumber: ''
       },
       formState: {
         phoneNumber: ''
@@ -112,7 +112,9 @@ export default {
       this.country = value
     },
     getMe () {
-      this.$store.dispatch('axios_me')
+      this.$store.dispatch('axios_me').then(() => {
+        this.form.phoneNumber = this.userInfo.mobile ? this.userInfo.phone_number : ''
+      })
     },
     submit () {
       if (this.formMessageAll) {

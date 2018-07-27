@@ -40,7 +40,6 @@ export default {
   data () {
     return {
       tabbarIndex: this.$route.meta.tabbarIndex || 0
-
     }
   },
   watch: {
