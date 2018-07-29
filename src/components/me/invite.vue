@@ -45,9 +45,6 @@ const language = $getLanguage()
 const axiosLanguage = $getAxiosLanguage()
 const domain = `${configure.ZENDESK_DOMAIN_URL}/hc/${(language.replace('HK', 'TW').toLowerCase())}`
 const CONF_INVITE_IMAGE = require(`../../assets/images/me/invite-${axiosLanguage}.jpg`)
-const QRCODE_POSITION_LEFT = 260
-const QRCODE_POSITION_TOP = 751
-const QRCODE_SIZE = 230
 export default {
   name: 'invite',
   components: {
@@ -105,7 +102,7 @@ export default {
         value: this.linkUrl,
         imagePath: require('../../assets/images/me/QC-Code-BG.png'),
         filter: 'canvas',
-        size: QRCODE_SIZE
+        size: configure.QRCODE_SIZE
       }
     }
   },
@@ -172,7 +169,7 @@ export default {
           img.src = imgArr[index]
           img.onload = () => {
             if (index === 1) {
-              ctx.drawImage(img, QRCODE_POSITION_LEFT, QRCODE_POSITION_TOP, QRCODE_SIZE, QRCODE_SIZE)
+              ctx.drawImage(img, configure.QRCODE_POSITION_LEFT, configure.QRCODE_POSITION_TOP, configure.QRCODE_SIZE, configure.QRCODE_SIZE)
               drawing(++index)
             } else {
               ctx.drawImage(img, 0, 0, c.width, c.height)
