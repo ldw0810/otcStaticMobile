@@ -4,14 +4,14 @@
     .wrapper(v-if="userInfo.id")
       .content
         .item(v-for="(item, index) in userInfo.valid_account" :key="index" @click="goAsset(index)")
-          .wrapper
+          .banner
             .currency
               .logo(v-if="currencyDefaultData[userInfo.valid_account[index].currency]")
                 img(v-lazy="currencyDefaultData[userInfo.valid_account[index].currency]['img']" :key="currencyDefaultData[userInfo.valid_account[index].currency]['img']")
               .text {{userInfo.valid_account[index].currency.toUpperCase()}}
             .amount {{item.amount}}
           .border
-          .wrapper
+          .banner
             .balance
               .number {{item.balance}}
               .text {{$t('public.balance')}}
@@ -94,7 +94,7 @@ export default {
       border-top 1px solid #EEEEEE
       border-bottom 1px solid #EEEEEE
       background #FFFFFF
-      .wrapper {
+      .banner {
         flex 1
         height 10vh
         width 100vw

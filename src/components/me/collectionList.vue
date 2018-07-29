@@ -3,18 +3,19 @@
     mt-header(:title="$t('user.default_receivables')" fixed)
       router-link(to="/me/settings" slot="left")
         mt-button(icon="back")
-    .content
-      mt-cell-swipe(v-for="(item, index) in collectionList" class="cell" :key="index" :right="getCellSwipeRight(index)")
-        span(slot="title" class="title")
-          .icon
-            img(src="../../assets/images/trade/C-Alipay.png" v-if="!item.bank")
-            img(src="../../assets/images/trade/C-Card.png" v-else-if="item.bank")
-          .info
-            .username {{item.name}}
-            .account {{(item.bank ? (item.bank_name + '&nbsp;') : '') + item.account}}
-        .radio(class="radio" :class="{'radioChecked': defaultCollectionIndex === index}" @click="setDefaultCollection(index)")
-    .footer(class="mintSubmit")
-      mt-button(@click="submit") {{$t('user.add_receivables')}}
+    .wrapper
+      .content
+        mt-cell-swipe(v-for="(item, index) in collectionList" class="cell" :key="index" :right="getCellSwipeRight(index)")
+          span(slot="title" class="title")
+            .icon
+              img(src="../../assets/images/trade/C-Alipay.png" v-if="!item.bank")
+              img(src="../../assets/images/trade/C-Card.png" v-else-if="item.bank")
+            .info
+              .username {{item.name}}
+              .account {{(item.bank ? (item.bank_name + '&nbsp;') : '') + item.account}}
+          .radio(class="radio" :class="{'radioChecked': defaultCollectionIndex === index}" @click="setDefaultCollection(index)")
+      .footer(class="mintSubmit")
+        mt-button(@click="submit") {{$t('user.add_receivables')}}
 </template>
 <script type="es6">
 import {Button, CellSwipe, Field, Header, MessageBox} from 'mint-ui'

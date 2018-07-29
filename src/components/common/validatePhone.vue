@@ -150,6 +150,13 @@ export default {
     .content {
       width: 100vw;
       min-height: 100 - $headerHeight - $footerHeight;
+      .subTitle {
+        padding-top: 2.5vh;
+        color: #FFFFFF;
+        margin-left: 14vw;
+        text-align: left;
+        font-size: 0.85rem;
+      }
     }
   }
 </style>

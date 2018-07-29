@@ -3,7 +3,7 @@
     transition(name="fade" mode="out-in")
       router-view
     mt-tabbar(v-model="tabbarIndex" class="footer" fixed)
-      LinkBarItem(id="0" class="linkBarItem" route="/buy" @click.native="goTrade")
+      LinkBarItem(id="0" class="linkBarItem" route="/buy" @click.native.prevent="goTrade")
         slot(v-if="+tabbarIndex === 0")
           img(slot="icon" src="../../assets/images/trade/navigationbar-trade-activation.svg")
           i(class="focus") {{$t('public.trade')}}

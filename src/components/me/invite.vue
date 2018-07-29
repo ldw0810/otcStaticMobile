@@ -1,46 +1,53 @@
 <template lang="pug">
   .invite
-    .banner(:class="{'.link': bannerList[0] && bannerList[0].jump_to}" :style="{backgroundImage: 'url('+getImg(bannerList[0])+')'}" @click.stop="goBanner(bannerList[0] && bannerList[0].jump_to)")
-    .container
-      .target
-        .scoreCards
-          .item {{$t('public.invite_invited')}}: {{inviteCount}}
-          .item {{$t("public.invite_omt")}}: {{inviteAmount}}
-        .desc {{$t('public.invite_title')}}
-          a(class='invite-target-desc-sub' @click="goArticle") {{$t('public.invite_question')}}
-        .copy
-          .area
-            .input(v-html="link")
-            .wrapper
-              mt-button(type="primary" class="copyBtn" v-clipboard:copy="link" v-clipboard:success="copySuccess") {{$t("public.invite_copy")}}
-          .image
-            .input(@click="showImage" v-html="$t('public.invite_image_content')")
-            .wrapper
-              mt-button(type="primary" class="copyBtn" @click="showImage" v-clipboard:copy="link" v-clipboard:success="copySuccess") {{$t("public.invite_image_show_text")}}
-      .rules
-        .title {{$t("public.invite_rules")}}
-        .content(v-html='$t("public.invite_rules_content")')
-    .popupBg(v-if="popImageFlag" @click="popImageFlag = false")
-    transition(name="fade" mode="out-in")
-      .popup(v-if="popImageFlag")
-        QrCode(v-if="qrCodeFlag" ref="qrCode" class="pop-qrCode" :value='qrCodeConfig.value' :size='qrCodeConfig.size')
-        .img(ref="popImage")
-        .footer
-          mt-button(class="popDownload") {{$t('public.invite_image_info_text')}}
+    mt-header(:title="$t('user.user_invite_friends')" fixed)
+      router-link(to="/me" slot="left")
+        mt-button(icon="back")
+    .content
+      .banner(:class="{'link': bannerLink}" :style="{backgroundImage: 'url('+ bannerImg +')'}" @click="goBanner(bannerLink)")
+      .wrapper
+        .target
+          .desc {{$t('public.invite_title')}}
+          .copy
+            .area
+              .input(v-html="link")
+              .wrapper
+                mt-button(type="primary" class="copyBtn" v-clipboard:copy="link" v-clipboard:success="copySuccess") {{$t('public.invite_copy')}}
+            .image
+              .input(@click="showPopImage" v-html="$t('public.invite_image_content')")
+              .wrapper
+                mt-button(type="primary" class="copyBtn" @click="showPopImage") {{$t("public.invite_image_show_text")}}
+          .question(@click="goArticle") {{$t('public.invite_question')}}
+          .scoreCards
+            .item {{$t('public.invite_invited')}}: {{inviteCount}}
+            .item {{$t('public.invite_omt')}}: {{inviteAmount}}
+        .rules
+          .rulesTitle {{$t("public.invite_rules")}}
+          .rulesContent(v-html='$t("public.invite_rules_content")')
+      transition(name="fade" mode="out-in")
+        .popupImage(v-show="popImageFlag" id="popupImage" @click="closePopImage")
+          QrCode(v-if="qrCodeFlag" ref="qrCode" class="qrCode" :value='qrCodeConfig.value' :size='qrCodeConfig.size')
+          .image(ref="popImage")
+          .footer
+            mt-button(class="popDownload") {{$t('public.invite_image_info_text')}}
 </template>
 <script type="es6">
-import {$getLanguage} from '../../utils'
+import {$getAxiosLanguage, $getLanguage} from '../../utils'
 import QrCode from 'qrcode.vue'
-import {Button} from 'mint-ui'
+import {Button, Header} from 'mint-ui'
 import Vue from 'vue'
 
+Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 
 const configure = require('../../../configure')
 const language = $getLanguage()
+const axiosLanguage = $getAxiosLanguage()
 const domain = `${configure.ZENDESK_DOMAIN_URL}/hc/${(language.replace('HK', 'TW').toLowerCase())}`
-const CONF_INVITE_IMAGE = require(`../../assets/images/me/invite_${language.toLowerCase()}.jpg`)
-
+const CONF_INVITE_IMAGE = require(`../../assets/images/me/invite-${axiosLanguage}.jpg`)
+const QRCODE_POSITION_LEFT = 260
+const QRCODE_POSITION_TOP = 751
+const QRCODE_SIZE = 230
 export default {
   name: 'invite',
   components: {
@@ -58,8 +65,30 @@ export default {
     }
   },
   computed: {
-    bannerList () {
-      return this.$store.state.inviteBannerList
+    bannerLink () {
+      if (this.$store.state.inviteBannerList.length) {
+        return this.$store.state.inviteBannerList[0].jump_to
+      } else {
+        return ''
+      }
+    },
+    bannerImg () {
+      const language = $getLanguage()
+      if (this.$store.state.inviteBannerList.length) {
+        if (language === 'zh-CN') {
+          return this.$store.state.inviteBannerList[0].zh_img_src || ''
+        } else if (['zh-HK', 'zh-TW'].indexOf(language) > -1) {
+          return this.$store.state.inviteBannerList[0].tw_img_src || ''
+        } else {
+          return this.$store.state.inviteBannerList[0].en_img_src || ''
+        }
+      } else {
+        if (['zh-CN', 'zh-HK', 'zh-TW'].indexOf(language) > -1) {
+          return require('../../assets/images/me/Invite-Banner-Cn.jpg')
+        } else {
+          return require('../../assets/images/me/Invite-Banner-En.jpg')
+        }
+      }
     },
     link () {
       return this.$t('public.invite_content') + '\n' + this.linkUrl
@@ -76,7 +105,7 @@ export default {
         value: this.linkUrl,
         imagePath: require('../../assets/images/me/QC-Code-BG.png'),
         filter: 'canvas',
-        size: 245
+        size: QRCODE_SIZE
       }
     }
   },
@@ -98,18 +127,6 @@ export default {
       }).catch(() => {
       })
     },
-    getImg (item) {
-      const language = $getLanguage()
-      if (!item) {
-        return ''
-      } else if (language === 'zh-CN') {
-        return item.zh_img_src || ''
-      } else if (language === 'zh-HK' || language === 'zh-TW') {
-        return item.tw_img_src || ''
-      } else {
-        return item.en_img_src || ''
-      }
-    },
     goArticle () {
       if (this.$store.state.userToken) {
         this.$store.dispatch('axios_zendesk').then(res => {
@@ -125,9 +142,6 @@ export default {
         location.href = this.articlesLink
       }
     },
-    showImage () {
-      this.popImageFlag = true
-    },
     goBanner (url) {
       if (url && url.length) {
         location.href = url
@@ -139,6 +153,9 @@ export default {
       return image.src
     },
     createImage () {
+      console.log(this.$refs.qrCode)
+      console.log(this.$refs.qrCode.$el)
+      console.log(this.$refs.qrCode.$el.children[0])
       let qrCodeImg = this.convertCanvasToImage(this.$refs.qrCode.$el.children[0])
       let imgArr = [CONF_INVITE_IMAGE, qrCodeImg]
       let c = document.createElement('canvas')
@@ -155,7 +172,7 @@ export default {
           img.src = imgArr[index]
           img.onload = () => {
             if (index === 1) {
-              ctx.drawImage(img, 246, 955, 245, 245)
+              ctx.drawImage(img, QRCODE_POSITION_LEFT, QRCODE_POSITION_TOP, QRCODE_SIZE, QRCODE_SIZE)
               drawing(++index)
             } else {
               ctx.drawImage(img, 0, 0, c.width, c.height)
@@ -165,8 +182,7 @@ export default {
         } else {
           this.qrCodeFlag = false
           this.imageData = c.toDataURL('image/png').replace('image/png', 'image/octet-stream')
-          this.$refs.popImage.innerHTML = "<img width='" + this.clientHeight * 0.45 +
-              "' height='" + this.clientHeight * 0.8 + "' src='" + this.imageData + "'>"
+          this.$refs.popImage.innerHTML = "<img width='" + this.clientHeight * 0.45 + "' height='" + this.clientHeight * 0.8 + "' src='" + this.imageData + "'>"
         }
       }
       drawing()
@@ -181,13 +197,15 @@ export default {
         a.remove()
       }
     },
-    popImageTrigger (val) {
-      if (!val) {
+    showPopImage (val) {
+      this.popImageFlag = true
+      if (this.qrCodeFlag) {
+        this.createImage()
+      }
+    },
+    closePopImage (event) {
+      if (event.target.id === 'popupImage') {
         this.popImageFlag = false
-      } else {
-        if (this.qrCodeFlag) {
-          this.createImage()
-        }
       }
     },
     getBanner () {
@@ -197,14 +215,17 @@ export default {
       }).then(res => {
         if (res.data && +res.data.error === 0) {
           this.$store.commit('inviteBannerList_setter', res.data.list)
-        } else {
         }
       }).catch(() => {
       })
     },
+    getMe () {
+      this.$store.dispatch('axios_me')
+    },
     init () {
       this.getInviteDetail()
       this.getBanner()
+      this.getMe()
     }
   },
   mounted () {
@@ -213,6 +234,21 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
+  .invite {
+    width 100vw
+    height 100vh
+    background #fafafa
+    overflow hidden
+    display flex
+    flex-direction column
+  }
+
+  .content {
+    flex 1
+    margin-top $mintHeaderHeight
+    overflow-y scroll
+  }
+
   img {
     object-fit: cover;
     object-position: 0 0;
@@ -221,7 +257,7 @@ export default {
   }
 
   .banner {
-    height: 20vh;
+    height 48.8vw
     width: 100vw;
     background-repeat: no-repeat;
     background-position: center;
@@ -233,7 +269,7 @@ export default {
   }
 
   .invite {
-    .container {
+    .wrapper {
       width: 100vw;
     }
     .target {
@@ -253,20 +289,20 @@ export default {
         justify-content: space-between;
         flex-direction: column;
         padding: 2vh 0 0 0;
-      }
-      .input {
-        font-family: SFUIDisplay-Light sans-serif;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 20vw;
-        width: 100%;
-        border: 1px solid #CCCCCC;
-        border-radius: 2px;
-        font-size: 0.8rem;
-        word-break: break-all;
-        cursor: text;
-        padding: 0 2vw 0 2vw;
+        .input {
+          font-family: SFUIDisplay-Light sans-serif;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 20vw;
+          width: 100%;
+          border: 1px solid #CCCCCC;
+          border-radius: 2px;
+          font-size: 0.8rem;
+          word-break: break-all;
+          cursor: text;
+          padding: 0 2vw 0 2vw;
+        }
       }
       .wrapper {
         width: 100%;
@@ -289,9 +325,10 @@ export default {
       }
       .image {
         padding: 2vh 0 2vh 0;
+        margin-left -1vw
         .input {
           font-family: SFUIDisplay-Light sans-serif;
-          width: 90vw;
+          width: 92vw;
           height: 20vw;
           background: #FFFFFF url(../../assets/images/me/Invite-pic-bg.png) no-repeat center;
           background-size: 100%;
@@ -304,6 +341,13 @@ export default {
           padding: 0 2vw 0 2vw;
         }
       }
+    }
+    .question {
+      display flex
+      align-items center
+      justify-content center
+      color: #2EA2F8;
+      margin 2.5vh 0
     }
     .scoreCards {
       width: 90vw;
@@ -332,12 +376,13 @@ export default {
       flex-direction: column;
       align-items: center;
       font-family: PingFangSC-Light sans-serif;
-      .title {
+      .rulesTitle {
+        color #333333
         font-weight: normal;
         font-size: 1.25rem;
         margin-bottom: 2.5vh;
       }
-      .content {
+      .rulesContent {
         border-top: 1px solid #eee;
         padding-top: 4vh;
         font-size: 0.85rem;
@@ -345,67 +390,20 @@ export default {
         line-height: 2rem;
       }
     }
-    .top {
-      width: 90vw;
-      min-height: 40vh;
-      margin-top: 2vh;
-      background: #FFFFFF;
-      box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.10);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      .title {
-        width: 90vw;
-        height: 25.5vw;
-        background-image: url("../../assets/images/me/toptittle-phone.svg");
-        background-size: cover;
-        color: white;
-        font-family: PingFangSC-Regular sans-serif;
-        font-size: 1.5rem;
-        text-align: center;
-        line-height: 25.5vw;
-      }
-      .content {
-        width: 90vw;
-        display: flex;
-        justify-content: space-around;
-        .item {
-          margin-top: 2.5vh;
-          padding-bottom: 2.5vh;
-          width: 25vw;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          .icon {
-            img {
-              object-fit: cover;
-              object-position: 0 0;
-              width: 100%;
-              height: 100%;
-            }
-          }
-          .name {
-            margin-top: 1.5vh;
-            word-break: break-all;
-            font-family: PingFangSC-Regular sans-serif;
-            font-size: 0.8rem;
-            color: #000000;
-            .second {
-              margin-top: 2.45vh;
-            }
-          }
-          .number {
-            margin-top: 0.5vh;
-            font-family: PingFangSC-Regular sans-serif;
-            font-size: 0.85rem;
-            color: #999999;
-          }
-        }
-      }
-    }
   }
-
-  .pop {
+  .popupImage {
+    position: fixed;
+    z-index $zIndexPopup + 1
+    left 0
+    top 0
+    width 100%
+    height 100%
+    overflow hidden
+    background-color rgba(55, 55, 55, 0.6)
+    display: flex;
+    justify-content: center;
+    flex-direction column
+    align-items: center;
     .qrCode {
       position: absolute;
       top: -100vh;
@@ -413,10 +411,7 @@ export default {
       visibility: hidden;
     }
     .image {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding-bottom: 2.5vh;
+      margin-bottom 2.5vh;
     }
     .popDownload {
       min-width: 36vw;

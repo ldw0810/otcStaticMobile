@@ -5,7 +5,7 @@
         mt-button(icon="back" @click="goBack")
     .wrapper(v-if="bankList.length")
     .content
-      mt-cell(:title="item.name" @click.native="goLink(index)" v-for="(item, index) in bankList" :key="index" is-link)
+      mt-cell(:title="item.name" @click.native.prevent="goLink(index)" v-for="(item, index) in bankList" :key="index" is-link)
         span(slot="title" class="title") {{item.name}}
 </template>
 <script type="es6">

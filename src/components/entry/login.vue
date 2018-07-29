@@ -76,7 +76,7 @@ export default {
             min: VALI_PASSWORD_NUMBER.min,
             max: VALI_PASSWORD_NUMBER.max,
             message: this.$t('validate.password_range')
-          },
+          }
         ]
       },
       captchaStatus: '',

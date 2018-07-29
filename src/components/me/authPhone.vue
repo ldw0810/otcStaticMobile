@@ -5,7 +5,7 @@
         mt-button(icon="back")
     .wrapper(v-if="userInfo.id")
       .content
-        mt-cell(:title="country[0] + ' +' + country[2]" @click.native="countryFlag = true" is-link v-if="!userInfo.mobile")
+        mt-cell(:title="country[0] + ' +' + country[2]" @click.native.prevent="countryFlag = true" is-link v-if="!userInfo.mobile")
         mt-field(type="tel" :label="$t('user.auth_phone_number')" :placeholder="$t('user.auth_phone_number_required')" v-model="form.phoneNumber" :state="formState.phoneNumber" :disabled="userInfo.mobile" @input="checkState('phoneNumber')")
       .submit(class="mintSubmit")
         mt-button(@click="submit" :disabled="!formStateAll") {{$t('user.auth_phone_code_send')}}

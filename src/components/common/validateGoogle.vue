@@ -6,7 +6,6 @@
       .validatePhone
         .content
           .title {{$t('user.auth_phone')}}
-          .subTitle {{}}
           el-form(ref="form" class="form" :model="form" :rules="rules" @submit.native.prevent="submit" status-icon)
             el-form-item(prop="pinCode" class="formItem" :show-message="false")
               el-input(class="googleCode" type="text" v-model="form.pinCode" :placeholder="$t('user.auth_google_code_required')")

@@ -4,7 +4,7 @@
       router-link(to="/me" slot="left")
         mt-button(icon="back")
     .content
-      mt-cell(:title="item.name" @click.native="changeLanguage(index)" v-for="(item, index) in languageList" :key="index" is-link)
+      mt-cell(:title="item.name" @click.native.prevent="changeLanguage(index)" v-for="(item, index) in languageList" :key="index" is-link)
 </template>
 <script type="es6">
 import {Header, Button, Cell} from 'mint-ui'

@@ -5,10 +5,10 @@
         mt-button(icon="back")
     .content
       mt-field(:label="$t('user.bankCard_userName')" :placeholder="$t('user.bankCard_userName_required')" v-model="form.username" :state="formState.username" @input="checkState('username')")
-      mt-cell(:title="$t('user.bankCard_bank_select')" @click.native="bankFlag = true" is-link)
+      mt-cell(:title="$t('user.bankCard_bank_select')" @click.native.prevent="bankFlag = true" is-link)
         span {{form.bank.name}}
       <!--mt-field(:label="$t('user.bankCard_bank_select')" :placeholder="$t('user.bankCard_bank_required')" v-model="form.bank" :state="formState.bank" @input="checkState('bank')" readonly)-->
-      <!--mt-button(icon="more" @click.native="bankActionFlag = true")-->
+      <!--mt-button(icon="more" @click.native.prevent="bankActionFlag = true")-->
       mt-field(:label="$t('user.bankCard_number')" :placeholder="$t('user.bankCard_number_required')" v-model="form.account" :state="formState.account" @input="checkState('account')")
       mt-field(:label="$t('user.bankCard_reNumber')" :placeholder="$t('user.bankCard_reNumber_required')" v-model="form.reAccount" :state="formState.reAccount" @input="checkState('reAccount')")
     .submit(class="mintSubmit")

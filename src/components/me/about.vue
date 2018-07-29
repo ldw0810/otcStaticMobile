@@ -4,7 +4,7 @@
       router-link(to="/me" slot="left")
         mt-button(icon="back")
     .content
-      mt-cell(:title="item.name" @click.native="goLink(index)" v-for="(item, index) in urlList" :key="index" is-link)
+      mt-cell(:title="item.name" @click.native.prevent="goLink(index)" v-for="(item, index) in urlList" :key="index" is-link)
       .link
         .telegram
         .twitter
