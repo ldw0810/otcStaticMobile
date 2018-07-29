@@ -117,13 +117,11 @@ export default {
           password: this.form.newPassword,
           password_confirmation: this.form.rePassword
         }).then(res => {
-          this.$loading.close()
           if (res.data && +res.data.error === 0) {
             this.$message.success(this.$t('user.password_modify_success'))
             this.$router.push('/me/settings')
           }
         }).catch(() => {
-          this.$loading.close()
           this.$message.error(this.$t('user.password_modify_fail'))
         })
       }

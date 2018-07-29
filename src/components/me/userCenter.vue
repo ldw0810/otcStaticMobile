@@ -17,14 +17,16 @@
     mt-cell(:title="$t('user.user_change_language')" to="/me/changeLanguage" is-link)
     mt-cell(:title="$t('user.user_invite_friends')" to="/invite" is-link)
     mt-cell(:title="$t('public.about')" to="/me/about" is-link)
-    mt-cell(class="logout" :title="$t('public.logout')" @click.native.prevent="goLink('logout')")
+    mt-cell(class="logout" :title="$t('public.logout')" @click.native.prevent="actionFlag = true")
+    mt-actionsheet(v-model="actionFlag" :actions="actions")
 </template>
 <script type="es6">
 import Avatar from '../common/avatar'
-import {Cell} from 'mint-ui'
+import {Cell, Actionsheet} from 'mint-ui'
 import Vue from 'vue'
 
 Vue.component(Cell.name, Cell)
+Vue.component(Actionsheet.name, Actionsheet)
 
 export default {
   name: 'userCenter',
@@ -32,7 +34,17 @@ export default {
     Avatar
   },
   data () {
-    return {}
+    return {
+      actionFlag: false,
+      actions: [
+        {
+          name: this.$t('public.confirm'),
+          method: () => {
+            this.goLink('logout')
+          }
+        }
+      ]
+    }
   },
   computed: {
     userInfo () {

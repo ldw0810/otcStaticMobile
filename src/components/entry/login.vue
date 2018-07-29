@@ -120,6 +120,7 @@ export default {
       }
     },
     login () {
+      this.$loading.open()
       axios.all([
         this.$store.dispatch('axios_me'),
         this.$store.dispatch('axios_language', {

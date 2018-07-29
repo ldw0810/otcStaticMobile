@@ -127,13 +127,11 @@ export default {
           name: this.form.username,
           account: this.form.account
         }).then(res => {
-          this.$loading.close()
           if (res.data && +res.data.error === 0) {
             this.$message.success(this.$t('user.receivables_add_success'))
             this.$router.push('/me/collectionList')
           }
         }).catch(() => {
-          this.$loading.close()
           this.$message.error(this.$t('user.receivables_add_fail'))
         })
       }

@@ -51,7 +51,6 @@ export default {
         this.$store.dispatch('axios_send_activation', {
           email: this.email
         }).then((res) => {
-          this.$loading.close()
           if (res.data && +res.data.error === 0) {
             this.$message.success(this.$t('user.auth_email_send_success'))
             this.remainTime = +res.data.remain || 120
@@ -60,7 +59,6 @@ export default {
           }
           resolve()
         }).catch(() => {
-          this.$loading.close()
           this.$message.error(this.$t('user.auth_email_send_fail'))
           resolve()
         })

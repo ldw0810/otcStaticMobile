@@ -43,13 +43,10 @@ export default {
           if (res.data && +res.data.error === 0) {
             localStorage.setItem('language', language)
             this.$i18n.set(language)
-            this.$loading.close()
           } else {
-            this.$loading.close()
             return false
           }
         }).catch(() => {
-          this.$loading.close()
           return false
         })
       } else {

@@ -87,13 +87,11 @@ export default {
             password: this.form.password,
             code: this.form.pinCode
           }).then(res => {
-            this.$loading.close()
             if (res.data && +res.data.error === 0) {
               this.$message.success(this.$t('user.auth_phone_unbind_success'))
               this.$router.push('/me/settings')
             }
           }).catch(() => {
-            this.$loading.close()
             this.$message.error(this.$t('user.auth_phone_unbind_fail'))
           })
         } else {
@@ -103,13 +101,11 @@ export default {
             mobile: this.phoneNumber,
             code: this.form.pinCode
           }).then(res => {
-            this.$loading.close()
             if (res.data && +res.data.error === 0) {
               this.$message.success(this.$t('user.auth_phone_bind_success'))
               this.$router.push('/me/settings')
             }
           }).catch(() => {
-            this.$loading.close()
             this.$message.success(this.$t('user.auth_phone_bind_fail'))
           })
         }

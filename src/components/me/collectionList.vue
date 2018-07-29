@@ -57,7 +57,6 @@ export default {
       this.$store.dispatch('axios_del_receiving', {
         id: this.collectionList[index].id
       }).then(res => {
-        this.$loading.close()
         if (res.data && +res.data.error === 0) {
           this.$message.success(this.$t('user.receivables_del_success'))
           let list = this.collectionList
@@ -66,7 +65,6 @@ export default {
           this.$store.commit('collectionList_setter', list)
         }
       }).catch(() => {
-        this.$loading.close()
         this.$message.error(this.$t('user.receivables_del_fail'))
       })
     },
@@ -78,7 +76,6 @@ export default {
         this.$store.dispatch('axios_default_receiving', {
           id: this.collectionList[index].id
         }).then(res => {
-          this.$loading.close()
           if (res.data && +res.data.error === 0) {
             let list = this.collectionList
             for (let i = 0; i < list.length; i++) {
@@ -94,7 +91,6 @@ export default {
           }
         }).catch(() => {
           this.defaultCollectionIndex = oldIndex
-          this.$loading.close()
           this.$message.error(this.$t('user.receivables_set_default_fail'))
         })
       }

@@ -127,12 +127,10 @@ export default {
             country: this.country[1],
             mobile: this.form.phoneNumber
           }).then(res => {
-            this.$loading.close()
             if (res.data && +res.data.error === 0) {
               this.authPhoneCodeFlag = true
             }
           }).catch(() => {
-            this.$loading.close()
             this.$message.error(this.$t('user.auth_phone_code_send_fail'))
           })
         } else {
