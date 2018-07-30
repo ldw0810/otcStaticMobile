@@ -81,7 +81,7 @@ export default {
 </script>
 <style lang='stylus' scoped>
   .userCenter {
-    min-height 100 - $tabbarFooterHeight
+    height 100 - $tabbarFooterHeight
     background #fafafa
   }
 
@@ -138,6 +138,7 @@ export default {
     }
   }
   .wrapper {
+    height 55vh
     overflow-y scroll
   }
   /deep/ .logout .mint-cell-title {
