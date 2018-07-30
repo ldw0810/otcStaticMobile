@@ -9,14 +9,14 @@
               .logo(v-if="currencyDefaultData[userInfo.valid_account[index].currency]")
                 img(v-lazy="currencyDefaultData[userInfo.valid_account[index].currency]['img']" :key="currencyDefaultData[userInfo.valid_account[index].currency]['img']")
               .text {{userInfo.valid_account[index].currency.toUpperCase()}}
-            .amount {{item.amount}}
+            .amount {{item.amount | $fixDecimalsAsset()}}
           .border
           .banner
             .balance
-              .number {{item.balance}}
+              .number {{item.balance | $fixDecimalsAsset()}}
               .text {{$t('public.balance')}}
             .locked
-              .number {{item.locked}}
+              .number {{item.locked | $fixDecimalsAsset()}}
               .text {{$t('public.locked')}}
 </template>
 <script type="es6">

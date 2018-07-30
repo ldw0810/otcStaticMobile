@@ -1,13 +1,15 @@
 <template lang="pug">
-  .selectCountry
-    mt-header(:title="$t('user.country_select')" fixed)
+  .selectWithdrawAddress
+    mt-header(:title="$t('asset.asset_withdraw_address')" fixed)
       span(slot="left")
         mt-button(icon="back" @click="goBack")
-    .wrapper(v-if="countryList.length")
+    .wrapper(v-if="withdraw.fund_sources.length")
       .content
-        mt-cell(:title="item.name" @click.native.prevent="goLink(index)" v-for="(item, index) in countryList" :key="index" is-link)
-          span(slot="title" class="title") {{item[0]}}
-          span {{item[2]}}
+        mt-cell(:title="item.name" @click.native.prevent="goLink(index)" v-for="(item, index) in withdraw.fund_sources" :key="index" is-link)
+          span(slot="title" class="title") {{item.extra}}
+          span {{item.uid}}
+        .mintSubmit
+          mt-button(@click.native.prevent="doAdd") {{$t('asset.asset_withdraw_address_add')}}
 </template>
 <script type="es6">
 import {Header, Button, Cell} from 'mint-ui'
@@ -18,14 +20,14 @@ Vue.component(Button.name, Button)
 Vue.component(Cell.name, Cell)
 
 export default {
-  name: 'selectCountry',
+  name: 'selectWithdrawAddress',
   data () {
     return {
     }
   },
   computed: {
-    countryList () {
-      return this.$store.state.countryList || []
+    withdraw () {
+      return this.$store.state.withdraw
     }
   },
   methods: {
@@ -33,25 +35,16 @@ export default {
       this.$emit('close', 1)
     },
     goLink (index) {
-      if (this.countryList[index]) {
-        this.$emit('success', this.countryList[index])
+      if (this.withdraw.fund_sources[index]) {
+        this.$emit('success', this.withdraw.fund_sources[index])
         this.goBack()
       }
     },
-    getCountryList () {
-      if (!this.countryList.length) {
-        this.$loading.open()
-        this.$store.dispatch('axios_national_list').then(res => {
-          if (res && +res.data.error === 0) {
-            this.$store.commit('countryList_setter', res.data.country)
-          }
-        }).catch(() => {
-          this.$message.error(this.$t('user.country_response_none'))
-        })
-      }
+    doAdd () {
+      this.$emit('add', 1)
+      this.goBack()
     },
     init () {
-      this.getCountryList()
     }
   },
   mounted () {
@@ -60,7 +53,7 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  .selectCountry {
+  .selectWithdrawAddress {
     width 100vw
     height 100vh
     background #fafafa

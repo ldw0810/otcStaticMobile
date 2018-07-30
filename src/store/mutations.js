@@ -34,6 +34,12 @@ export default {
   userInfo_notice_setter (state, value) {
     state.userInfo.notice = value
   },
+  deposit_setter (state, value) {
+    state.deposit = value
+  },
+  withdraw_setter (state, value) {
+    state.withdraw = value
+  },
   bankList_setter (state, value) {
     state.bankList = value
   },

@@ -1,4 +1,4 @@
-import {$fixDecimalAuto} from './index'
+import {$fixDecimalAuto, $fixDecimalsAsset} from './index'
 export default {
   capitalize: function (value) {
     if (!value) {
@@ -9,5 +9,8 @@ export default {
   },
   fixDecimalAuto: function (value, currency) {
     return $fixDecimalAuto(value, currency)
+  },
+  $fixDecimalsAsset: function (value) {
+    return $fixDecimalsAsset(value)
   }
 }

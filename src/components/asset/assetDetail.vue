@@ -11,14 +11,14 @@
               .logo(v-if="currencyDefaultData[currency]")
                 img(v-lazy="currencyDefaultData[currency]['img']" :key="currencyDefaultData[currency]['img']")
               .text {{currency.toUpperCase()}}
-            .amount {{userInfo.valid_account[currencyIndex].amount}}
+            .amount {{userInfo.valid_account[currencyIndex].amount | $fixDecimalsAsset()}}
           .border
           .banner
             .balance
-              .number {{userInfo.valid_account[currencyIndex].balance}}
+              .number {{userInfo.valid_account[currencyIndex].balance | $fixDecimalsAsset()}}
               .text {{$t('public.balance')}}
             .locked
-              .number {{userInfo.valid_account[currencyIndex].locked}}
+              .number {{userInfo.valid_account[currencyIndex].locked | $fixDecimalsAsset()}}
               .text {{$t('public.locked')}}
         .oper
           .operDiv
@@ -28,34 +28,61 @@
               .text(:class="{'focus': assetOperIndex === 1}") {{$t('public.withdraw')}}
           .border
           .operContent
-            mt-tab-container(v-model="assetOperIndex" swipeable)
+            mt-tab-container(v-model="assetOperIndex")
               mt-tab-container-item(:id="0")
-                .page(v-if="deposit.account.length && deposit.account[0].deposit_address")
-                  .text {{deposit.account[0].deposit_address}}
-                .noAddressPage(v-else)
-                  .tip {{$t("asset.asset_recharge_address_get_tip")}}
-                  mt-button(class="addressButton" @click.native.prevent="getAddress") {{$t("asset.asset_recharge_address_get")}}
+                .wrapper(v-if="deposit.account.length")
+                  .depositPage(v-if="deposit.account[0].deposit_address")
+                    .text {{$t('asset.asset_recharge_address')}}:
+                    .address(v-clipboard:copy="deposit.account[0].deposit_address" v-clipboard:success="copySuccess") {{deposit.account[0].deposit_address}}
+                    .tip(v-html="$t('asset.asset_recharge_address_tip', {'0': deposit.deposit_channels ? +deposit.deposit_channels.max_confirm: 0, '1': deposit.deposit_channels ? +deposit.deposit_channels.min_value: 0, '2': currency.toUpperCase()})")
+                  .noAddressPage(v-else)
+                    .tip {{$t('asset.asset_recharge_address_get_tip')}}
+                    mt-button(class="goBtn" @click.native.prevent="getAddress") {{$t('asset.asset_recharge_address_get')}}
               mt-tab-container-item(:id="1")
-                span 22222
-      .footer(class="mintSubmit")
-        mt-button(@click="submit") {{$t('asset.asset_withdraw_and_recharge_history')}}
+                .wrapper(v-if="withdraw.withdraw_channels.id")
+                  .withdrawPage(v-if="userInfo.mobile || userInfo.app_two_factor")
+                    .form
+                      mt-cell(v-if="withdraw.fund_sources.length" :title="$t('asset.asset_withdraw_address')" @click.native.prevent="withdrawAddressFlag = true" is-link)
+                        span {{form.selectAddress.label}}
+                      mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" :label="$t('public.label')" :placeholder="$t('asset.asset_withdraw_label_required')" v-model="form.label" :state="formState.label" @input="checkState('label')")
+                      mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" :label="$t('asset.asset_withdraw_address')" :placeholder="$t('asset.asset_withdraw_address_required')" v-model="form.address" :state="formState.address" @input="checkState('address')")
+                      mt-field(class="numberBtn" :label="$t('asset.asset_withdraw_number')" :placeholder="amountText" v-model="form.number" :state="formState.number" @input="checkState('number')")
+                        .right(name="slot")
+                          .currency {{currency.toUpperCase()}}
+                          mt-button(class="withdrawAllBtn" @click.native.prevent="form.number = amount") {{$t("asset.asset_withdraw_all")}}
+                    .tip {{$t("asset.asset_withdraw_address_tip", {'0': withdraw.withdraw_channels.min, '1': withdraw.withdraw_channels ? withdraw.withdraw_channels.fee : 0, '2': currency.toUpperCase()})}}
+                    .mintSubmit
+                      mt-button(@click.native.prevent="doWithdraw") {{$t('public.submit')}}
+                  .noAuthPage(v-else)
+                    .text {{$t("asset.asset_withdraw_no_auth", {'0': currency.toUpperCase()})}}
+                    mt-button(class="goBtn" @click.native.prevent="$router.push('/me/settings')") {{$t("asset.asset_go_set_auth")}}
+      .footer(class="historyButton")
+        mt-button(@click="$router.push('/assetHistory')") {{$t('asset.asset_withdraw_and_recharge_history')}}
+    transition(name="slide-right" mode="out-in")
+      .popup(class="popup-right" v-if="withdrawAddressFlag")
+        slot
+          SelectWithdrawAddress(@close="withdrawAddressFlag = false" @success="showWithdrawAddress" @add="addWithdrawAddress")
 </template>
 <script type="es6">
-import {Button, CellSwipe, Field, Header, MessageBox, TabContainer, TabContainerItem} from 'mint-ui'
+import {Button, Cell, Field, Header, MessageBox, TabContainer, TabContainerItem} from 'mint-ui'
 import Vue from 'vue'
+import SelectWithdrawAddress from './selectWithdrawAddress'
+import {$fixDecimalsAsset} from '../../utils'
+import {VALI_ADDRESS_LABEL} from "../../utils/validator";
 
 const configure = require('../../../configure')
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
+Vue.component(Field.name, Field)
+Vue.component(Cell.name, Cell)
+Vue.component(MessageBox.name, MessageBox)
 Vue.component(TabContainer.name, TabContainer)
 Vue.component(TabContainerItem.name, TabContainerItem)
-Vue.component(Field.name, Field)
-Vue.component(CellSwipe.name, CellSwipe)
-Vue.component(MessageBox.name, MessageBox)
 
 export default {
   name: 'assetDetail',
+  components: {SelectWithdrawAddress},
   data () {
     return {
       assetOperIndex: this.$route.query.oper === 'deposit' ? 0 : 1,
@@ -74,25 +101,26 @@ export default {
           img: require('../../assets/images/trade/CoinLogo-CAT.png')
         }
       },
-      deposit: {
-        account: [],
-        deposit_channels: {},
-        deposits_history: [],
-        page: 1,
-        per_page: 20,
-        total_count: 0,
-        total_pages: 1
+      form: {
+        selectAddress: {},
+        label: '',
+        address: '',
+        number: ''
       },
-      withdraw: {
-        default_source_id: '',
-        fund_sources: [],
-        withdraw_channels: {},
-        withdraws: [],
-        page: 1,
-        per_page: 20,
-        total_count: 0,
-        total_pages: 1
-      }
+      formState: {
+        selectAddress: '',
+        label: '',
+        address: '',
+        number: ''
+      },
+      formMessage: {
+        selectAddress: '',
+        label: '',
+        address: '',
+        number: ''
+      },
+      withdrawAddressFlag: false,
+      withdrawAddressAddFlag: false
     }
   },
   watch: {
@@ -101,6 +129,12 @@ export default {
     }
   },
   computed: {
+    deposit () {
+      return this.$store.state.deposit
+    },
+    withdraw () {
+      return this.$store.state.withdraw
+    },
     currency () {
       return this.$route.query.currency || (this.userInfo.valid_account.length && this.userInfo.valid_account[0].currency) || configure.CONF_DIGITAL_CURRENCY_LIST[0].currency
     },
@@ -117,9 +151,74 @@ export default {
     },
     userInfo () {
       return this.$store.state.userInfo
+    },
+    account () {
+      let index = 0
+      for (let i = 0; i < this.userInfo.valid_account.length; i++) {
+        if (this.userInfo.valid_account[i] &&
+            this.userInfo.valid_account[i].currency === this.currency) {
+          index = i
+          break
+        }
+      }
+      return this.userInfo.valid_account[index] || {}
+    },
+    amount () {
+      return this.account ? $fixDecimalsAsset(this.account.balance) : 0
+    },
+    amountText () {
+      return this.$t('asset.asset_add_balance') + ': ' + $fixDecimalsAsset(this.amount)
+    },
+    formStateAll () {
+      const tempStateList = Object.keys(this.formState)
+      for (let i = 0; i < tempStateList.length; i++) {
+        if (this.formState[tempStateList[i]] === '') {
+          return false
+        }
+      }
+      return true
+    },
+    formMessageAll () {
+      const tempMessageList = Object.keys(this.formMessage)
+      for (let i = 0; i < tempMessageList.length; i++) {
+        if (this.formMessage[tempMessageList[i]] !== '') {
+          return this.formMessage[tempMessageList[i]]
+        }
+      }
+      return ''
     }
   },
   methods: {
+    checkAllState () {
+      Object.keys(this.formState).forEach((item) => {
+        this.checkState(item)
+      })
+    },
+    checkState (value) {
+      // if (value === 'selectAddress') {
+      //   if (this.withdraw.fund_sources.length) {
+      //     if (!this.withdrawAddressAddFlag) {
+      //       this.formState.selectAddress = this.form.selectAddress ? 'success' : ''
+      //       this.formMessage.selectAddress = ''
+      //     } else {
+      //       this.formState.selectAddress = 'success'
+      //       this.formMessage.selectAddress = ''
+      //     }
+      //   } else {
+      //     this.formState.selectAddress = 'success'
+      //     this.formMessage.selectAddress = ''
+      //   }
+      // } else if (value === 'label') {
+      //   if (this.withdraw.fund_sources.length && !this.withdrawAddressAddFlag) {
+      //     this.formState.label = 'success'
+      //     this.formMessage.label = ''
+      //   } else {
+      //     if(this.formState.label.length > )
+      //   } else {
+      //
+      //   }
+      // }
+    },
     goOper (index) {
       this.$router.push({
         path: this.$route.path,
@@ -128,6 +227,17 @@ export default {
           oper: index === 0 ? 'deposit' : 'withdraw'
         }
       })
+    },
+    copySuccess () {
+      this.$message.success(this.$t('public.invite_copy_success'))
+    },
+    showWithdrawAddress (item) {
+      this.form.selectAddress = item
+      this.withdrawAddressAddFlag = false
+    },
+    addWithdrawAddress () {
+      this.form.selectAddress = {}
+      this.withdrawAddressAddFlag = true
     },
     getAddress () {
       this.$loading.open()
@@ -141,31 +251,63 @@ export default {
         this.$message.error(this.$t('asset.asset_address_request_fail'))
       })
     },
+    get_address_id (val) {
+      this.setAddress = val || ''
+      if (val === 1000) {
+        this.initFormData()
+        this.addNewAddressStatus = true
+      } else if (val) {
+        this.$refs.select && this.$refs.select.updateOptions()
+        this.addNewAddressStatus = false
+        for (let i = 0; i < this.withdraw.fund_sources.length; i++) {
+          if (val === this.withdraw.fund_sources[i].id + '-' + this.withdraw.fund_sources[i].uid) {
+            this.form.id = this.withdraw.fund_sources[i].id
+            this.form.label = this.withdraw.fund_sources[i].extra
+            this.form.labelPlus = this.withdraw.fund_sources[i].extra
+            this.form.address = this.withdraw.fund_sources[i].uid
+            this.form.addressPlus = this.withdraw.fund_sources[i].uid
+            return false
+          }
+        }
+      } else {
+        this.initFormData()
+        this.addNewAddressStatus = false
+      }
+    },
     getData () {
       if (this.assetOperIndex === 0) {
         this.$store.dispatch('axios_get_deposit', {
           currency: this.currency,
           limit: this.deposit.per_page,
-          page: +this.pageIndex || this.deposit.page
+          page: this.deposit.page
         }).then(res => {
           if (res.data && +res.data.error === 0) {
-            this.deposit = res.data
+            this.$store.commit('deposit_setter', res.data)
           }
         }).catch(() => {
         })
       } else {
-
+        this.$store.dispatch('axios_get_withdraw', {
+          currency: this.currency,
+          limit: this.withdraw.per_page,
+          page: this.withdraw.page
+        }).then(res => {
+          if (res.data && +res.data.error === 0) {
+            this.$store.commit('withdraw_setter', res.data)
+            this.get_address_id()
+          }
+        }).catch(() => {
+        })
       }
     },
     getMe () {
       this.$store.dispatch('axios_me')
     },
-    submit () {
-      this.$router.push('/assetHistory')
+    doWithdraw () {
     },
     init () {
       this.getMe()
-      this.assetOperIndex = this.$route.query.oper === 'deposit' ? 0 : 1
+      this.assetOperIndex = this.$route.query.oper === 'withdraw' ? 1 : 0
       this.getData()
     }
   },
@@ -246,7 +388,7 @@ export default {
           }
           .text {
             color #CCCCCC
-            font-size 0.85rem
+            font-size 0.8rem
           }
         }
         .locked {
@@ -261,7 +403,7 @@ export default {
           }
           .text {
             color #CCCCCC
-            font-size 0.85rem
+            font-size 0.8rem
           }
         }
       }
@@ -294,7 +436,7 @@ export default {
           justify-content center
           .text {
             color #999999
-            font-size 0.85rem
+            font-size 0.8rem
             font-weight lighter
           }
           .focus {
@@ -315,8 +457,81 @@ export default {
       }
       .operContent {
         width 100vw
-        .page {
-
+        .depositPage {
+          padding 5vh 8vw
+          .text {
+            font-size 1rem
+            color #333333
+            font-weight normal
+            padding-bottom 2.5vh
+          }
+          .address {
+            font-size 1.2rem
+            color #2EA2F8
+            font-weight normal
+            padding-bottom 2.5vh
+            cursor pointer
+          }
+          .tip {
+            font-size 0.8rem
+            color #999999
+          }
+        }
+        .withdrawPage {
+          display flex
+          flex-direction column
+          align-items center
+          justify-content center
+          padding-bottom 5vh
+          .form {
+            .numberBtn {
+              .right {
+                display flex
+                align-items center
+                justify-content center
+                margin 0 1vw
+              }
+              .currency {
+                font-size 0.9rem
+                color: #354052;
+                font-weight normal
+              }
+              .withdrawAllBtn {
+                margin-left 5vw
+                min-width 20vw
+                height 5vh
+                color #333333
+                background: #FFFFFF;
+                border: 1px solid rgba(0, 0, 0, 0.10);
+                box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.03);
+                border-radius: 2px;
+                font-size: 0.8rem;
+                line-height 1.2
+                text-align: center;
+                display flex
+                align-items center
+                justify-content center
+              }
+            }
+          }
+          .tip {
+            padding 1.5vh 8vw
+            font-size 0.8rem
+            color #999999
+          }
+        }
+        .noAuthPage {
+          display flex
+          flex-direction column
+          align-items center
+          justify-content center
+          padding 5vh 8vw
+          .text {
+            color #333333
+            font-weight normal
+            font-size 0.9rem
+            margin-bottom 2.5vh
+          }
         }
         .noAddressPage {
           display flex
@@ -330,23 +545,24 @@ export default {
             font-size 0.9rem
             margin-bottom 2.5vh
           }
-          .addressButton {
-            min-width 32vw
-            color #FFFFFF
-            background-image: linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%);
-            box-shadow: 0 5px 5px 0 rgba(102,187,191,0.14);
-            margin-top: 1vh;
-            font-size: 0.85rem;
-            line-height 1.2
-            text-align: center;
-            border-radius: 6px;
-            display flex
-            align-items center
-            justify-content center
-          }
         }
       }
     }
+  }
+
+  .goBtn {
+    min-width 32vw
+    color #FFFFFF
+    background-image: linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%);
+    box-shadow: 0 5px 5px 0 rgba(102, 187, 191, 0.14);
+    margin-top: 1vh;
+    font-size: 0.8rem;
+    line-height 1.2
+    text-align: center;
+    border-radius: 6px;
+    display flex
+    align-items center
+    justify-content center
   }
 
   .footer {
@@ -356,5 +572,24 @@ export default {
     justify-content center
     font-size 0.8rem
     color #999999
+  }
+  /deep/ .historyButton {
+    display flex
+    align-items center
+    justify-content center
+    .mint-button {
+      width 72vw
+      color #333333
+      background: #FFFFFF;
+      border: 1px solid rgba(0,0,0,0.10);
+      box-shadow: 0 5px 5px 0 rgba(0,0,0,0.03);
+      border-radius: 2px;
+      .mint-button-text {
+        font-size 1rem
+      }
+    }
+    .mint-button.is-disabled {
+      background: #C8D4E0;
+    }
   }
 </style>

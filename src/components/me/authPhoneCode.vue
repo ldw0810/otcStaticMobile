@@ -72,7 +72,11 @@ export default {
     },
     checkState (value) {
       if (value === 'password') {
-        this.formState.password = this.form.password ? 'success' : ''
+        if (this.userInfo.mobile) {
+          this.formState.password = this.form.password ? 'success' : ''
+        } else {
+          this.formState.password = 'success'
+        }
       } else if (value === 'pinCode') {
         this.formState.pinCode = this.form.pinCode ? 'success' : ''
       }

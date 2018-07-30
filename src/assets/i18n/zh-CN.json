@@ -394,7 +394,6 @@
     "asset_withdraw_address_del_fail": "提现地址删除失败",
     "asset_withdraw_address_set_default_success": "设置默认提现地址成功",
     "asset_withdraw_address_set_default_fail": "设置默认提现地址失败",
-    "asset_withdraw_address_tip_ETH": "提示：ETH 钱包只能向 ETH 地址发送资产，如果向非 ETH 地址发送资产将不可找回。 ETH 提现需要时间，最低提现金额为 {0} ETH，我们不会处理少于该金额的 ETH 提现请求。为保障转账速度，网络转账费用会根据情况进行实时调整，当前转账费用为每笔 {1} ETH。",
     "asset_withdraw_address_tip": "提示：{2} 钱包只能向 {2} 地址发送资产，如果向非 {2} 地址发送资产将不可找回。 {2} 提现需要时间，最低提现金额为 {0} {2}，我们不会处理少于该金额的 {2} 提现请求。为保障转账速度，网络转账费用会根据情况进行实时调整，当前转帐费用为每笔 {1} {2}",
     "asset_withdraw_address_info": "请输入您的接收地址",
     "asset_withdraw_number": "提现数量",

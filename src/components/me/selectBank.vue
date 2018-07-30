@@ -4,9 +4,9 @@
       span(slot="left")
         mt-button(icon="back" @click="goBack")
     .wrapper(v-if="bankList.length")
-    .content
-      mt-cell(:title="item.name" @click.native.prevent="goLink(index)" v-for="(item, index) in bankList" :key="index" is-link)
-        span(slot="title" class="title") {{item.name}}
+      .content
+        mt-cell(:title="item.name" @click.native.prevent="goLink(index)" v-for="(item, index) in bankList" :key="index" is-link)
+          span(slot="title" class="title") {{item.name}}
 </template>
 <script type="es6">
 import {Button, Cell, Header} from 'mint-ui'

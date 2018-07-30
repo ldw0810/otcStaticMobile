@@ -394,7 +394,6 @@
     "asset_withdraw_address_del_fail": "Withdraw address delete fail",
     "asset_withdraw_address_set_default_success": "Set default withdraw address success",
     "asset_withdraw_address_set_default_fail": "Set default withdraw address fail",
-    "asset_withdraw_address_tip_ETH": "Reminder: ETH address can only be recharged ETH. If you send ETH to a not ETH address it will be lost. In the ETH network to send ETH need some time. The minimum withdraw amount is {0} ETH, we will not handle any withdraw request that is less than this amount. To ensure a reliable transfer speed, network transfer fees will be adjusted in real time according to the network congestion, currently network transfer fees is {1} ETH",
     "asset_withdraw_address_tip": "Reminder: {2} address can only be recharged {2}. If you send {2} to a not {2} address it will be lost. Send {2} need some time. The minimum withdraw amount is {0} {2} , we will not handle any withdraw request that is less than this amount. To ensure a reliable transfer speed, network transfer fees will be adjusted in real time according to the network congestion, currently network transfer fees is {1} {2}",
     "asset_withdraw_address_info": "Please enter address",
     "asset_withdraw_number": "Amount",

@@ -9,15 +9,16 @@
       .tradeNumber {{$t('order.order_trade_count', {'0': userInfo.stat.trade_count})}}
       .border |
       .goodRate {{$t('order.order_praise_rate')}}: {{userInfo.stat.good_rate}}%
-    mt-cell(:title="$t('user.authentication_email')" @click.native.prevent="goLink('email')" :is-link="!userInfo.activated")
-      span {{!userInfo.activated ? ($t('user.authentication_wait') + '(' + $t('user.authentication_email_reSend') + ')') : $t('user.authenticated')}}
-    mt-cell(:title="$t('user.authentication_phone')" @click.native.prevent="goLink('phone')" :is-link="!userInfo.mobile")
-      span {{!userInfo.mobile ? $t('user.unAuthenticated') : ($t('user.authenticated') + '(' + userInfo.phone_number + ')')}}
-    mt-cell(:title="$t('user.user_settings')" to="/me/settings" is-link)
-    mt-cell(:title="$t('user.user_change_language')" to="/me/changeLanguage" is-link)
-    mt-cell(:title="$t('user.user_invite_friends')" to="/invite" is-link)
-    mt-cell(:title="$t('public.about')" to="/me/about" is-link)
-    mt-cell(class="logout" :title="$t('public.logout')" @click.native.prevent="actionFlag = true")
+    .wrapper
+      mt-cell(:title="$t('user.authentication_email')" @click.native.prevent="goLink('email')" :is-link="!userInfo.activated")
+        span {{!userInfo.activated ? ($t('user.authentication_wait') + '(' + $t('user.authentication_email_reSend') + ')') : $t('user.authenticated')}}
+      mt-cell(:title="$t('user.authentication_phone')" @click.native.prevent="goLink('phone')" :is-link="!userInfo.mobile")
+        span {{!userInfo.mobile ? $t('user.unAuthenticated') : ($t('user.authenticated') + '(' + userInfo.phone_number + ')')}}
+      mt-cell(:title="$t('user.user_settings')" to="/me/settings" is-link)
+      mt-cell(:title="$t('user.user_change_language')" to="/me/changeLanguage" is-link)
+      mt-cell(:title="$t('user.user_invite_friends')" to="/invite" is-link)
+      mt-cell(:title="$t('public.about')" to="/me/about" is-link)
+      mt-cell(class="logout" :title="$t('public.logout')" @click.native.prevent="actionFlag = true")
     mt-actionsheet(v-model="actionFlag" :actions="actions")
 </template>
 <script type="es6">
@@ -136,7 +137,9 @@ export default {
       justify-content center
     }
   }
-
+  .wrapper {
+    overflow-y scroll
+  }
   /deep/ .logout .mint-cell-title {
     display flex
     align-items center
