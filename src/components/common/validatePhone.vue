@@ -1,6 +1,6 @@
 <template lang="pug">
   .validatePhone
-    mt-header(:title="userInfo.mobile ? $t('user.auth_phone_del') : $t('user.auth_phone_add')" fixed)
+    mt-header(:title="$t('public.login_auth')" fixed)
       span(slot="left")
         mt-button(icon="back" @click="goBack")
     .wrapper
@@ -85,41 +85,10 @@ export default {
       if (this.formMessageAll) {
         this.$message.error(this.formMessageAll)
       } else {
-        this.$loading.open()
-        if (this.userInfo.mobile) {
-          this.$store.dispatch('axios_unbind_sms', {
-            password: this.form.password,
-            code: this.form.pinCode
-          }).then(res => {
-            if (res.data && +res.data.error === 0) {
-              this.$message.success(this.$t('user.auth_phone_unbind_success'))
-              this.$router.push('/me/settings')
-            }
-          }).catch(() => {
-            this.$message.error(this.$t('user.auth_phone_unbind_fail'))
-          })
-        } else {
-          this.$store.dispatch('axios_sms_auth', {
-            commit: 'auth',
-            country: this.country,
-            mobile: this.phoneNumber,
-            code: this.form.pinCode
-          }).then(res => {
-            if (res.data && +res.data.error === 0) {
-              this.$message.success(this.$t('user.auth_phone_bind_success'))
-              this.$router.push('/me/settings')
-            }
-          }).catch(() => {
-            this.$message.success(this.$t('user.auth_phone_bind_fail'))
-          })
-        }
+        this.$emit('success', 1)
       }
     },
     init () {
-      if (!this.userInfo.mobile) {
-        this.formState.password = 'success'
-        this.formMessage.password = ''
-      }
       this.checkAllState()
     }
   },
