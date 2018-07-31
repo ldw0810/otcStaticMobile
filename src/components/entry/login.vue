@@ -22,12 +22,13 @@
         .empty
         .goButton(v-text="$t('user.login_toRegister')" @click="$router.push('/register')")
       transition(name="slide-right" mode="out-in")
-        .popup(class="popup-right" v-if="validatePhonePopupFlag")
-          slot
-            ValidatePhone(@close="validatePhonePopupFlag = false" @changeValidate="changeValidate('google')" @success="login")
-        .popup(class="popup-right" v-if="validateGooglePopupFlag")
-          slot
-            ValidateGoogle(@close="validateGooglePopupFlag = false" @changeValidate="changeValidate('phone')" @success="login")
+        .popPage
+          .popup(class="popup-right" v-if="validatePhonePopupFlag")
+            slot
+              validatePhoneLogin(@close="validatePhonePopupFlag = false" @changeValidate="changeValidate('google')" @success="login")
+          .popup(class="popup-right" v-if="validateGooglePopupFlag")
+            slot
+              validateGoogleLogin(@close="validateGooglePopupFlag = false" @changeValidate="changeValidate('phone')" @success="login")
     #captcha
 </template>
 <script type="es6">
@@ -36,8 +37,8 @@ import Vue from 'vue'
 import axios from '../../utils/axios'
 import '../../utils/gt'
 import {$getAxiosLanguage} from '../../utils'
-import ValidatePhone from '../common/validatePhone'
-import ValidateGoogle from '../common/validateGoogle'
+import validatePhoneLogin from '../common/validatePhoneLogin'
+import validateGoogleLogin from '../common/validateGoogleLogin'
 import {VALI_PASSWORD_NUMBER} from '../../utils/validator'
 
 Vue.component(Button.name, Button)
@@ -47,8 +48,8 @@ Vue.component(Input.name, Input)
 
 export default {
   components: {
-    ValidatePhone,
-    ValidateGoogle
+    validatePhoneLogin,
+    validateGoogleLogin
   },
   data () {
     return {

@@ -3,7 +3,7 @@
     mt-header(:title="$t('public.asset') + ' - ' + currency.toUpperCase()" fixed)
       router-link(to="/asset" slot="left")
         mt-button(icon="back")
-    .wrapper(v-if="userInfo.id && userInfo.valid_account[currencyIndex]")
+    .page(v-if="userInfo.id && userInfo.valid_account[currencyIndex]")
       .content
         .asset
           .banner
@@ -41,34 +41,40 @@
               mt-tab-container-item(:id="1")
                 .wrapper(v-if="withdraw.withdraw_channels.id")
                   .withdrawPage(v-if="userInfo.mobile || userInfo.app_two_factor")
-                    .form
+                    .addressForm
                       mt-cell(v-if="withdraw.fund_sources.length" :title="$t('asset.asset_withdraw_address')" @click.native.prevent="withdrawAddressFlag = true" is-link)
-                        span {{form.selectAddress.label}}
+                        .label {{form.selectAddress.label}}
                       mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" :label="$t('public.label')" :placeholder="$t('asset.asset_withdraw_label_required')" v-model="form.label" :state="formState.label" @input="checkState('label')")
                       mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" :label="$t('asset.asset_withdraw_address')" :placeholder="$t('asset.asset_withdraw_address_required')" v-model="form.address" :state="formState.address" @input="checkState('address')")
                       mt-field(class="numberBtn" :label="$t('asset.asset_withdraw_number')" :placeholder="amountText" v-model="form.number" :state="formState.number" @input="checkState('number')")
                         .right(name="slot")
                           .currency {{currency.toUpperCase()}}
-                          mt-button(class="withdrawAllBtn" @click.native.prevent="form.number = amount") {{$t("asset.asset_withdraw_all")}}
-                    .tip {{$t("asset.asset_withdraw_address_tip", {'0': withdraw.withdraw_channels.min, '1': withdraw.withdraw_channels ? withdraw.withdraw_channels.fee : 0, '2': currency.toUpperCase()})}}
+                          mt-button(class="withdrawAllBtn" @click.native.prevent="form.number = amount") {{$t('asset.asset_withdraw_all')}}
+                    .tip {{$t('asset.asset_withdraw_address_tip', {'0': withdraw.withdraw_channels.min, '1': withdraw.withdraw_channels ? withdraw.withdraw_channels.fee : 0, '2': currency.toUpperCase()})}}
                     .mintSubmit
-                      mt-button(@click.native.prevent="doWithdraw") {{$t('public.submit')}}
+                      mt-button(:disabled="!formStateAll" @click.native.prevent="checkAndShowConfirm") {{$t('public.submit')}}
                   .noAuthPage(v-else)
-                    .text {{$t("asset.asset_withdraw_no_auth", {'0': currency.toUpperCase()})}}
+                    .text {{$t('asset.asset_withdraw_no_auth', {'0': currency.toUpperCase()})}}
                     mt-button(class="goBtn" @click.native.prevent="$router.push('/me/settings')") {{$t("asset.asset_go_set_auth")}}
       .footer(class="historyButton")
         mt-button(@click="$router.push('/assetHistory')") {{$t('asset.asset_withdraw_and_recharge_history')}}
     transition(name="slide-right" mode="out-in")
-      .popup(class="popup-right" v-if="withdrawAddressFlag")
-        slot
-          SelectWithdrawAddress(@close="withdrawAddressFlag = false" @success="showWithdrawAddress" @add="addWithdrawAddress")
+      .popPage
+        .popup(class="popup-right" v-if="withdrawAddressFlag")
+          slot
+            SelectWithdrawAddress(@close="withdrawAddressFlag = false" @success="showWithdrawAddress" @add="addWithdrawAddress")
+        .popup(class="popup-right" v-if="withdrawConfirmFlag")
+          slot
+            WithdrawConfirm(@close="withdrawConfirmFlag = false" @success="showAuth")
 </template>
 <script type="es6">
 import {Button, Cell, Field, Header, MessageBox, TabContainer, TabContainerItem} from 'mint-ui'
 import Vue from 'vue'
+import ethereumAddress from 'ethereum-address'
 import SelectWithdrawAddress from './selectWithdrawAddress'
 import {$fixDecimalsAsset} from '../../utils'
-import {VALI_ADDRESS_LABEL} from "../../utils/validator";
+import {VALI_ADDRESS_LABEL, VALI_NUMBER} from '../../utils/validator'
+import WithdrawConfirm from './withdrawConfirm'
 
 const configure = require('../../../configure')
 
@@ -82,7 +88,7 @@ Vue.component(TabContainerItem.name, TabContainerItem)
 
 export default {
   name: 'assetDetail',
-  components: {SelectWithdrawAddress},
+  components: {WithdrawConfirm, SelectWithdrawAddress},
   data () {
     return {
       assetOperIndex: this.$route.query.oper === 'deposit' ? 0 : 1,
@@ -120,12 +126,16 @@ export default {
         number: ''
       },
       withdrawAddressFlag: false,
-      withdrawAddressAddFlag: false
+      withdrawAddressAddFlag: false,
+      withdrawConfirmFlag: false
     }
   },
   watch: {
     $route: function () {
       this.init()
+    },
+    'withdrawAddressAddFlag': function () {
+      this.checkAllState()
     }
   },
   computed: {
@@ -195,29 +205,73 @@ export default {
       })
     },
     checkState (value) {
-      // if (value === 'selectAddress') {
-      //   if (this.withdraw.fund_sources.length) {
-      //     if (!this.withdrawAddressAddFlag) {
-      //       this.formState.selectAddress = this.form.selectAddress ? 'success' : ''
-      //       this.formMessage.selectAddress = ''
-      //     } else {
-      //       this.formState.selectAddress = 'success'
-      //       this.formMessage.selectAddress = ''
-      //     }
-      //   } else {
-      //     this.formState.selectAddress = 'success'
-      //     this.formMessage.selectAddress = ''
-      //   }
-      // } else if (value === 'label') {
-      //   if (this.withdraw.fund_sources.length && !this.withdrawAddressAddFlag) {
-      //     this.formState.label = 'success'
-      //     this.formMessage.label = ''
-      //   } else {
-      //     if(this.formState.label.length > )
-      //   } else {
-      //
-      //   }
-      // }
+      if (value === 'selectAddress') {
+        if (this.withdraw.fund_sources.length) {
+          if (!this.withdrawAddressAddFlag) {
+            this.formState.selectAddress = this.form.selectAddress.id ? 'success' : ''
+            this.formMessage.selectAddress = ''
+          } else {
+            this.formState.selectAddress = 'success'
+            this.formMessage.selectAddress = ''
+          }
+        } else {
+          this.formState.selectAddress = 'success'
+          this.formMessage.selectAddress = ''
+        }
+      } else if (value === 'label') {
+        if (this.withdraw.fund_sources.length && !this.withdrawAddressAddFlag) {
+          this.formState.label = 'success'
+          this.formMessage.label = ''
+        } else {
+          if (!this.form.label.length) {
+            this.formState.label = ''
+            this.formMessage.label = ''
+          } else if (this.form.label.length <= VALI_ADDRESS_LABEL.max && this.form.label.length >= VALI_ADDRESS_LABEL.min) {
+            this.formState.label = 'success'
+            this.formMessage.label = ''
+          } else {
+            this.formState.label = 'error'
+            this.formMessage.label = VALI_ADDRESS_LABEL.message
+          }
+        }
+      } else if (value === 'address') {
+        if (this.withdraw.fund_sources.length && !this.withdrawAddressAddFlag) {
+          this.formState.address = 'success'
+          this.formMessage.address = ''
+        } else {
+          if (!this.form.address.length) {
+            this.formState.address = ''
+            this.formMessage.address = ''
+          } else if (ethereumAddress.isAddress(this.form.address)) {
+            this.formState.address = 'success'
+            this.formMessage.address = ''
+          } else {
+            this.formState.address = 'error'
+            this.formMessage.address = this.$t('asset.asset_withdraw_address_invalid')
+          }
+        }
+      } else if (value === 'number') {
+        this.form.number += ''
+        if (!this.form.number.length) {
+          this.formState.number = ''
+          this.formMessage.number = ''
+        } else if (!VALI_NUMBER.regexp(this.form.number)) {
+          this.formState.number = 'error'
+          this.formMessage.number = VALI_NUMBER.message
+        } else if (+this.form.number > +$fixDecimalsAsset(this.account['balance'] || 0)) {
+          this.formState.number = 'error'
+          this.formMessage.number = this.$t('public.balance_insufficient')
+        } else if (+this.form.number < (this.withdraw.withdraw_channels.min || 0)) {
+          this.formState.number = 'error'
+          this.formMessage.number = this.$t('asset.asset_withdraw_number_required', {
+            '0': (this.withdraw.withdraw_channels.min || 0),
+            '1': this.currency.toUpperCase()
+          })
+        } else {
+          this.formState.number = 'success'
+          this.formMessage.number = ''
+        }
+      }
     },
     goOper (index) {
       this.$router.push({
@@ -234,10 +288,12 @@ export default {
     showWithdrawAddress (item) {
       this.form.selectAddress = item
       this.withdrawAddressAddFlag = false
+      this.checkAllState()
     },
     addWithdrawAddress () {
       this.form.selectAddress = {}
       this.withdrawAddressAddFlag = true
+      this.checkAllState()
     },
     getAddress () {
       this.$loading.open()
@@ -294,6 +350,7 @@ export default {
         }).then(res => {
           if (res.data && +res.data.error === 0) {
             this.$store.commit('withdraw_setter', res.data)
+            this.checkAllState()
             this.get_address_id()
           }
         }).catch(() => {
@@ -303,8 +360,62 @@ export default {
     getMe () {
       this.$store.dispatch('axios_me')
     },
-    doWithdraw () {
+    checkAndShowConfirm () {
+      if (this.formMessageAll) {
+        this.$message.error(this.formMessageAll)
+      } else {
+        this.withdrawConfirmFlag = true
+      }
     },
+    showAuth () {
+    },
+    // doWithdraw () {
+    //   if (this.formMessageAll) {
+    //     this.$message.error(this.formMessageAll)
+    //   } else {
+    //     let requestData = {
+    //       currency: this.currency,
+    //       sum: +this.form.number
+    //     }
+    //     if (!this.withdrawAddressAddFlag) {
+    //       requestData.fund_source_id = this.form.selectAddress.id
+    //     } else {
+    //       requestData.uid = this.form.address
+    //       requestData.extra = this.form.label
+    //     }
+    //     if (authJson) {
+    //       requestData = Object.assign(authJson, requestData)
+    //     }
+    //     this.$store.dispatch('ajax_withdraw', requestData).then(res => {
+    //       if (res.data && (res.data.uid || res.data.error === 0)) {
+    //         this.withdraw_id = res.data.id
+    //         this.remainTime = +res.data.remain || 120
+    //         this.withdraw_email = true
+    //         this.$refs.sendCodeButton.init()
+    //         // this.$Message.success(this.$t("asset.asset_withdraw_success"));
+    //         this.initFormData()
+    //         this.initSelectedValue()
+    //         this.getUserInfo()
+    //         this.init()
+    //       } else {
+    //         if (res.data.sms || res.data.app) {
+    //           this.$store.commit('loginInfo_setter', {
+    //             mobile: res.data.mobile
+    //           })
+    //           this.auth_two_flag = true
+    //         } else {
+    //           this.$alert.error({
+    //             title: this.$t('public.error_title_default'),
+    //             content: this.$t('asset.asset_withdraw_fail')
+    //           })
+    //           this.init()
+    //         }
+    //       }
+    //     }).catch(() => {
+    //
+    //     })
+    //   }
+    // },
     init () {
       this.getMe()
       this.assetOperIndex = this.$route.query.oper === 'withdraw' ? 1 : 0
@@ -331,7 +442,6 @@ export default {
     flex 1
     margin-top $mintHeaderHeight
     height 100 - $mintHeaderHeight - footerHeight
-    overflow-y scroll
     .asset {
       display flex
       flex-direction column
@@ -428,7 +538,7 @@ export default {
         align-items center
         justify-content center
         width 100vw
-        height 5vh
+        height $subTitleHeaderHeight
         .btn {
           flex 1
           display flex
@@ -436,7 +546,7 @@ export default {
           justify-content center
           .text {
             color #999999
-            font-size 0.8rem
+            font-size 0.85rem
             font-weight lighter
           }
           .focus {
@@ -459,6 +569,7 @@ export default {
         width 100vw
         .depositPage {
           padding 5vh 8vw
+          overflow-y scroll
           .text {
             font-size 1rem
             color #333333
@@ -482,8 +593,13 @@ export default {
           flex-direction column
           align-items center
           justify-content center
-          padding-bottom 5vh
-          .form {
+          height 55vh
+          overflow-y scroll
+          .addressForm {
+            .label {
+              max-width 68vw
+              word-break break-all
+            }
             .numberBtn {
               .right {
                 display flex
@@ -515,9 +631,12 @@ export default {
             }
           }
           .tip {
-            padding 1.5vh 8vw
+            padding 5vh 8vw 0
             font-size 0.8rem
             color #999999
+          }
+          .mintSubmit {
+            padding 5vh 0
           }
         }
         .noAuthPage {
@@ -526,6 +645,7 @@ export default {
           align-items center
           justify-content center
           padding 5vh 8vw
+          overflow-y scroll
           .text {
             color #333333
             font-weight normal
@@ -539,6 +659,7 @@ export default {
           flex-direction column
           width 100vw
           margin 15vh 0
+          overflow-y scroll
           .tip {
             color #333333
             font-weight normal
@@ -573,6 +694,7 @@ export default {
     font-size 0.8rem
     color #999999
   }
+
   /deep/ .historyButton {
     display flex
     align-items center
@@ -581,8 +703,8 @@ export default {
       width 72vw
       color #333333
       background: #FFFFFF;
-      border: 1px solid rgba(0,0,0,0.10);
-      box-shadow: 0 5px 5px 0 rgba(0,0,0,0.03);
+      border: 1px solid rgba(0, 0, 0, 0.10);
+      box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.03);
       border-radius: 2px;
       .mint-button-text {
         font-size 1rem
@@ -590,6 +712,17 @@ export default {
     }
     .mint-button.is-disabled {
       background: #C8D4E0;
+    }
+  }
+
+  /deep/ .numberBtn.mint-cell {
+    width 100vw
+    .mint-cell-title {
+      width auto
+    }
+    .mint-cell-value {
+      flex 1
+      margin-left 2.5vw
     }
   }
 </style>

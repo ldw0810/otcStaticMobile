@@ -14,6 +14,17 @@ export const $title = function (title) {
   window.document.title = title
 }
 
+export const $getDateStr = function (value) {
+  const getNumStr = (value) => {
+    if (+value > 9) {
+      return '' + value
+    } else {
+      return '0' + value
+    }
+  }
+  const tempDate = new Date(value)
+  return getNumStr(tempDate.getFullYear()) + '/' + getNumStr(tempDate.getMonth() + 1) + '/' + getNumStr(tempDate.getDate()) + ' ' + getNumStr(tempDate.getHours()) + ':' + getNumStr(tempDate.getMinutes()) + ':' + getNumStr(tempDate.getSeconds())
+}
 /**
  *获取当前语言，从localStorage或配置中读取
  *

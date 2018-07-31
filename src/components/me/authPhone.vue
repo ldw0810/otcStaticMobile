@@ -10,12 +10,13 @@
       .submit(class="mintSubmit")
         mt-button(@click="submit" :disabled="!formStateAll") {{$t('user.auth_phone_code_send')}}
     transition(name="slide-right" mode="out-in")
-      .popup(class="popup-right" v-if="countryFlag")
-        slot
-          SelectCountry(@close="countryFlag = false" @success="changeCountry")
-      .popup(class="popup-right" v-if="authPhoneCodeFlag")
-        slot
-          AuthPhoneCode(@close="authPhoneCodeFlag = false" :userInfo="userInfo" :country="country[1]" :phoneNumber="form.phoneNumber")
+      .popPage
+        .popup(class="popup-right" v-if="countryFlag")
+          slot
+            SelectCountry(@close="countryFlag = false" @success="changeCountry")
+        .popup(class="popup-right" v-if="authPhoneCodeFlag")
+          slot
+            AuthPhoneCode(@close="authPhoneCodeFlag = false" :userInfo="userInfo" :country="country[1]" :phoneNumber="form.phoneNumber")
 </template>
 <script type="es6">
 import {Button, Cell, Field, Header} from 'mint-ui'

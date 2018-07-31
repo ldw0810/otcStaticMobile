@@ -5,9 +5,8 @@
         mt-button(icon="back" @click="goBack")
     .wrapper(v-if="withdraw.fund_sources.length")
       .content
-        mt-cell(:title="item.name" @click.native.prevent="goLink(index)" v-for="(item, index) in withdraw.fund_sources" :key="index" is-link)
-          span(slot="title" class="title") {{item.extra}}
-          span {{item.uid}}
+        mt-cell(:title="item.extra" @click.native.prevent="goLink(index)" v-for="(item, index) in withdraw.fund_sources" :key="index" is-link)
+          .label {{item.uid}}
         .mintSubmit
           mt-button(@click.native.prevent="doAdd") {{$t('asset.asset_withdraw_address_add')}}
 </template>
@@ -66,12 +65,12 @@ export default {
     margin-top $mintHeaderHeight + 1
     overflow-y scroll
   }
-  .footer {
-    height 5vh
-    display flex
-    align-items center
-    justify-content center
-    font-size 0.8rem
-    color #999999
+  .label {
+    max-width 75vw
+    margin-left 2.5vw
+    word-break break-all
+  }
+  .mintSubmit {
+    margin-top 2.5vh
   }
 </style>
