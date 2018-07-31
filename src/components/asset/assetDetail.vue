@@ -68,10 +68,10 @@
             WithdrawConfirm(:currency="currency" :form="form" :currencyFee="withdraw.withdraw_channels.fee" @close="withdrawConfirmFlag = false" @success="showAuth")
         .popup(class="popup-right" v-if="withdrawAuthPhoneFlag")
           slot
-            ValidatePhone(@close="withdrawAuthPhoneFlag = false" @success="doWithdraw" @change="changeValidate(0)")
+            ValidatePhone(:needAuth="false" @close="withdrawAuthPhoneFlag = false" @success="doWithdraw" @change="changeValidate(0)")
         .popup(class="popup-right" v-if="withdrawAuthGoogleFlag")
           slot
-            ValidateGoogle(@close="withdrawAuthGoogleFlag = false" @success="doWithdraw" @change="changeValidate(1)")
+            ValidateGoogle(:needAuth="false" @close="withdrawAuthGoogleFlag = false" @success="doWithdraw" @change="changeValidate(1)")
         .popup(class="popup-right" v-if="WithdrawEmailFlag")
           slot
             WithdrawEmail(@close="WithdrawEmailFlag = false" :withdraw_id="withdrawId" :currency="currency")

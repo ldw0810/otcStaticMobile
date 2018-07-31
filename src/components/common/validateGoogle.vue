@@ -25,6 +25,12 @@ Vue.component(Field.name, Field)
 
 export default {
   name: 'validateGoogle',
+  props: {
+    needAuth: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
       form: {
@@ -79,19 +85,24 @@ export default {
       if (this.formMessageAll) {
         this.$message.error(this.formMessageAll)
       } else {
-        this.$loading.open()
         let requestData = {
           op: 'app',
           code: this.form.pinCode
         }
-        this.$store.dispatch('axios_verify_code', requestData).then(res => {
-          if (res.data && +res.data.error === 0) {
-            this.$emit('close', 1)
-            this.$emit('success', requestData)
-          }
-        }).catch(() => {
-          this.$message.error(this.$t('user.auth_phone_fail'))
-        })
+        if (!this.needAuth) {
+          this.$emit('close', 1)
+          this.$emit('success', requestData)
+        } else {
+          this.$loading.open()
+          this.$store.dispatch('axios_verify_code', requestData).then(res => {
+            if (res.data && +res.data.error === 0) {
+              this.$emit('close', 1)
+              this.$emit('success', 1)
+            }
+          }).catch(() => {
+            this.$message.error(this.$t('user.auth_phone_fail'))
+          })
+        }
       }
     },
     init () {
