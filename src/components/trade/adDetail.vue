@@ -7,36 +7,36 @@
     .wrapper(v-if="ad.id")
       .content
         .user
-          .wrapper
-            Avatar(class="avatar" :status='ad.member.online' :statusType="2")
+          .image
+            Avatar(class="avatar" :status='ad.member.online' :statusType="1" :size="6")
             .name {{ad.member.nickname}}
           .info
-            .tradeNumber {{$t("order.order_trade_count", {'0': ad.member.stat.trade_count})}}
-            .border |
-            .goodRate {{$t("order.order_praise_rate")}}: {{ad.member.stat.good_rate}}%
-            .email
-              img(src="../../assets/images/icon/Email-999999.svg")
-            .phone(v-if="ad.member.mobile")
-              img(src="../../assets/images/icon/Phone-999999.svg")
+            .text
+              .infoItem {{$t("order.order_trade_count", {'0': ad.member.stat.trade_count})}}
+              .infoItem {{$t("order.order_praise_rate")}}: {{ad.member.stat.good_rate}}%
+            .icon
+              .infoItem
+                img(src="../../assets/images/icon/Email-999999.svg")
+              .infoItem(v-if="ad.member.mobile")
+                img(src="../../assets/images/icon/Phone-999999.svg")
         .ad
-          .price
-            .title {{$t('order.order_offer')}}
-            .text {{ad.current_price | $fixDecimalAuto(ad.targetCurrency)}} {{ad.target_currency.toUpperCase() + '/' + ad.currency.toUpperCase()}}
-          .limit
-            .title {{$t('order.order_trade_limit')}}
+          .labelList
+            .label {{$t('order.order_offer')}}:
+            .label {{$t('order.order_trade_limit')}}:
+            .label {{$t('order.order_order_payment')}}:
+            .label {{$t('ad.ad_remark')}}:
+          .textList
+            .text {{ad.current_price | $fixDecimalAuto(ad.targetCurrency)}} {{targetCurrency.toUpperCase() + '/' + ad.currency.toUpperCase()}}
             .text {{ad.min_limit | $fixDecimalAuto(ad.targetCurrency)}} - {{ad.order_limit | $fixDecimalAuto(ad.targetCurrency)}}
-          .payment
-            .title {{$t('order.order_order_payment')}}
             .text {{$t('public.' + ad.pay_kind)}}
-          .remark
-            .title {{$t('ad.ad_remark')}}
-            .text {{ad.remark}}
-        .inputDiv
-          .title
-            mt-field(type="number" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input="checkState('amount')")
-              .currency {{targetCurrency.toUpperCase()}}
-            mt-field(type="number" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input="checkState('number')")
-              .currency {{currency.toUpperCase()}}
+            .textArea {{ad.remark}}
+        .border
+        .adForm
+          .label {{adType === 0 ? $t('order.order_buy_title', {'0': currency.toUpperCase()}): $t('order.order_sell_title', {'0': currency.toUpperCase()})}}
+          mt-field(type="number" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input="checkState('amount')")
+            .currency {{targetCurrency.toUpperCase()}}
+          mt-field(type="number" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input="checkState('number')")
+            .currency {{currency.toUpperCase()}}
         .footer
           mt-button(class="submitButton" type='primary' @click="submit") {{adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm')}}
     transition(name="slide-right" mode="out-in")
@@ -117,7 +117,7 @@ export default {
       return this.ad.currency || ''
     },
     targetCurrency () {
-      return this.ad.targetCurrency || ''
+      return this.ad.target_currency || ''
     },
     isLegalTrade () {
       return this.$store.state.code.payable.indexOf(this.targetCurrency) > -1
@@ -175,7 +175,27 @@ export default {
     },
     checkState (value) {
       if (value === 'amount') {
-        this.formState.oldPassword = this.form.oldPassword ? 'success' : ''
+        if (this.form.amount) {
+          if (!/^[0-9]+.?[0-9]*$/.test(this.form.amount)) {
+            this.formState.amount = 'error'
+            this.formMessage.amount = this.$t('validate.must_be_number')
+          } else {
+            this.form.number = $fixDecimalAuto($dividedBy(+this.form.amount, +this.ad.current_price), this.ad.currency)
+            if (this.form.amount < this.ad.min_limit) {
+              this.formState.amount = 'error'
+              this.formMessage.amount = this.$t('ad.ad_floor_limit')
+            } else if (this.form.amount > this.ad.order_limit) {
+              this.formState.amount = 'error'
+              this.formMessage.amount = this.$t('ad.ad_ceiling_limit')
+            } else if (this.form.amount > this.ad.order_limit) {
+              this.formState.amount = 'error'
+              this.formMessage.amount = this.$t('ad.ad_ceiling_limit')
+            }
+          }
+        } else {
+          this.formState.amount = ''
+          this.formMessage.amount = ''
+        }
       } else if (value === 'number') {
         if (this.form.rePassword) {
           if (this.form.rePassword === this.form.newPassword) {
@@ -200,10 +220,11 @@ export default {
     changeNumber () {
       if (+this.form.number >= 0) {
         const tempAmount = $multipliedBy(+this.form.number, +this.ad.current_price)
-        this.form.amount = $fixDecimalAuto(tempAmount, this.ad.target_currency)
+        this.form.amount = $fixDecimalAuto(tempAmount, this.targetCurrency)
       }
     },
     getAd () {
+      this.$loading.open()
       this.$store.dispatch('axios_get_ad', {
         id: this.id
       }).then(res => {
@@ -226,7 +247,6 @@ export default {
     submit (id) {
     },
     init () {
-      this.$loading.close()
       this.getAd()
     }
   },
@@ -237,19 +257,123 @@ export default {
 </script>
 <style lang='stylus' scoped>
   .adDetail {
-    background-color: #fafafa;
-    .user {
-      height 12.88vh
-      width 100vw
-      padding ($mintHeaderHeight + 1) $mintContentPaddingWidth 1vh
-      border-top 1px solid #EEEEEE
-      .wrapper{
+    width 100vw
+    height 100vh
+    background #fafafa
+    overflow hidden
+    display flex
+    flex-direction column
+    .content {
+      flex 1
+      margin-top $mintHeaderHeight
+      overflow-y scroll
+      .user {
         display flex
-        align-items center
-        .name {
-          margin-left 2.5vw
+        flex-direction column
+        background #FFFFFF
+        height 14vh
+        width 100vw
+        margin 1vh 0
+        padding 0 6vw
+        border-top 1px solid #EEEEEE
+        .image {
+          margin-top 1vh
+          flex 1
+          display flex
+          align-items center
+          .name {
+            margin-left 5vw
+            font-size 1.2rem
+            font-weight normal
+            color #333333
+            text-overflow ellipsis
+            overflow hidden
+            white-space nowrap
+          }
+        }
+        .info {
+          flex 1
+          display flex
+          align-items center
+          .text {
+            flex 1
+            display flex
+            align-items center
+            .infoItem {
+              font-size 0.85rem
+              font-weight normal
+              color #333333
+            }
+            .infoItem:nth-child(2) {
+              margin-left 5vw
+            }
+          }
+          .icon {
+            display flex
+            align-items center
+            .infoItem {
+              margin-left 5vw
+            }
+          }
+        }
+      }
+      .ad {
+        display flex
+        background #FFFFFF
+        width 100vw
+        padding 1vh 6vw 5vh
+        border-top 1px solid #EEEEEE
+        .labelList {
+          .label {
+            font-size 1rem
+            font-weight normal
+            color #333333
+            margin 2.5vh 5vw 0 0
+          }
+        }
+        .textList {
+          flex 1
+          .text {
+            font-size 1rem
+            font-weight normal
+            color #333333
+            margin-top 2.5vh
+          }
+          .textArea {
+            font-size 1rem
+            font-weight normal
+            color #333333
+            margin-top 2.5vh
+          }
+        }
+      }
+      .border {
+        margin-left 6vw
+        height 1px
+        background #EEEEEE
+        width 88vw
+      }
+      .adForm {
+        display flex
+        flex-direction column
+        background #FFFFFF
+        width 100vw
+        padding 2.5vh 0 5vh
+        border-bottom 1px solid #EEEEEE
+        .label {
+          font-size 1rem
+          font-weight normal
+          color #333333
+          padding 0 3vw 2.5vh 3vw
         }
       }
     }
+  }
+  /deep/ .currency {
+    font-weight normal
+    margin-left 1vw
+  }
+  /deep/ .mint-field-core {
+    font-weight normal
   }
 </style>
