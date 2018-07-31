@@ -27,6 +27,13 @@ export default {
     },
     default_collection: {}
   },
+  orders: {
+    list: [],
+    page: 1,
+    per_page: 10,
+    total_count: 0,
+    total_pages: 1
+  },
   deposit: {
     account: [],
     deposit_channels: {},

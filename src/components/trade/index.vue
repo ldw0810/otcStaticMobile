@@ -8,7 +8,7 @@
         .icon(:class="{'show': currencyListFlag}")
           img(src="../../assets/images/icon/PullDown-999999.svg")
       .balance
-        .number {{tradePrice | fixDecimalAuto(targetCurrency)}}
+        .number {{tradePrice | $fixDecimalAuto(targetCurrency)}}
         .targetCurrency {{targetCurrency.toUpperCase()}}
     mt-navbar(v-model="navbarIndex" class="navbar")
       LinkBarItem(:class="'navbarItem_' + index" v-for="(item, index) in navList" :id="index" :route="getNavbarRoute(index)" :key="index")

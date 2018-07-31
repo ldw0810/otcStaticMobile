@@ -7,7 +7,7 @@ export default {
     value = value.toString()
     return value.charAt(0).toUpperCase() + value.slice(1)
   },
-  fixDecimalAuto: function (value, currency) {
+  $fixDecimalAuto: function (value, currency) {
     return $fixDecimalAuto(value, currency)
   },
   $fixDecimalsAsset: function (value) {

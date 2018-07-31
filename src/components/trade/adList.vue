@@ -18,11 +18,11 @@
             el-button(class="operation" :class="{'sell': adType === 1}" type='primary' @click="submit(ad.id)") {{adType === 0 ? $t('public.buy') : $t('public.sell')}}
           .contentDown
             .price
-              .number {{ad.current_price | fixDecimalAuto(ad.target_currency)}}
+              .number {{ad.current_price | $fixDecimalAuto(ad.target_currency)}}
               .text {{$t('order.order_unit_price', {'0': currency.toUpperCase()})}}
             .border
             .limit
-              .number {{ad.min_limit | fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | fixDecimalAuto( ad.target_currency)}}
+              .number {{ad.min_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | $fixDecimalAuto( ad.target_currency)}}
               .text {{$t('order.order_limit')}}
     EmptyList(class="emptyDiv" :text='emptyMessage' :loading="adsLoading" v-else)
 </template>
@@ -166,7 +166,7 @@ export default {
         this.$store.commit('showAuthEmail_setter', 1)
       } else {
         this.$router.push({
-          path: '/detail',
+          path: '/ad',
           query: {
             id: id
           }

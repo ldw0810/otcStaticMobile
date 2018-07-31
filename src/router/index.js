@@ -109,7 +109,8 @@ const routers = [
     ]
   },
   {
-    path: '/detail',
+    path: '/adDetail',
+    alias: ['/ad'],
     component: trade.adDetail
   },
   {

@@ -1,40 +1,44 @@
 <template lang="pug">
   .adDetail
-    <!--HeaderBar(fixed :leftLink="backLink" :rightText="$t('order.order_trade_notice')" @rightClick="popupFlag = true" :title="(adType === 0 ? $t('public.buy') : $t('public.sell')) + currency.toUpperCase()")-->
-    .user
-      .wrapper
-        Avatar(class="avatar" :status='ad.member.online' :statusType="2")
-        .name {{ad.member.nickname}}
-      .info
-        .tradeNumber {{$t("order.order_trade_count", {'0': ad.member.stat.trade_count})}}
-        .border |
-        .goodRate {{$t("order.order_praise_rate")}}: {{ad.member.stat.good_rate}}%
-        .email
-          img(src="../../assets/images/icon/Email-999999.svg")
-        .phone(v-if="ad.member.mobile")
-          img(src="../../assets/images/icon/Phone-999999.svg")
-    .ad
-      .price
-        .title
-        .text
-      .limit
-        .title
-        .text
-      .payment
-        .title
-        .text
-      .remark
-        .title
-        .text
-    .inputDiv
-      .title
-        el-input(class="input" v-model="form.amount" @change="changeAmount" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')")
-          slot {{targetCurrency.toUpperCase()}}
-        .icon
-        el-input(class="input" v-model="form.number" @change="changeNumber" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')")
-          slot {{currency.toUpperCase()}}
-    .footer
-      el-button(class="submitButton" type='primary' @click="submit") {{adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm')}}
+    mt-header(:title="(adType === 0 ? $t('public.buy') : $t('public.sell')) + currency.toUpperCase()" fixed)
+      router-link(:to="backLink" slot="left")
+        mt-button(icon="back")
+      .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
+    .wrapper(v-if="ad.id")
+      .content
+        .user
+          .wrapper
+            Avatar(class="avatar" :status='ad.member.online' :statusType="2")
+            .name {{ad.member.nickname}}
+          .info
+            .tradeNumber {{$t("order.order_trade_count", {'0': ad.member.stat.trade_count})}}
+            .border |
+            .goodRate {{$t("order.order_praise_rate")}}: {{ad.member.stat.good_rate}}%
+            .email
+              img(src="../../assets/images/icon/Email-999999.svg")
+            .phone(v-if="ad.member.mobile")
+              img(src="../../assets/images/icon/Phone-999999.svg")
+        .ad
+          .price
+            .title {{$t('order.order_offer')}}
+            .text {{ad.current_price | $fixDecimalAuto(ad.targetCurrency)}} {{ad.target_currency.toUpperCase() + '/' + ad.currency.toUpperCase()}}
+          .limit
+            .title {{$t('order.order_trade_limit')}}
+            .text {{ad.min_limit | $fixDecimalAuto(ad.targetCurrency)}} - {{ad.order_limit | $fixDecimalAuto(ad.targetCurrency)}}
+          .payment
+            .title {{$t('order.order_order_payment')}}
+            .text {{$t('public.' + ad.pay_kind)}}
+          .remark
+            .title {{$t('ad.ad_remark')}}
+            .text {{ad.remark}}
+        .inputDiv
+          .title
+            mt-field(type="number" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input="checkState('amount')")
+              .currency {{targetCurrency.toUpperCase()}}
+            mt-field(type="number" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input="checkState('number')")
+              .currency {{currency.toUpperCase()}}
+        .footer
+          mt-button(class="submitButton" type='primary' @click="submit") {{adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm')}}
     transition(name="slide-right" mode="out-in")
       .popup(class="popup-right" v-if="popupFlag")
         slot
@@ -44,18 +48,16 @@
 import Policy from '../policy/policy'
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
-import {Loadmore} from 'mint-ui'
-import {Button, Form, FormItem, Input} from 'element-ui'
+import {Header, Loadmore, Button, Field} from 'mint-ui'
 import Vue from 'vue'
 import {$dividedBy, $multipliedBy, $fixDecimalAuto} from '../../utils'
 
 // const configure = require('../../../configure')
 
 Vue.component(Loadmore.name, Loadmore)
+Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
-Vue.component(Form.name, Form)
-Vue.component(FormItem.name, FormItem)
-Vue.component(Input.name, Input)
+Vue.component(Field.name, Field)
 
 export default {
   name: 'adDetail',
@@ -65,21 +67,6 @@ export default {
     EmptyList
   },
   data () {
-    // const validateNumberLimitCheck = (rule, value, callback) => {
-    //   if (+this.ad.min_limit > +this.ad.order_limit) {
-    //     callback(new Error(this.$t('ad.ad_ceiling_number_notValid')))
-    //   } else if (+value < this.ad.min_limit) {
-    //     callback(new Error(this.$t('ad.ad_min_number_required', {
-    //       '0': this.ad.min_limit
-    //     })))
-    //   } else if (+value > this.ad.order_limit) {
-    //     callback(new Error(this.$t('ad.ad_ceiling_limit', {
-    //       '0': this.ad.order_limit
-    //     })))
-    //   } else {
-    //     callback()
-    //   }
-    // }
     return {
       ad: {
         member: {
@@ -90,8 +77,17 @@ export default {
         amount: '',
         number: ''
       },
+      formState: {
+        amount: '',
+        number: ''
+      },
+      formMessage: {
+        amount: '',
+        number: ''
+      },
       isSelfOrder: false,
-      popupFlag: false
+      popupFlag: false,
+      showRulesFlag: false
     }
   },
   watch: {
@@ -151,9 +147,50 @@ export default {
           return this.balanceObj[this.currency] >= this.limitCurrencyPrice
         }
       }
+    },
+    formStateAll () {
+      const tempStateList = Object.keys(this.formState)
+      for (let i = 0; i < tempStateList.length; i++) {
+        if (this.formState[tempStateList[i]] === '') {
+          return false
+        }
+      }
+      return true
+    },
+    formMessageAll () {
+      const tempMessageList = Object.keys(this.formMessage)
+      for (let i = 0; i < tempMessageList.length; i++) {
+        if (this.formMessage[tempMessageList[i]] !== '') {
+          return this.formMessage[tempMessageList[i]]
+        }
+      }
+      return ''
     }
   },
   methods: {
+    checkAllState () {
+      Object.keys(this.formState).forEach((item) => {
+        this.checkState(item)
+      })
+    },
+    checkState (value) {
+      if (value === 'amount') {
+        this.formState.oldPassword = this.form.oldPassword ? 'success' : ''
+      } else if (value === 'number') {
+        if (this.form.rePassword) {
+          if (this.form.rePassword === this.form.newPassword) {
+            this.formState.rePassword = 'success'
+            this.formMessage.rePassword = ''
+          } else {
+            this.formState.rePassword = 'error'
+            this.formMessage.rePassword = this.$t('user.password_different')
+          }
+        } else {
+          this.formState.rePassword = ''
+          this.formMessage.rePassword = ''
+        }
+      }
+    },
     changeAmount () {
       if (+this.form.amount >= 0) {
         const tempNumber = $dividedBy(+this.form.amount, +this.ad.current_price)
