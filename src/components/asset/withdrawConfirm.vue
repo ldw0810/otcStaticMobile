@@ -13,7 +13,7 @@
           .tip {{'(' + $t('asset.asset_miners_fee') + currencyFee + ' ' + currency.toUpperCase() + ')'}}
       .submit
         .mintSubmit
-          mt-button(class="submitBtn" @click="$emit('success', 1)") {{$t('public.confirm')}}
+          mt-button(class="submitBtn" @click="success") {{$t('public.confirm')}}
         .mintCancel
           mt-button(class="cancelBtn" @click="goBack") {{$t('public.cancel')}}
 </template>
@@ -52,6 +52,10 @@ export default {
   methods: {
     goBack () {
       this.$emit('close', 1)
+    },
+    success () {
+      this.$emit('close', 1)
+      this.$emit('success', 1)
     },
     init () {
     }

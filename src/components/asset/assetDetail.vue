@@ -55,7 +55,7 @@
                       mt-button(:disabled="!formStateAll" @click.native.prevent="checkAndShowConfirm") {{$t('public.submit')}}
                   .noAuthPage(v-else)
                     .text {{$t('asset.asset_withdraw_no_auth', {'0': currency.toUpperCase()})}}
-                    mt-button(class="goBtn" @click.native.prevent="$router.push('/me/settings')") {{$t("asset.asset_go_set_auth")}}
+                    mt-button(class="goBtn" @click.native.prevent="$router.push('/me/settings')") {{$t('asset.asset_go_set_auth')}}
       .footer(class="historyButton")
         mt-button(@click="$router.push('/assetHistory')") {{$t('asset.asset_withdraw_and_recharge_history')}}
     transition(name="slide-right" mode="out-in")
@@ -68,10 +68,13 @@
             WithdrawConfirm(:currency="currency" :form="form" :currencyFee="withdraw.withdraw_channels.fee" @close="withdrawConfirmFlag = false" @success="showAuth")
         .popup(class="popup-right" v-if="withdrawAuthPhoneFlag")
           slot
-            ValidatePhone(@close="withdrawAuthPhoneFlag = false" @success="showAuth")
+            ValidatePhone(@close="withdrawAuthPhoneFlag = false" @success="doWithdraw" @change="changeValidate(0)")
         .popup(class="popup-right" v-if="withdrawAuthGoogleFlag")
           slot
-            ValidateGoogle(@close="withdrawAuthGoogleFlag = false" @success="showAuth")
+            ValidateGoogle(@close="withdrawAuthGoogleFlag = false" @success="doWithdraw" @change="changeValidate(1)")
+        .popup(class="popup-right" v-if="WithdrawEmailFlag")
+          slot
+            WithdrawEmail(@close="WithdrawEmailFlag = false" :withdraw_id="withdrawId" :currency="currency")
 </template>
 <script type="es6">
 import {Button, Cell, Field, Header, MessageBox, TabContainer, TabContainerItem} from 'mint-ui'
@@ -83,6 +86,7 @@ import {$fixDecimalsAsset} from '../../utils'
 import {VALI_ADDRESS_LABEL, VALI_NUMBER} from '../../utils/validator'
 import ValidatePhone from '../common/ValidatePhone'
 import ValidateGoogle from '../common/ValidateGoogle'
+import WithdrawEmail from './withdrawEmail';
 
 const configure = require('../../../configure')
 
@@ -96,7 +100,7 @@ Vue.component(TabContainerItem.name, TabContainerItem)
 
 export default {
   name: 'assetDetail',
-  components: {ValidatePhone, ValidateGoogle, WithdrawConfirm, SelectWithdrawAddress},
+  components: {WithdrawEmail, ValidatePhone, ValidateGoogle, WithdrawConfirm, SelectWithdrawAddress},
   data () {
     return {
       assetOperIndex: this.$route.query.oper === 'deposit' ? 0 : 1,
@@ -137,7 +141,9 @@ export default {
       withdrawAddressAddFlag: false,
       withdrawConfirmFlag: false,
       withdrawAuthPhoneFlag: false,
-      withdrawAuthGoogleFlag: false
+      withdrawAuthGoogleFlag: false,
+      WithdrawEmailFlag: false,
+      withdrawId: ''
     }
   },
   watch: {
@@ -377,61 +383,54 @@ export default {
         this.withdrawConfirmFlag = true
       }
     },
+    changeValidate (value) {
+      if (+value === 0) {
+        this.withdrawAuthPhoneFlag = false
+        this.withdrawAuthGoogleFlag = true
+      } else {
+        this.withdrawAuthGoogleFlag = false
+        this.withdrawAuthPhoneFlag = true
+      }
+    },
     showAuth () {
-      this.withdrawConfirmFlag = false
       if (this.userInfo.mobile) {
         this.withdrawAuthPhoneFlag = true
       } else if (this.userInfo.app_two_factor) {
         this.withdrawAuthGoogleFlag = true
       }
     },
-    // doWithdraw () {
-    //   if (this.formMessageAll) {
-    //     this.$message.error(this.formMessageAll)
-    //   } else {
-    //     let requestData = {
-    //       currency: this.currency,
-    //       sum: +this.form.number
-    //     }
-    //     if (!this.withdrawAddressAddFlag) {
-    //       requestData.fund_source_id = this.form.selectAddress.id
-    //     } else {
-    //       requestData.uid = this.form.address
-    //       requestData.extra = this.form.label
-    //     }
-    //     if (authJson) {
-    //       requestData = Object.assign(authJson, requestData)
-    //     }
-    //     this.$store.dispatch('ajax_withdraw', requestData).then(res => {
-    //       if (res.data && (res.data.uid || res.data.error === 0)) {
-    //         this.withdraw_id = res.data.id
-    //         this.remainTime = +res.data.remain || 120
-    //         this.withdraw_email = true
-    //         this.$refs.sendCodeButton.init()
-    //         // this.$Message.success(this.$t("asset.asset_withdraw_success"));
-    //         this.initFormData()
-    //         this.initSelectedValue()
-    //         this.getUserInfo()
-    //         this.init()
-    //       } else {
-    //         if (res.data.sms || res.data.app) {
-    //           this.$store.commit('loginInfo_setter', {
-    //             mobile: res.data.mobile
-    //           })
-    //           this.auth_two_flag = true
-    //         } else {
-    //           this.$alert.error({
-    //             title: this.$t('public.error_title_default'),
-    //             content: this.$t('asset.asset_withdraw_fail')
-    //           })
-    //           this.init()
-    //         }
-    //       }
-    //     }).catch(() => {
-    //
-    //     })
-    //   }
-    // },
+    doWithdraw (authForm) {
+      this.$loading.open()
+      let requestData = {
+        currency: this.currency,
+        sum: +this.form.number
+      }
+      if (!this.withdrawAddressAddFlag) {
+        requestData.fund_source_id = this.form.selectAddress.id
+      } else {
+        requestData.uid = this.form.address
+        requestData.extra = this.form.label
+      }
+      if (typeof authForm === 'object') {
+        console.log(1)
+        requestData = Object.assign(authForm, requestData)
+      }
+      this.$store.dispatch('axios_withdraw', requestData).then(res => {
+        if (res.data && (res.data.uid || res.data.error === 0)) {
+          this.withdrawId = res.data.id
+          this.init()
+          this.withdrawEmailFlag = true
+        } else if (res.data && +res.data.error === 100017) {
+          if (this.userInfo.mobile) {
+            this.withdrawAuthPhoneFlag = true
+          } else if (this.userInfo.app_two_factor) {
+            this.withdrawAuthGoogleFlag = true
+          }
+        }
+      }).catch(() => {
+        this.$message.error(this.$t('asset.asset_withdraw_fail'))
+      })
+    },
     init () {
       this.getMe()
       this.assetOperIndex = this.$route.query.oper === 'withdraw' ? 1 : 0
