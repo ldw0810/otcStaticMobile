@@ -11,6 +11,7 @@
         .email {{userInfo.email}}
         .info {{$t('asset.asset_withdraw_email')}}
       .submit
+        mt-button(class="formButton" @click="goBack") {{$t('public.confirm')}}
         SendCode(ref="sendCode" class="submitButton" :text="$t('user.authentication_email_reSend_link')" :reText="$t('user.authentication_email_reSend_link')" :time="remainTime" :maxTime="maxTime" :once="!+remainTime" @sendCode="sendEmail")
 </template>
 <script type="es6">
@@ -123,6 +124,9 @@ export default {
       align-items flex-start
       justify-content center
       height buttonHeight
+      .formButton {
+        margin-bottom 2.5vh
+      }
       .submitButton {
         height 5vh
         background-image: linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%);

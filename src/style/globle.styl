@@ -58,7 +58,6 @@
     height 4.5vw
   }
 }
-
 .goDiv {
   display: flex;
   margin: 0 14vw;
@@ -84,6 +83,25 @@
     color #FFFFFF
     background-image: linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%);
     box-shadow: 0 5px 5px 0 rgba(102,187,191,0.14);
+    border-radius: 2px;
+    .mint-button-text {
+      font-size 1rem
+    }
+  }
+  .mint-button.is-disabled {
+    background: #C8D4E0;
+  }
+}
+/deep/ .mintCancel {
+  display flex
+  align-items center
+  justify-content center
+  .mint-button {
+    width 72vw
+    color #333333
+    background: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.10);
+    box-shadow: 0 5px 5px 0 rgba(0,0,0,0.03);
     border-radius: 2px;
     .mint-button-text {
       font-size 1rem

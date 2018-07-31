@@ -1,68 +1,47 @@
 <template lang="pug">
-  .authPhone
-    mt-header(:title="$t('user.auth_phone')" fixed)
+  .validatePhone
+    mt-header(:title="userInfo.mobile ? $t('user.auth_phone_del') : $t('user.auth_phone_add')" fixed)
       span(slot="left")
         mt-button(icon="back" @click="goBack")
-    .wrapper(v-if="userInfo.id")
+    .wrapper
       .content
-        mt-cell(:title="country[0] + ' +' + country[2]" @click.native.prevent="countryFlag = true" is-link v-if="!userInfo.mobile")
-        mt-field(type="tel" :label="$t('user.auth_phone_number')" :placeholder="$t('user.auth_phone_number_required')" v-model="form.phoneNumber" :state="formState.phoneNumber" :disabled="userInfo.mobile" @input="checkState('phoneNumber')")
+        mt-field(type="password" :label="$t('user.password')" :placeholder="$t('user.password_required')" v-model="form.password" :state="formState.password" @input="checkState('password')" v-if="userInfo.mobile")
+        mt-field(type="text" :label="$t('user.auth_phone_code')" :placeholder="$t('user.auth_phone_code_required')" v-model="form.pinCode" :state="formState.pinCode" @input="checkState('pinCode')")
       .submit(class="mintSubmit")
-        mt-button(@click="submit" :disabled="!formStateAll") {{$t('user.auth_phone_code_send')}}
-    transition(name="slide-right" mode="out-in")
-      .popPage
-        .popup(class="popup-right" v-if="countryFlag")
-          slot
-            SelectCountry(@close="countryFlag = false" @success="changeCountry")
-        .popup(class="popup-right" v-if="authPhoneCodeFlag")
-          slot
-            AuthPhoneCode(@close="authPhoneCodeFlag = false" :userInfo="userInfo" :country="country[1]" :phoneNumber="form.phoneNumber")
+        mt-button(@click="submit" :disabled="!formStateAll") {{$t('public.confirm')}}
 </template>
 <script type="es6">
-import {Button, Cell, Field, Header} from 'mint-ui'
+import {Button, Field, Header} from 'mint-ui'
 import Vue from 'vue'
-import SelectCountry from './selectCountry'
-import AuthPhoneCode from './authPhoneCode'
 
 Vue.component(Header.name, Header)
-Vue.component(Cell.name, Cell)
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
 
 export default {
-  name: 'authPhone',
-  components: {AuthPhoneCode, SelectCountry},
+  name: 'validatePhone',
+  props: {
+    userInfo: '',
+    country: '',
+    phoneNumber: ''
+  },
   data () {
     return {
-      country: ['China', 'CN', '86'],
       form: {
-        phoneNumber: ''
+        password: '',
+        pinCode: ''
       },
       formState: {
-        phoneNumber: ''
+        password: '',
+        pinCode: ''
       },
       formMessage: {
-        phoneNumber: ''
-      },
-      countryFlag: false,
-      authPhoneCodeFlag: false
-    }
-  },
-  watch: {
-    'userInfo.mobile' (value) {
-      if (value) {
-        this.form.phoneNumber = this.userInfo.phone_number
-        this.formState.phoneNumber = 'success'
-        this.formMessage.phoneNumber = ''
-      } else {
-        this.form.phoneNumber = ''
+        password: '',
+        pinCode: ''
       }
     }
   },
   computed: {
-    userInfo () {
-      return this.$store.state.userInfo
-    },
     formStateAll () {
       const tempStateList = Object.keys(this.formState)
       for (let i = 0; i < tempStateList.length; i++) {
@@ -92,66 +71,55 @@ export default {
       })
     },
     checkState (value) {
-      if (value === 'phoneNumber') {
+      if (value === 'password') {
         if (this.userInfo.mobile) {
-          this.formState.phoneNumber = this.form.phoneNumber ? 'success' : ''
-          this.formMessage.phoneNumber = ''
+          this.formState.password = this.form.password ? 'success' : ''
         } else {
-          if (this.form.phoneNumber) {
-            if (!/^[0-9]+.?[0-9]*$/.test(this.form.phoneNumber)) {
-              this.formState.phoneNumber = 'error'
-              this.formMessage.phoneNumber = this.$t('validate.must_be_number')
-            } else {
-              this.formState.phoneNumber = 'success'
-              this.formMessage.phoneNumber = ''
-            }
-          } else {
-            this.formState.phoneNumber = ''
-            this.formMessage.phoneNumber = ''
-          }
+          this.formState.password = 'success'
         }
+      } else if (value === 'pinCode') {
+        this.formState.pinCode = this.form.pinCode ? 'success' : ''
       }
-    },
-    changeCountry (value) {
-      this.country = value
-    },
-    getMe () {
-      this.$store.dispatch('axios_me').then(() => {
-        this.form.phoneNumber = this.userInfo.mobile ? this.userInfo.phone_number : ''
-      })
     },
     submit () {
       if (this.formMessageAll) {
         this.$message.error(this.formMessageAll)
       } else {
         this.$loading.open()
-        if (!this.userInfo.mobile) {
-          this.$store.dispatch('axios_sms_auth', {
-            commit: 'send_code',
-            country: this.country[1],
-            mobile: this.form.phoneNumber
+        if (this.userInfo.mobile) {
+          this.$store.dispatch('axios_unbind_sms', {
+            password: this.form.password,
+            code: this.form.pinCode
           }).then(res => {
             if (res.data && +res.data.error === 0) {
-              this.authPhoneCodeFlag = true
+              this.$message.success(this.$t('user.auth_phone_unbind_success'))
+              this.$router.push('/me/settings')
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_phone_code_send_fail'))
+            this.$message.error(this.$t('user.auth_phone_unbind_fail'))
           })
         } else {
-          this.$store.dispatch('axios_refresh', {
-            refresh: 1
+          this.$store.dispatch('axios_sms_auth', {
+            commit: 'auth',
+            country: this.country,
+            mobile: this.phoneNumber,
+            code: this.form.pinCode
           }).then(res => {
             if (res.data && +res.data.error === 0) {
-              this.authPhoneCodeFlag = true
+              this.$message.success(this.$t('user.auth_phone_bind_success'))
+              this.$router.push('/me/settings')
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_phone_code_send_fail'))
+            this.$message.success(this.$t('user.auth_phone_bind_fail'))
           })
         }
       }
     },
     init () {
-      this.getMe()
+      if (!this.userInfo.mobile) {
+        this.formState.password = 'success'
+        this.formMessage.password = ''
+      }
       this.checkAllState()
     }
   },
@@ -161,7 +129,7 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  .authPhone {
+  .validatePhone {
     width 100vw
     height 100vh
     background #fafafa
@@ -174,17 +142,5 @@ export default {
 
   .submit {
     margin-top 2.5vh
-  }
-
-  .popup {
-    width 100%
-    height 100%
-    background #FFFFFF
-    overflow: scroll;
-    overflow-scrolling touch
-    -webkit-overflow-scrolling: touch;
-  }
-  /deep/ .mint-field-core {
-    height 6vh
   }
 </style>

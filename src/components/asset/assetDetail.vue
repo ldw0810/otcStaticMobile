@@ -65,16 +65,24 @@
             SelectWithdrawAddress(@close="withdrawAddressFlag = false" @success="showWithdrawAddress" @add="addWithdrawAddress")
         .popup(class="popup-right" v-if="withdrawConfirmFlag")
           slot
-            WithdrawConfirm(@close="withdrawConfirmFlag = false" @success="showAuth")
+            WithdrawConfirm(:currency="currency" :form="form" :currencyFee="withdraw.withdraw_channels.fee" @close="withdrawConfirmFlag = false" @success="showAuth")
+        .popup(class="popup-right" v-if="withdrawAuthPhoneFlag")
+          slot
+            ValidatePhone(@close="withdrawAuthPhoneFlag = false" @success="showAuth")
+        .popup(class="popup-right" v-if="withdrawAuthGoogleFlag")
+          slot
+            ValidateGoogle(@close="withdrawAuthGoogleFlag = false" @success="showAuth")
 </template>
 <script type="es6">
 import {Button, Cell, Field, Header, MessageBox, TabContainer, TabContainerItem} from 'mint-ui'
 import Vue from 'vue'
 import ethereumAddress from 'ethereum-address'
 import SelectWithdrawAddress from './selectWithdrawAddress'
+import WithdrawConfirm from './withdrawConfirm'
 import {$fixDecimalsAsset} from '../../utils'
 import {VALI_ADDRESS_LABEL, VALI_NUMBER} from '../../utils/validator'
-import WithdrawConfirm from './withdrawConfirm'
+import ValidatePhone from '../common/ValidatePhone'
+import ValidateGoogle from '../common/ValidateGoogle'
 
 const configure = require('../../../configure')
 
@@ -88,7 +96,7 @@ Vue.component(TabContainerItem.name, TabContainerItem)
 
 export default {
   name: 'assetDetail',
-  components: {WithdrawConfirm, SelectWithdrawAddress},
+  components: {ValidatePhone, ValidateGoogle, WithdrawConfirm, SelectWithdrawAddress},
   data () {
     return {
       assetOperIndex: this.$route.query.oper === 'deposit' ? 0 : 1,
@@ -127,7 +135,9 @@ export default {
       },
       withdrawAddressFlag: false,
       withdrawAddressAddFlag: false,
-      withdrawConfirmFlag: false
+      withdrawConfirmFlag: false,
+      withdrawAuthPhoneFlag: false,
+      withdrawAuthGoogleFlag: false
     }
   },
   watch: {
@@ -368,6 +378,12 @@ export default {
       }
     },
     showAuth () {
+      this.withdrawConfirmFlag = false
+      if (this.userInfo.mobile) {
+        this.withdrawAuthPhoneFlag = true
+      } else if (this.userInfo.app_two_factor) {
+        this.withdrawAuthGoogleFlag = true
+      }
     },
     // doWithdraw () {
     //   if (this.formMessageAll) {

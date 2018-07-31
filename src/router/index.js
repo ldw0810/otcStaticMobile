@@ -53,6 +53,7 @@ const me = {
 const routers = [
   {
     path: '/',
+    redirect: '/buy',
     component: page.home,
     meta: {
       needLogin: true
@@ -113,6 +114,7 @@ const routers = [
   },
   {
     path: '/assetDetail',
+    alias: ['/asset'],
     component: asset.assetDetail
   },
   {
