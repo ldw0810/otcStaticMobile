@@ -43,5 +43,6 @@
     "speed": 5000,
     "list": [
     ]
-  }
+  },
+  "LIST_NUMBER_PER_PAGE": 10
 }

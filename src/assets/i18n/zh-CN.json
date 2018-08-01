@@ -146,7 +146,11 @@
     "no_asset_recharge": "没有充值的信息",
     "no_asset_withdraw": "没有提现的信息",
     "success_title_default": "成功",
-    "error_title_default": "错误"
+    "error_title_default": "错误",
+    "loadMore_topPullText": "下拉刷新",
+    "loadMore_bottomPullText": "上拉刷新",
+    "loadMore_dropText": "释放刷新",
+    "loadMore_loadingText": "加载中..."
   },
   "user": {
     "register_error": "请输入正确的注册信息",
@@ -511,6 +515,8 @@
   },
   "order": {
     "order_detail": "订单详情",
+    "order_hide_detail": "隐藏详情",
+    "order_show_detail": "显示详情",
     "order_unit_price": "单价({0})",
     "remark_required": "请输入订单相关内容",
     "order_unfinished": "未完成订单",

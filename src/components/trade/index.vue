@@ -243,7 +243,6 @@ export default {
       height $navbarHeaderHeight
       background: #FFFFFF;
       border-bottom 1px solid #EEEEEE
-
     }
     .page {
       position absolute
@@ -301,6 +300,7 @@ export default {
           display flex
           align-items center
           justify-content center
+          border-top 1px solid #EEEEEE
           border-bottom 1px solid #EEEEEE
           &:active, &:hover, &:focus {
             background #DDDDDD

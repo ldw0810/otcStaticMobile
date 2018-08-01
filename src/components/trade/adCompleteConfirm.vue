@@ -80,6 +80,7 @@ export default {
       display flex
       padding 5vh 6vw
       flex-direction column
+      border-top 1px solid #EEEEEE
       border-bottom 1px solid #EEEEEE
       .info {
         .text {

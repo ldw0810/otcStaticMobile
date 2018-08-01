@@ -27,6 +27,7 @@ export default {
     },
     default_collection: {}
   },
+  ads: {},
   orders: {
     list: [],
     page: 1,

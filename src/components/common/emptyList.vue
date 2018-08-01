@@ -5,14 +5,13 @@
         img(src="../../assets/images/icon/advertisement-ccc.svg" width="55" height="48" v-if='iconType === 1')
         img(src="../../assets/images/icon/order-ccc.svg" width="55" height="55" v-if='iconType === 2')
       p(class='text') {{text}}
-    .loadingShow(v-else)
 </template>
 <script type="es6">
 export default {
   props: {
     loading: {
       type: Boolean,
-      default: true
+      default: false
     },
     text: {
       type: String,

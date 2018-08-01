@@ -146,7 +146,11 @@
     "no_asset_recharge": "沒有充值的信息",
     "no_asset_withdraw": "沒有提現的信息",
     "success_title_default": "成功",
-    "error_title_default": "錯誤"
+    "error_title_default": "錯誤",
+    "loadMore_topPullText": "下拉刷新",
+    "loadMore_bottomPullText": "上拉刷新",
+    "loadMore_dropText": "釋放刷新",
+    "loadMore_loadingText": "加載中..."
   },
   "user": {
     "register_error": "請輸入正確的註冊信息",
@@ -511,6 +515,8 @@
   },
   "order": {
     "order_detail": "訂單詳情",
+    "order_hide_detail": "隱藏詳情",
+    "order_show_detail": "顯示詳情",
     "order_unit_price": "單價({0})",
     "remark_required": "請輸入訂單相關內容",
     "order_unfinished": "未完成訂單",

@@ -58,11 +58,10 @@ import EmptyList from '../common/emptyList'
 import OrderCreateConfirm from './orderCreateConfirm'
 import AdCompleteConfirm from './adCompleteConfirm'
 import Rules from '../policy/rules'
-import {Button, Field, Header, Loadmore} from 'mint-ui'
+import {Button, Field, Header} from 'mint-ui'
 import Vue from 'vue'
 import {$dividedBy, $fixDecimalAuto, $multipliedBy} from '../../utils'
 
-Vue.component(Loadmore.name, Loadmore)
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
@@ -419,6 +418,7 @@ export default {
         background #FFFFFF
         width 100vw
         padding 2.5vh 0 5vh
+        border-top 1px solid #EEEEEE
         border-bottom 1px solid #EEEEEE
         .label {
           font-size 1rem

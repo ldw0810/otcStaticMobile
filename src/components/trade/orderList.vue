@@ -1,36 +1,39 @@
 <template lang="pug">
-  .order(v-if="+orders.error === 0")
-    <!--mt-loadmore(:top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore")-->
-    .itemList(v-if="orders.list.length")
-      .item(v-for="(order, index) in orders.list" :key="index" @click="goOrder(order)")
-        .notice(:class="{'noticeShow': order.notice_order !== 0}")
-        .wrapper
-          .content
-            Avatar(class="avatar" :status="order.member.online" :statusType="1" :size="6")
-            .info
-              .name {{order.member.nickname}}
-              .infoItem
-                .text {{$t("order.order_id")}}:
-                .value {{order.id}}
-              .infoItem
-                .text {{$t("order.order_time")}}:
-                .value {{+order.created_at * 1000 | $getDateStr()}}
-              .infoItem
-                .text {{$t("order.order_number")}}:
-                .value {{order.amount | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
-              .infoItem
-                .text {{$t("order.order_money_amount")}}:
-                .value {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
-            mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary' disabled) {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
-          .border
-          .status(:class="{'complete': ['over', 'complete'].indexOf(order.status) > -1}") {{$t("order.order_status_" + order.status)}}
-    EmptyList(:text='emptyMessage' v-else)
+  .order(v-if="+orders.error === 0" :style="{'-webkit-overflow-scrolling': scrollMode}")
+    mt-loadmore(:autoFill="false" :top-method="loadTop" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
+      .itemList(v-if="orders.list.length")
+        .item(v-for="(order, index) in orders.list" :key="index" @click="goOrder(order)")
+          .notice(:class="{'noticeShow': order.notice_order !== 0}")
+          .wrapper
+            .content
+              Avatar(class="avatar" :status="order.member.online" :statusType="1" :size="6")
+              .info
+                .name {{order.member.nickname}}
+                .infoItem
+                  .text {{$t("order.order_id")}}:
+                  .value {{order.id}}
+                .infoItem
+                  .text {{$t("order.order_time")}}:
+                  .value {{+order.created_at * 1000 | $getDateStr()}}
+                .infoItem
+                  .text {{$t("order.order_number")}}:
+                  .value {{order.amount | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
+                .infoItem
+                  .text {{$t("order.order_money_amount")}}:
+                  .value {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
+              mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary' @click="goOrder(order)" disabled) {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
+            .border
+            .status(:class="{'complete': ['over', 'complete'].indexOf(order.status) > -1}") {{$t("order.order_status_" + order.status)}}
+      EmptyList(:text='emptyMessage' v-else)
 </template>
 <script type="es6">
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
 import {Loadmore, Button} from 'mint-ui'
 import Vue from 'vue'
+import unionBy from 'lodash/unionBy'
+
+const configure = require('../../../configure')
 
 Vue.component(Loadmore.name, Loadmore)
 Vue.component(Button.name, Button)
@@ -42,8 +45,10 @@ export default {
   },
   data () {
     return {
+      ordersLoading: false,
+      scrollMode: 'auto',
       allLoaded: false,
-      pageIndex: 1
+      bottomPageIndex: 1
     }
   },
   computed: {
@@ -53,22 +58,48 @@ export default {
   },
   methods: {
     loadTop () {
-      this.$refs.loadmore.onTopLoaded()
+      this.getOrders(0).then(() => {
+        this.$refs.loadmore.onTopLoaded()
+      })
     },
     loadBottom () {
-      this.$refs.loadmore.onBottomLoaded()
+      this.bottomPageIndex++
+      this.getOrders(1).then(() => {
+        this.$refs.loadmore.onBottomLoaded()
+      })
     },
-    showOrders () {
-      this.$loading.open()
-      this.$store.dispatch('axios_order_list', {
-        limit: +this.orders.per_page,
-        page: +this.pageIndex || +this.orders.page
-      }).then(res => {
-        if (res.data && +res.data.error === 0) {
-          this.$store.commit('orders_setter', res.data)
+    getOrders (type) {
+      return new Promise((resolve, reject) => {
+        if (!type && !(type === 0)) {
+          this.$loading.open()
         }
-      }).catch(() => {
-        this.$message.error(this.$t('order.order_data_request_fail'))
+        this.ordersLoading = true
+        this.$store.dispatch('axios_order_list', {
+          limit: configure.LIST_NUMBER_PER_PAGE,
+          page: type ? this.bottomPageIndex : 1
+        }).then(res => {
+          this.ordersLoading = false
+          if (res.data && +res.data.error === 0) {
+            let tempData = res.data
+            if (!type) {
+              tempData.list = unionBy(tempData.list, this.orders.list, 'id')
+            } else {
+              tempData.list = unionBy(this.orders.list, tempData.list, 'id')
+            }
+            if (tempData.total_pages < this.bottomPageIndex + 1) {
+              this.allLoaded = true
+            }
+            this.$store.commit('orders_setter', tempData)
+            this.$nextTick(() => {
+              this.scrollMode = 'touch'
+            })
+          }
+          resolve()
+        }).catch(() => {
+          this.ordersLoading = false
+          this.$message.error(this.$t('order.order_data_request_fail'))
+          resolve()
+        })
       })
     },
     goOrder (item) {
@@ -80,7 +111,7 @@ export default {
       })
     },
     init () {
-      this.showOrders()
+      this.getOrders()
     }
   },
   mounted () {

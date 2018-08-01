@@ -6,36 +6,64 @@
       .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
     .wrapper(v-if="order.id")
       .content
-        .info
-          .labelList
-            .label {{$t('order.order_id')}}:
-            .label {{$t('order.order_money_amount')}}:
-            .label {{$t('order.order_order_price')}}:
-            .label {{orderType === 0 ? $t("order.order_buy_number_title") : $t("order.order_sell_number_title")}}
-            .label {{$t('order.order_order_payment')}}:
-          .textList
-            .text {{ad.current_price | $fixDecimalAuto(targetCurrency)}} {{targetCurrency.toUpperCase() + '/' + currency.toUpperCase()}}
-            .text {{ad.min_limit | $fixDecimalAuto(targetCurrency)}} - {{ad.order_limit | $fixDecimalAuto(targetCurrency)}}
-            .text {{ad.pay_kind ? $t('public.' + ad.pay_kind) : ''}}
-            .textArea {{ad.remark}}
-        .border
-        .remark
-          .label {{$t('ad.ad_remark')}}
-          .text {{order.remark}}
+        .info(v-if="triggerInfoFlag")
+          .list
+            .labelList
+              .label {{$t('order.order_id')}}:
+              .label {{$t('order.order_money_amount')}}:
+              .label {{$t('order.order_order_price')}}:
+              .label {{orderType === 0 ? $t("order.order_buy_number_title") : $t("order.order_sell_number_title")}}:
+              .label {{$t('order.order_order_payment')}}:
+            .textList
+              .text {{order.id}}
+              .text {{order.amount | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
+              .text {{order.price | $fixDecimalAuto(order.currency)}} {{order.target_currency.toUpperCase() + '/' + order.currency.toUpperCase()}}
+              .text {{order.price_sum | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
+              .text {{order.pay_kind ? $t('public.' + order.pay_kind) : ''}}
+            .btn(@click="triggerInfo") {{$t('order.order_hide_detail')}}
+          .border
+          .remark
+            .label {{$t('ad.ad_remark')}}:
+            .text {{order.remark}}
+        .info(v-else)
+          .list
+            .labelList
+              .label {{$t('order.order_id')}}:
+              .label {{$t('order.order_money_amount')}}:
+            .textList
+              .text {{order.id}}
+              .text {{order.amount | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
+            .btn(@click="triggerInfo") {{$t('order.order_show_detail')}}
         .oper
           .tip {{stepTip}}
-          .input
-            mt-button(class="submitButton" type='primary' @click="submit" :disabled="!formStateAll || isSelfOrder") {{isSelfOrder ? $t('order.order_join_own_otc_ad') : (adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm'))}}
-            mt-button(class="submitButton" type='primary' @click="submit" :disabled="!formStateAll || isSelfOrder") {{isSelfOrder ? $t('order.order_join_own_otc_ad') : (adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm'))}}
-        .chat
+          .submit(class="mintSubmit" v-if="order.status === 'timeout'")
+            mt-button(disabled) {{$t('order.order_deal_timeout')}}
+          .submit(class="mintSubmit" v-else-if="['cancel', 'judge_seller'].indexOf(order.status) > -1")
+            mt-button(disabled) {{$t('order.order_deal_cancel')}}
+          .submit(class="mintSubmit" v-else-if="order.status === 'over'")
+            mt-button(disabled) {{$t('order.order_deal_complete')}}
+          .submit(class="orderSubmit" v-else-if="order.status === 'fresh' && !orderType")
+            mt-button(@click="orderOper('pay')") {{$t('order.order_pay_complete')}}
+            mt-button(@click="orderOper('cancel')") {{$t('order.order_pay_cancel')}}
+          .submit(class="orderSubmit" v-else-if="order.status === 'pay' && !orderType")
+            mt-button(disabled) {{$t('order.order_pay_completed')}}
+            mt-button(disabled) {{$t('order.order_pay_cancel')}}
+          .submit(class="mintSubmit" v-else-if="['fresh', 'pay'].indexOf(order.status) > -1 && orderType")
+            mt-button(@click="orderOper('release')") {{$t('order.order_pay_release')}}
+          .submit(class="orderSubmit" v-else-if="order.status === 'release' || (order.status === 'sell_eval' && !orderType) || (order.status === 'buy_eval' && orderType)")
+            .radio(class="radio" :class="{'radioChecked': radioIndex === 0}" @click="radioIndex = 0") {{$t("order.order_pay_evaluate_good")}}
+            .radio(class="radio" :class="{'radioChecked': radioIndex === 1}" @click="radioIndex = 1") {{$t("order.order_pay_evaluate_bad")}}
+            mt-button(@click="orderOper('evaluate')") {{$t('order.order_eval')}}
+          .submit(class="mintSubmit" v-else)
+            mt-button(disabled) {{$t('order.order_status_over')}}
     transition(name="slide-right" mode="out-in")
       .popPage
-        .popup(class="popup-right" v-if="showConfirmFlag")
+        .popup(class="popup-right" v-if="confirmFlag.pay")
           slot
-            OrderCreateConfirm(:ad="ad" :form="form" @close="showConfirmFlag = false" @success="createOrder")
-        .popup(class="popup-right" v-if="showCompleteFlag")
+            OrderCreateConfirm(:ad="ad" :form="form" @close="confirmFlag.pay = false" @success="init()")
+        .popup(class="popup-right" v-if="confirmFlag.release")
           slot
-            OrderCompleteConfirm(:ad="ad" :form="form" @close="showCompleteFlag = false" @success="init()")
+            OrderCompleteConfirm(:ad="ad" :form="form" @close="confirmFlag.release = false" @success="init()")
         .popup(class="popup-right" v-if="showRulesFlag")
           slot
             Rules(@close="showRulesFlag = false" @success="init()")
@@ -47,11 +75,9 @@ import EmptyList from '../common/emptyList'
 import OrderCreateConfirm from './orderCreateConfirm'
 import OrderCompleteConfirm from './adCompleteConfirm'
 import Rules from '../policy/rules'
-import {Button, Field, Header, Loadmore} from 'mint-ui'
+import {Button, Field, Header} from 'mint-ui'
 import Vue from 'vue'
-import {$dividedBy, $fixDecimalAuto, $multipliedBy} from '../../utils'
 
-Vue.component(Loadmore.name, Loadmore)
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
@@ -78,6 +104,7 @@ export default {
         cancel: false,
         complete: false
       },
+      triggerInfoFlag: true,
       showRulesFlag: false,
       evaluate: '0',
       cancelFlag: true,
@@ -85,7 +112,8 @@ export default {
       chatFlag: false,
       chatMessage: '',
       remainTime: 0,
-      timer: 0
+      timer: 0,
+      radioIndex: -1
     }
   },
   watch: {
@@ -97,142 +125,13 @@ export default {
     orderType () {
       return this.order.op_type === 'buy' ? 0 : 1
     },
-    userInfo () {
-      return this.$store.state.userInfo
-    },
     id () {
       return this.$route.query.id
-    },
-    backLink () {
-      return {
-        path: this.adType === 0 ? '/buy' : '/sell',
-        query: {
-          currency: this.currency
-        }
-      }
-    },
-    currency () {
-      return this.ad.currency || ''
-    },
-    targetCurrency () {
-      return this.ad.target_currency || ''
-    },
-    isLegalTrade () {
-      return this.$store.state.code.payable.indexOf(this.targetCurrency) > -1
-    },
-    balanceObj () {
-      let obj = {}
-      for (let i = 0; i < this.userInfo.valid_account.length; i++) {
-        obj[this.userInfo.valid_account[i].currency] = +this.userInfo.valid_account[i].balance
-      }
-      return obj
-    },
-    formStateAll () {
-      const tempStateList = Object.keys(this.formState)
-      for (let i = 0; i < tempStateList.length; i++) {
-        if (this.formState[tempStateList[i]] === '') {
-          return false
-        }
-      }
-      return true
-    },
-    formMessageAll () {
-      const tempMessageList = Object.keys(this.formMessage)
-      for (let i = 0; i < tempMessageList.length; i++) {
-        if (this.formMessage[tempMessageList[i]] !== '') {
-          return this.formMessage[tempMessageList[i]]
-        }
-      }
-      return ''
     }
   },
   methods: {
-    checkAllState () {
-      Object.keys(this.formState).forEach((item) => {
-        this.checkState(item)
-      })
-      console.log(this.formMessageAll)
-    },
-    checkState (value) {
-      if (value === 'amount') {
-        if (this.form.amount) {
-          if (!/^[0-9]+.?[0-9]*$/.test(this.form.amount)) {
-            this.formState.amount = 'error'
-            this.formMessage.amount = this.$t('validate.must_be_number')
-          } else if (this.form.amount < this.ad.min_limit) {
-            this.formState.amount = 'error'
-            this.formMessage.amount = this.$t('ad.ad_floor_limit')
-          } else if (this.form.amount > this.ad.order_limit) {
-            this.formState.amount = 'error'
-            this.formMessage.amount = this.$t('ad.ad_ceiling_limit')
-          } else if (!this.checkBalance(value)) {
-            this.formState.amount = 'error'
-            this.formMessage.amount = this.$t('public.balance_insufficient')
-          } else {
-            this.formState.amount = 'success'
-            this.formMessage.amount = ''
-          }
-        } else {
-          this.formState.amount = ''
-          this.formMessage.amount = ''
-        }
-      } else if (value === 'number') {
-        if (this.form.number) {
-          if (!/^[0-9]+.?[0-9]*$/.test(this.form.number)) {
-            this.formState.number = 'error'
-            this.formMessage.number = this.$t('validate.must_be_number')
-          } else if (this.form.number < 0) {
-            this.formState.number = 'error'
-            this.formMessage.number = this.$t('public.input_number_required')
-          } else if (!this.checkBalance(value)) {
-            this.formState.number = 'error'
-            this.formMessage.number = this.$t('public.balance_insufficient')
-          } else {
-            this.formState.number = 'success'
-            this.formMessage.number = ''
-          }
-        } else {
-          this.formState.number = ''
-          this.formMessage.number = ''
-        }
-      }
-    },
-    checkBalance (type) {
-      if (type === 'amount') {
-        if (this.isLegalTrade || +this.adType === 1) {
-          return true
-        } else {
-          return this.balanceObj[this.targetCurrency] >= this.form.amount
-        }
-      } else if (type === 'number') {
-        if (this.isLegalTrade || +this.adType === 0) {
-          return true
-        } else {
-          return this.balanceObj[this.currency] >= this.form.number
-        }
-      }
-    },
-    changeInput (value) {
-      if (value === 'amount') {
-        if (+this.form.amount >= 0) {
-          if (+this.form.amount > this.ad.order_limit) {
-            this.form.amount = this.ad.order_limit
-          }
-          const tempNumber = $dividedBy(+this.form.amount, +this.ad.current_price)
-          this.form.number = $fixDecimalAuto(tempNumber, this.currency)
-        }
-      } else if (value === 'number') {
-        if (+this.form.number >= 0) {
-          const tempAmount = $multipliedBy(+this.form.number, +this.ad.current_price)
-          this.form.amount = $fixDecimalAuto(tempAmount, this.targetCurrency)
-          if (+this.form.amount > this.ad.order_limit) {
-            this.form.amount = this.ad.order_limit
-          }
-          const tempNumber = $dividedBy(+this.form.amount, +this.ad.current_price)
-          this.form.number = $fixDecimalAuto(tempNumber, this.currency)
-        }
-      }
-      this.checkAllState()
+    triggerInfo () {
+      this.triggerInfoFlag = !this.triggerInfoFlag
     },
     showTip () {
       this.timer && clearTimeout(this.timer)
@@ -268,7 +167,6 @@ export default {
           this.chat = res.data.chat
           this.remainTime = +(res.data.info.remainTime || 0)
           this.showTip()
-          this.showStep()
         }
       }).catch(() => {
         this.$message.error(this.$t('order.order_info_request_fail'))
@@ -276,9 +174,9 @@ export default {
     },
     orderOper (operStr) {
       if (operStr === 'pay') {
-        this.confirmPayFlag = true
+        this.confirmFlag.pay = true
       } else if (operStr === 'release') {
-        this.confirmReleaseFlag = true
+        this.confirmFlag.release = true
       } else if (operStr === 'evaluate') {
         if (+this.evaluate) {
           this.$store.dispatch('axios_order_evaluate', {
@@ -296,9 +194,9 @@ export default {
           this.$message.error(this.$t('order.order_pay_evaluate_required'))
         }
       } else if (operStr === 'complete') {
-        this.confirmCompleteFlag = true
+        this.confirmFlag.complete = true
       } else if (operStr === 'cancel') {
-        this.confirmCancelFlag = true
+        this.confirmFlag.cancel = true
       } else {
       }
     },
@@ -360,7 +258,7 @@ export default {
               this.$Message.success(
                 this.$t('order.order_pay_cancel_success')
               )
-              this.getOrderInfo()
+              this.getOrder()
             } else {
               this.cancelFlag = false
               // this.$Message.error(this.$t("order.order_pay_cancel_fail"));
@@ -378,34 +276,6 @@ export default {
       } else {
         this.showConfirmFlag = true
       }
-    },
-    createOrder () {
-      this.$loading.open()
-      this.$store.dispatch('axios_order_buy', {
-        id: this.id,
-        price: +this.ad.current_price,
-        price_sum: +this.form.amount
-      }).then(res => {
-        if (res.data && +res.data.error === 0) {
-          if (this.isLegalTrade) {
-            this.$router.push({
-              path: '/order',
-              query: {
-                id: res.data.order_id
-              }
-            })
-          } else {
-            this.showCompleteFlag = true
-          }
-        } else if (res.data && +res.data.error === 100052) {
-          this.$router.push(this.backLink)
-        } else {
-          this.init()
-        }
-      }).catch(() => {
-        this.$message.error(this.$t('order.order_deal_request_fail'))
-        this.init()
-      })
     },
     init () {
       this.getOrder()
@@ -429,104 +299,73 @@ export default {
       margin-top $mintHeaderHeight
       height 100 - $footerHeight - $mintHeaderHeight
       overflow-y scroll
-      .user {
+      .info {
         display flex
         flex-direction column
+        margin-top 1vh
+        padding 0 6vw 2.5vh
         background #FFFFFF
-        height 14vh
-        width 100vw
-        margin 1vh 0
-        padding 0 6vw
         border-top 1px solid #EEEEEE
-        .image {
-          margin-top 1vh
-          flex 1
+        border-bottom 1px solid #EEEEEE
+        .list {
           display flex
-          align-items center
-          .name {
-            margin-left 5vw
-            font-size 1.2rem
-            font-weight normal
-            color #333333
-            text-overflow ellipsis
-            overflow hidden
-            white-space nowrap
-          }
-        }
-        .info {
-          flex 1
-          display flex
-          align-items center
-          .text {
-            flex 1
-            display flex
-            align-items center
-            .infoItem {
-              font-size 0.85rem
+          .labelList {
+            .label {
+              font-size 1rem
               font-weight normal
               color #333333
-            }
-            .infoItem:nth-child(2) {
-              margin-left 5vw
+              margin 2.5vh 5vw 0 0
             }
           }
-          .icon {
-            display flex
-            align-items center
-            .infoItem {
-              margin-left 5vw
+          .textList {
+            flex 1
+            .text {
+              font-size 1rem
+              font-weight normal
+              color #333333
+              margin-top 2.5vh
             }
+          }
+          .btn {
+            margin-top 2.5vh
+            color #2EA2F8
+            font-size 1rem
           }
         }
-      }
-      .ad {
-        display flex
-        background #FFFFFF
-        width 100vw
-        padding 1vh 6vw 5vh
-        border-top 1px solid #EEEEEE
-        .labelList {
+        .border {
+          align-self center
+          margin 2.5vh 0
+          height 1px
+          width 88vw
+          background #EEEEEE
+        }
+        .remark {
+          padding-bottom 2.5vh
           .label {
             font-size 1rem
             font-weight normal
             color #333333
-            margin 2.5vh 5vw 0 0
           }
-        }
-        .textList {
-          flex 1
           .text {
             font-size 1rem
             font-weight normal
             color #333333
-            margin-top 2.5vh
-          }
-          .textArea {
-            font-size 1rem
-            font-weight normal
-            color #333333
-            margin-top 2.5vh
           }
         }
       }
-      .border {
-        margin-left 6vw
-        height 1px
-        background #EEEEEE
-        width 88vw
-      }
-      .adForm {
+      .oper {
         display flex
         flex-direction column
+        margin-top 1vh
+        padding 2.5vh 0
         background #FFFFFF
-        width 100vw
-        padding 2.5vh 0 5vh
+        border-top 1px solid #EEEEEE
         border-bottom 1px solid #EEEEEE
-        .label {
-          font-size 1rem
-          font-weight normal
-          color #333333
-          padding 0 3vw 2.5vh 3vw
+        .tip {
+
+        }
+        .input {
+
         }
       }
     }

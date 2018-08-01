@@ -15,52 +15,54 @@
           mt-tab-container(v-model="assetHistoryIndex")
             mt-tab-container-item(:id="0")
               .wrapper(v-if="deposit.deposit_channels.id")
-                .historyPage(v-if="deposit.deposits_history.length")
-                  .item(v-for="(item, index) in deposit.deposits_history" :key="index")
-                    .info
-                      .time {{item.created_at | $getDateStr()}}
-                      .state
-                        .text {{$t('asset[\'asset_recharge_status_' + item.aasm_state + '\']')}}
-                        .button {{item.confirmations < (deposit.deposit_channels ? +deposit.deposit_channels.max_confirm : 0) ? '&nbsp;&nbsp;' + item.confirmations + '/' + (deposit.deposit_channels ? + deposit.deposit_channels.max_confirm : 0): ''}}
-                    .numberDiv
-                      .tip {{$t('asset.asset_number') + ': '}}
-                      .number {{(item.amount || 0) | $fixDecimalsAsset()}}
-                    .txidDiv
-                      .tip {{'Txid: '}}
-                      .txid(@click="goBlockUrl(item)") {{item.txid}}
-                .noDataPage(v-else)
-                  EmptyList(class="emptyDiv" :loading="false" :text="$t('public.no_asset_recharge')")
+                mt-loadmore(:autoFill="false" :top-method="loadTop" :top-all-loaded="allLoaded" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
+                  .historyPage(v-if="deposit.deposits_history.length")
+                    .item(v-for="(item, index) in deposit.deposits_history" :key="index")
+                      .info
+                        .time {{item.created_at | $getDateStr()}}
+                        .state
+                          .text {{$t('asset[\'asset_recharge_status_' + item.aasm_state + '\']')}}
+                          .button {{item.confirmations < (deposit.deposit_channels ? +deposit.deposit_channels.max_confirm : 0) ? '&nbsp;&nbsp;' + item.confirmations + '/' + (deposit.deposit_channels ? + deposit.deposit_channels.max_confirm : 0): ''}}
+                      .numberDiv
+                        .tip {{$t('asset.asset_number') + ': '}}
+                        .number {{(item.amount || 0) | $fixDecimalsAsset()}}
+                      .txidDiv
+                        .tip {{'Txid: '}}
+                        .txid(@click="goBlockUrl(item)") {{item.txid}}
+                  .noDataPage(v-else)
+                    EmptyList(class="emptyDiv" :text="$t('public.no_asset_recharge')")
           mt-tab-container(v-model="assetHistoryIndex")
             mt-tab-container-item(:id="1")
               .wrapper(v-if="withdraw.withdraw_channels.id")
-                .historyPage(v-if="withdraw.withdraws.length")
-                  .item(v-for="(item, index) in withdraw.withdraws" :key="index")
-                    .info
-                      .time {{item.created_at | $getDateStr()}}
-                      .state(v-if="['submitting'].indexOf(item.aasm_state) > -1")
-                        .button(@click="resendWithdraw(item, index)") {{$t('asset.asset_resend_email')}}
-                        .button(@click="cancelWithdraw(item, index)") {{$t('public.cancel')}}
-                      .state(v-else-if="['submitted', 'accepted'].indexOf(item.aasm_state) > -1")
-                        .button(@click="cancelWithdraw(item, index)") {{$t('public.cancel')}}
-                      .state(v-else-if="['suspect', 'processing', 'almost_done', 'failed'].indexOf(item.aasm_state) > -1")
-                        .text {{$t('asset.asset_withdraw_status_underway')}}
-                      .state(v-else)
-                        .text {{$t("asset.asset_withdraw_status_" + item["aasm_state"])}}
-                    .numberDiv
-                      .tip {{$t('asset.asset_number') + ': '}}
-                      .number {{(item.amount || 0) | $fixDecimalsAsset()}}
-                    .txidDiv
-                      .tip {{'Txid: '}}
-                      .txid(@click="goBlockUrl(item)") {{item.fund_uid}}
-                .noDataPage(v-else)
-                  EmptyList(class="emptyDiv" :loading="false" :text="$t('piublic.no_asset_withdraw')")
+                mt-loadmore(:autoFill="false" :top-method="loadTop" :top-all-loaded="allLoaded" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
+                  .historyPage(v-if="withdraw.withdraws.length")
+                    .item(v-for="(item, index) in withdraw.withdraws" :key="index")
+                      .info
+                        .time {{item.created_at | $getDateStr()}}
+                        .state(v-if="['submitting'].indexOf(item.aasm_state) > -1")
+                          .button(@click="resendWithdraw(item, index)") {{$t('asset.asset_resend_email')}}
+                          .button(@click="cancelWithdraw(item, index)") {{$t('public.cancel')}}
+                        .state(v-else-if="['submitted', 'accepted'].indexOf(item.aasm_state) > -1")
+                          .button(@click="cancelWithdraw(item, index)") {{$t('public.cancel')}}
+                        .state(v-else-if="['suspect', 'processing', 'almost_done', 'failed'].indexOf(item.aasm_state) > -1")
+                          .text {{$t('asset.asset_withdraw_status_underway')}}
+                        .state(v-else)
+                          .text {{$t("asset.asset_withdraw_status_" + item["aasm_state"])}}
+                      .numberDiv
+                        .tip {{$t('asset.asset_number') + ': '}}
+                        .number {{(item.amount || 0) | $fixDecimalsAsset()}}
+                      .txidDiv
+                        .tip {{'Txid: '}}
+                        .txid(@click="goBlockUrl(item)") {{item.fund_uid}}
+                  .noDataPage(v-else)
+                    EmptyList(class="emptyDiv" :text="$t('piublic.no_asset_withdraw')")
     transition(name="slide-right" mode="out-in")
       .popup(class="popup-right" v-if="withdrawEmailFlag")
         slot
           WithdrawEmail(:withdraw_id="selectWithdraw.id" :currency="currency" @close="withdrawEmailFlag = false")
 </template>
 <script type="es6">
-import {Button, Header, TabContainer, TabContainerItem} from 'mint-ui'
+import {Button, Header, TabContainer, TabContainerItem, Loadmore} from 'mint-ui'
 import Vue from 'vue'
 import EmptyList from '../common/emptyList'
 import WithdrawEmail from './withdrawEmail'
@@ -71,6 +73,7 @@ Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(TabContainer.name, TabContainer)
 Vue.component(TabContainerItem.name, TabContainerItem)
+Vue.component(Loadmore.name, Loadmore)
 
 export default {
   name: 'assetHistory',
@@ -82,7 +85,8 @@ export default {
     return {
       assetHistoryIndex: this.$route.query.oper === 'deposit' ? 0 : 1,
       withdrawEmailFlag: false,
-      selectWithdraw: {}
+      selectWithdraw: {},
+      allLoaded: false
     }
   },
   watch: {
@@ -105,6 +109,15 @@ export default {
     }
   },
   methods: {
+    loadTop () {
+      setTimeout(() => {
+        this.$refs.loadmore.onTopLoaded()
+      }, 2000)
+    },
+    loadBottom () {
+      console.log(2)
+      this.$refs.loadmore.onBottomLoaded()
+    },
     goBack () {
       this.$router.push({
         path: '/assetDetail',
@@ -228,84 +241,88 @@ export default {
           width 80vw
           background #EEEEEE
         }
-        .historyPage {
-          display flex
-          flex-direction column
-          align-items center
-          background #FFFFFF
-          width 100vw
-          .item {
+        .wrapper {
+          overflow-y scroll
+          .historyPage {
             display flex
             flex-direction column
-            justify-content center
-            padding 2.5vh 6vw
-            border-bottom 1px solid #EEEEEE
-            .info {
+            align-items center
+            background #FFFFFF
+            width 100vw
+            .item {
               display flex
-              align-items center
-              .time {
-                flex 1
-                font-size 0.9rem
-                color #999999
-              }
-              .state {
+              flex-direction column
+              justify-content center
+              padding 2.5vh 6vw
+              border-top 1px solid #EEEEEE
+              border-bottom 1px solid #EEEEEE
+              .info {
                 display flex
                 align-items center
-                .button {
+                .time {
+                  flex 1
                   font-size 0.9rem
-                  font-weight normal
-                  color #2EA2F8
-                  padding-left 5vw
+                  color #999999
                 }
-                .text {
+                .state {
+                  display flex
+                  align-items center
+                  .button {
+                    font-size 0.9rem
+                    font-weight normal
+                    color #2EA2F8
+                    padding-left 5vw
+                  }
+                  .text {
+                    font-size 0.9rem
+                    font-weight normal
+                    color #333333
+                  }
+                }
+              }
+              .numberDiv {
+                display flex
+                align-items center
+                padding-top 1vh
+                .tip {
                   font-size 0.9rem
                   font-weight normal
                   color #333333
                 }
+                .number {
+                  font-size 0.9rem
+                  font-weight normal
+                  color #333333
+                  margin-left 2.5vw
+                }
               }
-            }
-            .numberDiv {
-              display flex
-              align-items center
-              padding-top 1vh
-              .tip {
-                font-size 0.9rem
-                font-weight normal
-                color #333333
-              }
-              .number {
-                font-size 0.9rem
-                font-weight normal
-                color #333333
-                margin-left 2.5vw
-              }
-            }
-            .txidDiv {
-              display flex
-              align-items center
-              padding-top 1vh
-              .tip {
-                font-size 0.9rem
-                font-weight normal
-                color #333333
-              }
-              .txid {
-                font-size 0.9rem
-                font-weight normal
-                color #2EA2F8
-                margin-left 2.5vw
-                word-break break-all
+              .txidDiv {
+                display flex
+                align-items center
+                padding-top 1vh
+                .tip {
+                  font-size 0.9rem
+                  font-weight normal
+                  color #333333
+                }
+                .txid {
+                  font-size 0.9rem
+                  font-weight normal
+                  color #2EA2F8
+                  margin-left 2.5vw
+                  word-break break-all
+                }
               }
             }
           }
-        }
-        .noDataPage {
-          display flex
-          align-items center
-          justify-content center
-          background #FFFFFF
-          width 100vw
-          height 100 - $subTitleHeaderHeight - $mintHeaderHeight
+          .noDataPage {
+            display flex
+            align-items center
+            justify-content center
+            background #FFFFFF
+            width 100vw
+            height 100 - $subTitleHeaderHeight - $mintHeaderHeight
+          }
         }
       }
     }

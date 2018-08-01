@@ -146,7 +146,11 @@
     "no_asset_recharge": "No recharge information",
     "no_asset_withdraw": "No withdraw information",
     "success_title_default": "Success",
-    "error_title_default": "Error"
+    "error_title_default": "Error",
+    "loadMore_topPullText": "Pull refresh",
+    "loadMore_bottomPullText": "Pull up refresh",
+    "loadMore_dropText": "Drop refresh",
+    "loadMore_loadingText": "loading..."
   },
   "user": {
     "register_error": "Enter valid email address",
@@ -511,6 +515,8 @@
   },
   "order": {
     "order_detail": "Order detail",
+    "order_hide_detail": "Hide detail",
+    "order_show_detail": "Show detail",
     "order_unit_price": "Unit price ({0})",
     "remark_required": "Please enter the order related content",
     "order_unfinished": "Processing",

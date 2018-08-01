@@ -1,30 +1,30 @@
 <template lang="pug">
   .adList(:style="{'-webkit-overflow-scrolling': scrollMode}")
-    mt-loadmore(:top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :auto-fill="false" ref="loadmore")
-    .itemList(v-if="ads.list.length")
-      .item(v-for="(ad, index) in ads.list" :key="index")
-        .wrapper
-          .content
-            Avatar(class="avatar" :status='ad.member.online' :statusType="1")
-            .info
-              .name {{ad.member.nickname}}
-              .pack
-                .tradeNumber {{$t("order.order_trade_count", {'0': ad.member.stat.trade_count})}}
-                .border |
-                .goodRate {{$t("order.order_praise_rate")}}: {{ad.member.stat.good_rate}}%
-                .icon
-                  img(src="../../assets/images/trade/C-Alipay.png" v-if="!ad.member.bank")
-                  img(src="../../assets/images/trade/C-Card.png" v-else-if="ad.member.bank")
-            el-button(class="operation" :class="{'sell': adType === 1}" type='primary' @click="submit(ad.id)") {{adType === 0 ? $t('public.buy') : $t('public.sell')}}
-          .contentDown
-            .price
-              .number {{ad.current_price | $fixDecimalAuto(ad.target_currency)}}
-              .text {{$t('order.order_unit_price', {'0': currency.toUpperCase()})}}
-            .border
-            .limit
-              .number {{ad.min_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | $fixDecimalAuto( ad.target_currency)}}
-              .text {{$t('order.order_limit')}}
-    EmptyList(class="emptyDiv" :text='emptyMessage' :loading="adsLoading" v-else)
+    mt-loadmore(:autoFill="false" :top-method="loadTop" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
+      .itemList(v-if="adsData.list.length")
+        .item(v-for="(ad, index) in adsData.list" :key="index")
+          .wrapper
+            .content
+              Avatar(class="avatar" :status='ad.member.online' :statusType="1")
+              .info
+                .name {{ad.member.nickname}}
+                .pack
+                  .tradeNumber {{$t("order.order_trade_count", {'0': ad.member.stat.trade_count})}}
+                  .border |
+                  .goodRate {{$t("order.order_praise_rate")}}: {{ad.member.stat.good_rate}}%
+                  .icon
+                    img(src="../../assets/images/trade/C-Alipay.png" v-if="!ad.member.bank")
+                    img(src="../../assets/images/trade/C-Card.png" v-else-if="ad.member.bank")
+              el-button(class="operation" :class="{'sell': adType === 1}" type='primary' @click="submit(ad.id)") {{adType === 0 ? $t('public.buy') : $t('public.sell')}}
+            .contentDown
+              .price
+                .number {{ad.current_price | $fixDecimalAuto(ad.target_currency)}}
+                .text {{$t('order.order_unit_price', {'0': currency.toUpperCase()})}}
+              .border
+              .limit
+                .number {{ad.min_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | $fixDecimalAuto( ad.target_currency)}}
+                .text {{$t('order.order_limit')}}
+      EmptyList(class="emptyDiv" :text='emptyMessage' :loading="adsLoading" v-else)
 </template>
 <script type="es6">
 import Avatar from '../common/avatar'
@@ -32,6 +32,7 @@ import EmptyList from '../common/emptyList'
 import {Loadmore} from 'mint-ui'
 import {Button} from 'element-ui'
 import Vue from 'vue'
+import unionBy from 'lodash/unionBy'
 
 const configure = require('../../../configure')
 
@@ -46,22 +47,22 @@ export default {
   },
   data () {
     return {
+      adsLoading: false,
       scrollMode: 'auto',
       allLoaded: false,
-      ads: {
-        list: [],
-        page: 1,
-        per_page: 10,
-        total_count: 0,
-        total_pages: 1
-      },
-      adsLoading: false,
-      pageIndex: 1
+      bottomPageIndex: 1,
+      adsData: {list: []}
     }
   },
   watch: {
     $route: function () {
       this.init()
+    },
+    '$store.state.ads': {
+      handle: () => {
+        this.getAds()
+      },
+      deep: true
     }
   },
   computed: {
@@ -95,64 +96,57 @@ export default {
   },
   methods: {
     loadTop () {
-      this.getAdList()
-      this.$refs.loadmore.onTopLoaded()
-    },
-    loadBottom () {
-      this.getAdListMore()
-      this.$refs.loadmore.onBottomLoaded()
-    },
-    getAdList () {
-      this.$loading.open()
-      this.adsLoading = true
-      this.ads.list = []
-      this.$store.dispatch('axios_ads', {
-        limit: +this.ads.per_page,
-        page: +this.pageIndex,
-        op_type: +this.adType === 0 ? 'sell' : 'buy',
-        currency: this.currency
-      }).then(res => {
-        this.adsLoading = false
-        if (res.data && +res.data.error === 0) {
-          this.ads = res.data
-        }
-      }).catch(() => {
-        this.adsLoading = false
-        this.$message.error(this.$t('public.url_request_fail'))
+      this.getAdsData(0).then(() => {
+        this.$refs.loadmore.onTopLoaded()
       })
     },
-    getAdListMore () {
-      this.pageIndex = this.ads.page + 1
-      if (this.pageIndex > this.ads.total_pages) {
-        this.allLoaded = true
-        this.pageIndex = this.ads.page
-      } else {
-        const currentAdsList = this.ads.list
+    loadBottom () {
+      this.bottomPageIndex++
+      this.getAdsData(1).then(() => {
+        this.$refs.loadmore.onBottomLoaded()
+      })
+    },
+    getAds () {
+      this.adsData = this.$store.state.ads[this.currency + '_' + this.targetCurrency + '_' + this.adType] || {list: []}
+    },
+    getAdsData (type) {
+      return new Promise((resolve, reject) => {
+        if (!type && !(type === 0)) {
+          this.$loading.open()
+        }
         this.adsLoading = true
         this.$store.dispatch('axios_ads', {
-          limit: +this.ads.per_page,
-          page: +this.pageIndex,
+          limit: configure.LIST_NUMBER_PER_PAGE,
+          page: type ? this.bottomPageIndex : 1,
           op_type: +this.adType === 0 ? 'sell' : 'buy',
           currency: this.currency
         }).then(res => {
           this.adsLoading = false
           if (res.data && +res.data.error === 0) {
-            this.ads = {
-              list: currentAdsList.concat(res.data.list),
-              page: res.data.page,
-              per_page: res.data.per_page,
-              total_count: res.data.total_count,
-              total_pages: res.data.total_pages
+            let tempData = res.data
+            if (!type) {
+              tempData.list = unionBy(tempData.list, this.adsData.list, 'id')
+            } else {
+              tempData.list = unionBy(this.adsData.list, tempData.list, 'id')
             }
+            if (tempData.total_pages < this.bottomPageIndex + 1) {
+              this.allLoaded = true
+            }
+            this.$store.commit('ads_setter', {
+              key: this.currency + '_' + this.targetCurrency + '_' + this.adType,
+              value: tempData
+            })
             this.$nextTick(() => {
               this.scrollMode = 'touch'
             })
           }
+          resolve()
         }).catch(() => {
           this.adsLoading = false
           this.$message.error(this.$t('public.url_request_fail'))
+          resolve()
         })
-      }
+      })
     },
     submit (id) {
       if (!this.$store.state.userToken) {
@@ -174,7 +168,10 @@ export default {
       }
     },
     init () {
-      this.getAdList()
+      this.getAds()
+      this.getAdsData().then(() => {
+        this.getAds()
+      })
     }
   },
   mounted () {
@@ -184,7 +181,10 @@ export default {
 </script>
 <style lang='stylus' scoped>
   .adList {
+    width 100vw
+    height 100 - $currencyHeaderHeight - $navbarHeaderHeight - $tabbarFooterHeight
     background-color: #fafafa;
+    overflow-y scroll
     .itemList {
       margin-bottom 1vh
       .item {
