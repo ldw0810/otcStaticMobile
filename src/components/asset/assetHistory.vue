@@ -14,7 +14,7 @@
         .operContent
           mt-tab-container(v-model="assetHistoryIndex")
             mt-tab-container-item(:id="0")
-              .wrapper(v-if="deposit.deposit_channels.id")
+              .wrapper(v-if="deposit.deposit_channels.id" :style="{'-webkit-overflow-scrolling': scrollMode}")
                 mt-loadmore(:autoFill="false" :top-method="loadTop" :top-all-loaded="allLoaded" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
                   .historyPage(v-if="deposit.deposits_history.length")
                     .item(v-for="(item, index) in deposit.deposits_history" :key="index")
@@ -33,7 +33,7 @@
                     EmptyList(class="emptyDiv" :text="$t('public.no_asset_recharge')")
           mt-tab-container(v-model="assetHistoryIndex")
             mt-tab-container-item(:id="1")
-              .wrapper(v-if="withdraw.withdraw_channels.id")
+              .wrapper(v-if="withdraw.withdraw_channels.id" :style="{'-webkit-overflow-scrolling': scrollMode}")
                 mt-loadmore(:autoFill="false" :top-method="loadTop" :top-all-loaded="allLoaded" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
                   .historyPage(v-if="withdraw.withdraws.length")
                     .item(v-for="(item, index) in withdraw.withdraws" :key="index")
@@ -66,6 +66,7 @@ import {Button, Header, TabContainer, TabContainerItem, Loadmore} from 'mint-ui'
 import Vue from 'vue'
 import EmptyList from '../common/emptyList'
 import WithdrawEmail from './withdrawEmail'
+import unionBy from 'lodash/unionBy'
 
 const configure = require('../../../configure')
 
@@ -86,7 +87,10 @@ export default {
       assetHistoryIndex: this.$route.query.oper === 'deposit' ? 0 : 1,
       withdrawEmailFlag: false,
       selectWithdraw: {},
-      allLoaded: false
+      historyLoading: false,
+      scrollMode: 'auto',
+      allLoaded: false,
+      bottomPageIndex: 1
     }
   },
   watch: {
@@ -110,13 +114,15 @@ export default {
   },
   methods: {
     loadTop () {
-      setTimeout(() => {
+      this.getHistory(1).then(() => {
         this.$refs.loadmore.onTopLoaded()
-      }, 2000)
+      })
     },
     loadBottom () {
-      console.log(2)
-      this.$refs.loadmore.onBottomLoaded()
+      this.bottomPageIndex++
+      this.getHistory(2).then(() => {
+        this.$refs.loadmore.onBottomLoaded()
+      })
     },
     goBack () {
       this.$router.push({
@@ -138,32 +144,70 @@ export default {
     goBlockUrl (item) {
       item.blockchain_url && window.open(item.blockchain_url)
     },
-    getData () {
-      if (this.assetHistoryIndex === 0) {
-        this.$store.dispatch('axios_get_deposit', {
-          currency: this.currency,
-          limit: this.deposit.per_page,
-          page: this.deposit.page
-        }).then(res => {
-          if (res.data && +res.data.error === 0) {
-            this.$store.commit('deposit_setter', res.data)
-          }
-        }).catch(() => {
-        })
-      } else {
-        this.$store.dispatch('axios_get_withdraw', {
-          currency: this.currency,
-          limit: this.withdraw.per_page,
-          page: this.withdraw.page
-        }).then(res => {
-          if (res.data && +res.data.error === 0) {
-            this.$store.commit('withdraw_setter', res.data)
-            this.checkAllState()
-            this.get_address_id()
-          }
-        }).catch(() => {
-        })
-      }
+    getHistory (type) {
+      return new Promise((resolve, reject) => {
+        if (!type) {
+          this.$loading.open()
+        }
+        this.historyLoading = true
+        if (this.assetHistoryIndex === 0) {
+          this.$store.dispatch('axios_get_deposit', {
+            currency: this.currency,
+            limit: configure.LIST_NUMBER_PER_PAGE,
+            page: +type === 2 ? this.bottomPageIndex : 1
+          }).then(res => {
+            this.historyLoading = false
+            if (res.data && +res.data.error === 0) {
+              let tempData = res.data
+              if (type === 1) {
+                tempData.deposits_history = unionBy(tempData.deposits_history, this.deposit.deposits_history, 'id')
+              } else if (type === 2) {
+                tempData.list = unionBy(this.deposit.deposits_history, tempData.deposits_history, 'id')
+              }
+              if (tempData.total_pages < this.bottomPageIndex + 1) {
+                this.allLoaded = true
+              }
+              this.$store.commit('deposit_setter', tempData)
+              this.$nextTick(() => {
+                this.scrollMode = 'touch'
+              })
+            }
+            resolve()
+          }).catch(() => {
+            this.$message.error(this.$t('asset.asset_recharge_request_fail'))
+            resolve()
+          })
+        } else {
+          this.$store.dispatch('axios_get_withdraw', {
+            currency: this.currency,
+            limit: configure.LIST_NUMBER_PER_PAGE,
+            page: +type === 2 ? this.bottomPageIndex : 1
+          }).then(res => {
+            if (res.data && +res.data.error === 0) {
+              this.historyLoading = false
+              if (res.data && +res.data.error === 0) {
+                let tempData = res.data
+                if (type === 1) {
+                  tempData.withdraws = unionBy(tempData.withdraws, this.deposit.withdraws, 'id')
+                } else if (type === 2) {
+                  tempData.withdraws = unionBy(this.deposit.withdraws, tempData.withdraws, 'id')
+                }
+                if (tempData.total_pages < this.bottomPageIndex + 1) {
+                  this.allLoaded = true
+                }
+                this.$store.commit('withdraw_setter', tempData)
+                this.$nextTick(() => {
+                  this.scrollMode = 'touch'
+                })
+              }
+              resolve()
+            }
+          }).catch(() => {
+            this.$message.error(this.$t('asset.asset_withdraw_request_fail'))
+            resolve()
+          })
+        }
+      })
     },
     getMe () {
       this.$store.dispatch('axios_me')
@@ -188,7 +232,10 @@ export default {
         this.getMe()
       }
       this.assetHistoryIndex = this.$route.query.oper === 'withdraw' ? 1 : 0
-      this.getData()
+      this.scrollMode = 'auto'
+      this.allLoaded = false
+      this.bottomPageIndex = 1
+      this.getHistory()
     }
   },
   mounted () {

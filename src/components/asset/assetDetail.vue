@@ -323,29 +323,6 @@ export default {
         this.$message.error(this.$t('asset.asset_address_request_fail'))
       })
     },
-    get_address_id (val) {
-      this.setAddress = val || ''
-      if (val === 1000) {
-        this.initFormData()
-        this.addNewAddressStatus = true
-      } else if (val) {
-        this.$refs.select && this.$refs.select.updateOptions()
-        this.addNewAddressStatus = false
-        for (let i = 0; i < this.withdraw.fund_sources.length; i++) {
-          if (val === this.withdraw.fund_sources[i].id + '-' + this.withdraw.fund_sources[i].uid) {
-            this.form.id = this.withdraw.fund_sources[i].id
-            this.form.label = this.withdraw.fund_sources[i].extra
-            this.form.labelPlus = this.withdraw.fund_sources[i].extra
-            this.form.address = this.withdraw.fund_sources[i].uid
-            this.form.addressPlus = this.withdraw.fund_sources[i].uid
-            return false
-          }
-        }
-      } else {
-        this.initFormData()
-        this.addNewAddressStatus = false
-      }
-    },
     getData () {
       if (this.assetOperIndex === 0) {
         this.$store.dispatch('axios_get_deposit', {
@@ -367,7 +344,6 @@ export default {
           if (res.data && +res.data.error === 0) {
             this.$store.commit('withdraw_setter', res.data)
             this.checkAllState()
-            this.get_address_id()
           }
         }).catch(() => {
         })

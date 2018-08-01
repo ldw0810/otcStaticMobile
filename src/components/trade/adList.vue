@@ -96,13 +96,13 @@ export default {
   },
   methods: {
     loadTop () {
-      this.getAdsData(0).then(() => {
+      this.getAdsData(1).then(() => {
         this.$refs.loadmore.onTopLoaded()
       })
     },
     loadBottom () {
       this.bottomPageIndex++
-      this.getAdsData(1).then(() => {
+      this.getAdsData(2).then(() => {
         this.$refs.loadmore.onBottomLoaded()
       })
     },
@@ -111,22 +111,22 @@ export default {
     },
     getAdsData (type) {
       return new Promise((resolve, reject) => {
-        if (!type && !(type === 0)) {
+        if (!type) {
           this.$loading.open()
         }
         this.adsLoading = true
         this.$store.dispatch('axios_ads', {
           limit: configure.LIST_NUMBER_PER_PAGE,
-          page: type ? this.bottomPageIndex : 1,
+          page: +type === 2 ? this.bottomPageIndex : 1,
           op_type: +this.adType === 0 ? 'sell' : 'buy',
           currency: this.currency
         }).then(res => {
           this.adsLoading = false
           if (res.data && +res.data.error === 0) {
             let tempData = res.data
-            if (!type) {
+            if (type === 1) {
               tempData.list = unionBy(tempData.list, this.adsData.list, 'id')
-            } else {
+            } else if (type === 2) {
               tempData.list = unionBy(this.adsData.list, tempData.list, 'id')
             }
             if (tempData.total_pages < this.bottomPageIndex + 1) {

@@ -24,7 +24,7 @@
               mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary' @click="goOrder(order)" disabled) {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
             .border
             .status(:class="{'complete': ['over', 'complete'].indexOf(order.status) > -1}") {{$t("order.order_status_" + order.status)}}
-      EmptyList(:text='emptyMessage' v-else)
+      EmptyList(:text='emptyMessage' :loading="ordersLoading" v-else)
 </template>
 <script type="es6">
 import Avatar from '../common/avatar'
@@ -53,37 +53,37 @@ export default {
   },
   computed: {
     orders () {
-      return this.$store.state.orders
+      return this.$store.state.orders || {list: []}
     }
   },
   methods: {
     loadTop () {
-      this.getOrders(0).then(() => {
+      this.getOrders(1).then(() => {
         this.$refs.loadmore.onTopLoaded()
       })
     },
     loadBottom () {
       this.bottomPageIndex++
-      this.getOrders(1).then(() => {
+      this.getOrders(2).then(() => {
         this.$refs.loadmore.onBottomLoaded()
       })
     },
     getOrders (type) {
       return new Promise((resolve, reject) => {
-        if (!type && !(type === 0)) {
+        if (!type) {
           this.$loading.open()
         }
         this.ordersLoading = true
         this.$store.dispatch('axios_order_list', {
           limit: configure.LIST_NUMBER_PER_PAGE,
-          page: type ? this.bottomPageIndex : 1
+          page: +type === 2 ? this.bottomPageIndex : 1
         }).then(res => {
           this.ordersLoading = false
           if (res.data && +res.data.error === 0) {
             let tempData = res.data
-            if (!type) {
+            if (type === 1) {
               tempData.list = unionBy(tempData.list, this.orders.list, 'id')
-            } else {
+            } else if (type === 2) {
               tempData.list = unionBy(this.orders.list, tempData.list, 'id')
             }
             if (tempData.total_pages < this.bottomPageIndex + 1) {

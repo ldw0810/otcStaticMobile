@@ -384,7 +384,6 @@
     "asset_withdraw_status_almost_done": "Sending",
     "asset_withdraw_status_canceled": "Cancelled",
     "asset_withdraw_status_failed": "Failed",
-    "asset_with_request_fail": "Withdraw data request fail",
     "asset_withdraw_no_auth": "You must set two-factor authentication before withdraw {0}",
     "asset_withdraw_request_fail": "Withdraw data request fail",
     "asset_go_set_auth": "Go to setting",

@@ -27,32 +27,22 @@ export default {
     },
     default_collection: {}
   },
-  ads: {},
+  ads: {
+    list: []
+  },
   orders: {
-    list: [],
-    page: 1,
-    per_page: 10,
-    total_count: 0,
-    total_pages: 1
+    list: []
   },
   deposit: {
     account: [],
     deposit_channels: {},
-    deposits_history: [],
-    page: 1,
-    per_page: 10,
-    total_count: 0,
-    total_pages: 1
+    deposits_history: []
   },
   withdraw: {
     default_source_id: '',
     fund_sources: [],
     withdraw_channels: {},
-    withdraws: [],
-    page: 1,
-    per_page: 10,
-    total_count: 0,
-    total_pages: 1
+    withdraws: []
   },
   code: {
     exable: ['cny', 'usd', 'dai', 'ck'],
