@@ -54,7 +54,7 @@ export default {
         },
         {
           name: this.$t('public.order'),
-          path: '/order'
+          path: '/orderList'
         }
       ],
       currencyDefaultData: {

@@ -12,7 +12,7 @@
             .name {{ad.member.nickname}}
           .info
             .text
-              .infoItem {{$t("order.order_trade_count", {'0': ad.member.stat.trade_count})}}
+              .infoItem {{$t('order.order_trade_count', {'0': ad.member.stat.trade_count})}}
               .infoItem {{$t("order.order_praise_rate")}}: {{ad.member.stat.good_rate}}%
             .icon
               .infoItem
@@ -26,33 +26,41 @@
             .label {{$t('order.order_order_payment')}}:
             .label {{$t('ad.ad_remark')}}:
           .textList
-            .text {{ad.current_price | $fixDecimalAuto(ad.targetCurrency)}} {{targetCurrency.toUpperCase() + '/' + ad.currency.toUpperCase()}}
-            .text {{ad.min_limit | $fixDecimalAuto(ad.targetCurrency)}} - {{ad.order_limit | $fixDecimalAuto(ad.targetCurrency)}}
-            .text {{$t('public.' + ad.pay_kind)}}
+            .text {{ad.current_price | $fixDecimalAuto(targetCurrency)}} {{targetCurrency.toUpperCase() + '/' + currency.toUpperCase()}}
+            .text {{ad.min_limit | $fixDecimalAuto(targetCurrency)}} - {{ad.order_limit | $fixDecimalAuto(targetCurrency)}}
+            .text {{ad.pay_kind ? $t('public.' + ad.pay_kind) : ''}}
             .textArea {{ad.remark}}
         .border
         .adForm
           .label {{adType === 0 ? $t('order.order_buy_title', {'0': currency.toUpperCase()}): $t('order.order_sell_title', {'0': currency.toUpperCase()})}}
-          mt-field(type="number" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input="checkState('amount')")
+          mt-field(type="number" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input="changeInput('amount')")
             .currency {{targetCurrency.toUpperCase()}}
-          mt-field(type="number" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input="checkState('number')")
+          mt-field(type="number" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input="changeInput('number')")
             .currency {{currency.toUpperCase()}}
-        .footer
-          mt-button(class="submitButton" type='primary' @click="submit") {{adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm')}}
+      .footer(class="mintSubmit")
+        mt-button(class="submitButton" type='primary' @click="submit" :disabled="!formStateAll || isSelfOrder") {{isSelfOrder ? $t('order.order_join_own_otc_ad') : (adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm'))}}
     transition(name="slide-right" mode="out-in")
-      .popup(class="popup-right" v-if="popupFlag")
-        slot
-          Policy(@close="popupFlag = false")
+      .popPage
+        .popup(class="popup-right" v-if="showConfirmFlag")
+          slot
+            OrderCreateConfirm(:ad="ad" :form="form" @close="showConfirmFlag = false" @success="createOrder")
+        .popup(class="popup-right" v-if="showCompleteFlag")
+          slot
+            OrderCompleteConfirm(:ad="ad" :form="form" @close="showCompleteFlag = false" @success="init()")
+        .popup(class="popup-right" v-if="showRulesFlag")
+          slot
+            Rules(@close="showRulesFlag = false" @success="init()")
 </template>
 <script type="es6">
 import Policy from '../policy/policy'
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
-import {Header, Loadmore, Button, Field} from 'mint-ui'
+import OrderCreateConfirm from './orderCreateConfirm'
+import OrderCompleteConfirm from './orderCompleteConfirm'
+import Rules from '../policy/rules'
+import {Button, Field, Header, Loadmore} from 'mint-ui'
 import Vue from 'vue'
-import {$dividedBy, $multipliedBy, $fixDecimalAuto} from '../../utils'
-
-// const configure = require('../../../configure')
+import {$dividedBy, $fixDecimalAuto, $multipliedBy} from '../../utils'
 
 Vue.component(Loadmore.name, Loadmore)
 Vue.component(Header.name, Header)
@@ -64,7 +72,10 @@ export default {
   components: {
     Policy,
     Avatar,
-    EmptyList
+    EmptyList,
+    OrderCreateConfirm,
+    OrderCompleteConfirm,
+    Rules
   },
   data () {
     return {
@@ -86,7 +97,8 @@ export default {
         number: ''
       },
       isSelfOrder: false,
-      popupFlag: false,
+      showConfirmFlag: false,
+      showCompleteFlag: false,
       showRulesFlag: false
     }
   },
@@ -129,25 +141,6 @@ export default {
       }
       return obj
     },
-    balanceFlag () {
-      if (this.isLegalTrade) {
-        if (this.adType !== 1) {
-          return true
-        } else {
-          return this.balanceObj[this.currency] >= this.currencyLimit
-        }
-      } else {
-        if (this.adType !== 1) {
-          if (this.balanceObj[this.targetCurrency] >= 0) {
-            return +this.balanceObj[this.targetCurrency] >= this.currencyLimit
-          } else {
-            return true
-          }
-        } else {
-          return this.balanceObj[this.currency] >= this.limitCurrencyPrice
-        }
-      }
-    },
     formStateAll () {
       const tempStateList = Object.keys(this.formState)
       for (let i = 0; i < tempStateList.length; i++) {
@@ -172,6 +165,7 @@ export default {
       Object.keys(this.formState).forEach((item) => {
         this.checkState(item)
       })
+      console.log(this.formMessageAll)
     },
     checkState (value) {
       if (value === 'amount') {
@@ -179,49 +173,80 @@ export default {
           if (!/^[0-9]+.?[0-9]*$/.test(this.form.amount)) {
             this.formState.amount = 'error'
             this.formMessage.amount = this.$t('validate.must_be_number')
+          } else if (this.form.amount < this.ad.min_limit) {
+            this.formState.amount = 'error'
+            this.formMessage.amount = this.$t('ad.ad_floor_limit')
+          } else if (this.form.amount > this.ad.order_limit) {
+            this.formState.amount = 'error'
+            this.formMessage.amount = this.$t('ad.ad_ceiling_limit')
+          } else if (!this.checkBalance(value)) {
+            this.formState.amount = 'error'
+            this.formMessage.amount = this.$t('public.balance_insufficient')
           } else {
-            this.form.number = $fixDecimalAuto($dividedBy(+this.form.amount, +this.ad.current_price), this.ad.currency)
-            if (this.form.amount < this.ad.min_limit) {
-              this.formState.amount = 'error'
-              this.formMessage.amount = this.$t('ad.ad_floor_limit')
-            } else if (this.form.amount > this.ad.order_limit) {
-              this.formState.amount = 'error'
-              this.formMessage.amount = this.$t('ad.ad_ceiling_limit')
-            } else if (this.form.amount > this.ad.order_limit) {
-              this.formState.amount = 'error'
-              this.formMessage.amount = this.$t('ad.ad_ceiling_limit')
-            }
+            this.formState.amount = 'success'
+            this.formMessage.amount = ''
           }
         } else {
           this.formState.amount = ''
           this.formMessage.amount = ''
         }
       } else if (value === 'number') {
-        if (this.form.rePassword) {
-          if (this.form.rePassword === this.form.newPassword) {
-            this.formState.rePassword = 'success'
-            this.formMessage.rePassword = ''
+        if (this.form.number) {
+          if (!/^[0-9]+.?[0-9]*$/.test(this.form.number)) {
+            this.formState.number = 'error'
+            this.formMessage.number = this.$t('validate.must_be_number')
+          } else if (this.form.number < 0) {
+            this.formState.number = 'error'
+            this.formMessage.number = this.$t('public.input_number_required')
+          } else if (!this.checkBalance(value)) {
+            this.formState.number = 'error'
+            this.formMessage.number = this.$t('public.balance_insufficient')
           } else {
-            this.formState.rePassword = 'error'
-            this.formMessage.rePassword = this.$t('user.password_different')
+            this.formState.number = 'success'
+            this.formMessage.number = ''
           }
         } else {
-          this.formState.rePassword = ''
-          this.formMessage.rePassword = ''
+          this.formState.number = ''
+          this.formMessage.number = ''
         }
       }
     },
-    changeAmount () {
-      if (+this.form.amount >= 0) {
-        const tempNumber = $dividedBy(+this.form.amount, +this.ad.current_price)
-        this.form.number = $fixDecimalAuto(tempNumber, this.ad.currency)
+    checkBalance (type) {
+      if (type === 'amount') {
+        if (this.isLegalTrade || +this.adType === 1) {
+          return true
+        } else {
+          return this.balanceObj[this.targetCurrency] >= this.form.amount
+        }
+      } else if (type === 'number') {
+        if (this.isLegalTrade || +this.adType === 0) {
+          return true
+        } else {
+          return this.balanceObj[this.currency] >= this.form.number
+        }
       }
     },
-    changeNumber () {
-      if (+this.form.number >= 0) {
-        const tempAmount = $multipliedBy(+this.form.number, +this.ad.current_price)
-        this.form.amount = $fixDecimalAuto(tempAmount, this.targetCurrency)
+    changeInput (value) {
+      if (value === 'amount') {
+        if (+this.form.amount >= 0) {
+          if (+this.form.amount > this.ad.order_limit) {
+            this.form.amount = this.ad.order_limit
+          }
+          const tempNumber = $dividedBy(+this.form.amount, +this.ad.current_price)
+          this.form.number = $fixDecimalAuto(tempNumber, this.currency)
+        }
+      } else if (value === 'number') {
+        if (+this.form.number >= 0) {
+          const tempAmount = $multipliedBy(+this.form.number, +this.ad.current_price)
+          this.form.amount = $fixDecimalAuto(tempAmount, this.targetCurrency)
+          if (+this.form.amount > this.ad.order_limit) {
+            this.form.amount = this.ad.order_limit
+          }
+          const tempNumber = $dividedBy(+this.form.amount, +this.ad.current_price)
+          this.form.number = $fixDecimalAuto(tempNumber, this.currency)
+        }
       }
+      this.checkAllState()
     },
     getAd () {
       this.$loading.open()
@@ -230,6 +255,7 @@ export default {
       }).then(res => {
         if (res.data && +res.data.error === 0) {
           this.ad = res.data.info
+          this.isSelfOrder = (this.ad.member.id === this.userInfo.id)
           if (this.ad.member.id === this.userInfo.id) {
             this.$message.error(this.$t('order.order_join_own_otc_ad'))
             this.$router.push(this.backLink)
@@ -244,7 +270,40 @@ export default {
         this.$message.error(this.$t('public.url_request_fail'))
       })
     },
-    submit (id) {
+    submit () {
+      if (this.formMessageAll) {
+        this.$message.error(this.formMessageAll)
+      } else {
+        this.showConfirmFlag = true
+      }
+    },
+    createOrder () {
+      this.$loading.open()
+      this.$store.dispatch('axios_order_buy', {
+        id: this.id,
+        price: +this.ad.current_price,
+        price_sum: +this.form.amount
+      }).then(res => {
+        if (res.data && +res.data.error === 0) {
+          if (this.isLegalTrade) {
+            this.$router.push({
+              path: '/order',
+              query: {
+                id: res.data.order_id
+              }
+            })
+          } else {
+            this.showCompleteFlag = true
+          }
+        } else if (res.data && +res.data.error === 100052) {
+          this.$router.push(this.backLink)
+        } else {
+          this.init()
+        }
+      }).catch(() => {
+        this.$message.error(this.$t('order.order_deal_request_fail'))
+        this.init()
+      })
     },
     init () {
       this.getAd()
@@ -266,6 +325,7 @@ export default {
     .content {
       flex 1
       margin-top $mintHeaderHeight
+      height 100 - $footerHeight - $mintHeaderHeight
       overflow-y scroll
       .user {
         display flex
@@ -369,10 +429,19 @@ export default {
       }
     }
   }
+  .footer {
+    height $footerHeight
+    display flex
+    align-items center
+    justify-content center
+    font-size 0.8rem
+    color #999999
+  }
   /deep/ .currency {
     font-weight normal
     margin-left 1vw
   }
+
   /deep/ .mint-field-core {
     font-weight normal
   }

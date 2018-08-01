@@ -27,7 +27,7 @@ const trade = {
   index: r => require.ensure([], () => r(require('../components/trade/index'))),
   adList: r => require.ensure([], () => r(require('../components/trade/adList'))),
   adDetail: r => require.ensure([], () => r(require('../components/trade/adDetail'))),
-  order: r => require.ensure([], () => r(require('../components/trade/order')))
+  orderList: r => require.ensure([], () => r(require('../components/trade/orderList')))
 }
 const asset = {
   index: r => require.ensure([], () => r(require('../components/asset/index'))),
@@ -83,9 +83,9 @@ const routers = [
             }
           },
           {
-            path: 'order',
-            alias: ['/order'],
-            component: trade.order,
+            path: 'orderList',
+            alias: ['/orderList'],
+            component: trade.orderList,
             meta: {
               navbarIndex: 2
             }

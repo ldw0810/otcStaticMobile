@@ -44,9 +44,9 @@
                     .addressForm
                       mt-cell(v-if="withdraw.fund_sources.length" :title="$t('asset.asset_withdraw_address')" @click.native.prevent="withdrawAddressFlag = true" is-link)
                         .label {{form.selectAddress.label}}
-                      mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" :label="$t('public.label')" :placeholder="$t('asset.asset_withdraw_label_required')" v-model="form.label" :state="formState.label" @input="checkState('label')")
-                      mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" :label="$t('asset.asset_withdraw_address')" :placeholder="$t('asset.asset_withdraw_address_required')" v-model="form.address" :state="formState.address" @input="checkState('address')")
-                      mt-field(class="numberBtn" :label="$t('asset.asset_withdraw_number')" :placeholder="amountText" v-model="form.number" :state="formState.number" @input="checkState('number')")
+                      mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('public.label')" :placeholder="$t('asset.asset_withdraw_label_required')" v-model="form.label" :state="formState.label" @input="checkState('label')")
+                      mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('asset.asset_withdraw_address')" :placeholder="$t('asset.asset_withdraw_address_required')" v-model="form.address" :state="formState.address" @input="checkState('address')")
+                      mt-field(type="number" class="numberBtn" :label="$t('asset.asset_withdraw_number')" :placeholder="amountText" v-model="form.number" :state="formState.number" @input="checkState('number')")
                         .right(name="slot")
                           .currency {{currency.toUpperCase()}}
                           mt-button(class="withdrawAllBtn" @click.native.prevent="form.number = amount") {{$t('asset.asset_withdraw_all')}}
@@ -86,7 +86,7 @@ import {$fixDecimalsAsset} from '../../utils'
 import {VALI_ADDRESS_LABEL, VALI_NUMBER} from '../../utils/validator'
 import ValidatePhone from '../common/ValidatePhone'
 import ValidateGoogle from '../common/ValidateGoogle'
-import WithdrawEmail from './withdrawEmail';
+import WithdrawEmail from './withdrawEmail'
 
 const configure = require('../../../configure')
 
@@ -412,7 +412,6 @@ export default {
         requestData.extra = this.form.label
       }
       if (typeof authForm === 'object') {
-        console.log(1)
         requestData = Object.assign(authForm, requestData)
       }
       this.$store.dispatch('axios_withdraw', requestData).then(res => {

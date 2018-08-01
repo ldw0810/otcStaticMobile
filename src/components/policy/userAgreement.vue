@@ -568,7 +568,7 @@ export default {
   .agreement {
     line-height 1.5
     .content {
-      height 88vh
+      height 100 - $footerHeight
       width 100vw
       padding 5vh 8vw
       overflow: scroll;
@@ -592,7 +592,7 @@ export default {
       }
     }
     .footer{
-      height 12vh
+      height $footerHeight
       width 100vw
       display flex
       align-items center

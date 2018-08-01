@@ -15,7 +15,6 @@ export default {
   methods: {
     init () {
       if (this.$route.query) {
-        console.log(this.$route.query)
         if (this.$route.query.withdraw_token) {
           this.$store.dispatch('axios_withdraw_confirm', {
             code: this.$route.query.withdraw_token

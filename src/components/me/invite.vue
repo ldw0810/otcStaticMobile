@@ -150,9 +150,6 @@ export default {
       return image.src
     },
     createImage () {
-      console.log(this.$refs.qrCode)
-      console.log(this.$refs.qrCode.$el)
-      console.log(this.$refs.qrCode.$el.children[0])
       let qrCodeImg = this.convertCanvasToImage(this.$refs.qrCode.$el.children[0])
       let imgArr = [CONF_INVITE_IMAGE, qrCodeImg]
       let c = document.createElement('canvas')

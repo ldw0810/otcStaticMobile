@@ -143,7 +143,7 @@ export default {
   }
 
   .footer {
-    height 12vh
+    height $footerHeight
     display flex
     align-items center
     justify-content center

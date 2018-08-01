@@ -183,7 +183,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
   .policy {
-    height 88vh
+    height 100 - $footerHeight
     width 100vw
     padding 5vh 8vw
     line-height: 1.5;
@@ -203,7 +203,7 @@ export default {
     }
   }
   .footer{
-    height 12vh
+    height $footerHeight
     width 100vw
     display flex
     align-items center

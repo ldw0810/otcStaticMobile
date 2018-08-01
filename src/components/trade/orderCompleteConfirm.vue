@@ -1,16 +1,16 @@
 <template lang="pug">
-  .withdrawConfirm
-    mt-header(:title="$t('asset.asset_withdraw_confirm')" fixed)
+  .orderCompleteConfirm
+    mt-header(:title="$t('order.order_complete')" fixed)
       span(slot="left")
         mt-button(icon="back" @click="goBack")
     .wrapper
       .content
-        .text {{$t("asset.asset_withdraw_address")}}
-        .address {{address}}
-        .text {{$t("asset.asset_withdraw_number")}}
-        .numberDiv
-          .number {{form.number + ' ' + currency.toUpperCase()}}
-          .tip {{'(' + $t('asset.asset_miners_fee') + currencyFee + ' ' + currency.toUpperCase() + ')'}}
+        .info
+          .text(v-if="ad.op_type === 'sell'" v-html="$t('order.order_complete_info', {'0': form.number, '1': ad.currency.toUpperCase()})")
+          .text(v-else v-html="$t('order.order_complete_info', {'0': form.amount, '1': ad.target_currency.toUpperCase()})")
+        .tip
+          .text(@click="$router.push('/orderList')") {{$t("order.order_show_order")}}
+          .text(@click="goAsset") {{$t("order.order_show_asset")}}
       .submit
         .mintSubmit
           mt-button(class="submitBtn" @click="success") {{$t('public.confirm')}}
@@ -25,14 +25,11 @@ Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 
 export default {
-  name: 'withdrawConfirm',
+  name: 'orderCompleteConfirm',
   props: {
-    currency: '',
-    currencyFee: '',
+    ad: {},
     form: {
-      selectAddress: {},
-      label: '',
-      address: '',
+      amount: '',
       number: ''
     }
   },
@@ -41,17 +38,21 @@ export default {
     }
   },
   computed: {
-    address () {
-      if (this.form.address) {
-        return this.form.address
-      } else {
-        return this.form.selectAddress.uid
-      }
+    isLegalTrade () {
+      return this.$store.state.code.payable.indexOf(this.ad.target_currency) > -1
     }
   },
   methods: {
     goBack () {
       this.$emit('close', 1)
+    },
+    goAsset () {
+      this.$router.push({
+        path: '/asset',
+        query: {
+          currency: this.ad.op_type === 'sell' ? this.ad.currency : this.ad.traget_currency
+        }
+      })
     },
     success () {
       this.$emit('close', 1)
@@ -67,7 +68,7 @@ export default {
 </script>
 <style lang='stylus' scoped>
   buttonHeight = 15vh
-  .withdrawConfirm {
+  .orderCompleteConfirm {
     width 100vw
     height 100vh
     background #fafafa
@@ -75,33 +76,29 @@ export default {
     .content {
       width 100vw
       margin-top $mintHeaderHeight + 1
-      display flex
-      flex-direction column
-      padding 2.5vh 6vw
       background #FFFFFF
-      .text {
-        color #666666
-        font-size 1rem
-        font-weight normal
+      display flex
+      padding 5vh 6vw
+      flex-direction column
+      border-bottom 1px solid #EEEEEE
+      .info {
+        .text {
+          font-size 1rem
+          font-weight normal
+          color #333333
+          margin-bottom 2.5vh
+          line-height 1.5
+        }
       }
-      .address {
-        margin 1.5vh 0 2.5vh
-        font-size 1.2rem
-        color: #2EA2F8;
-        word-break break-all
-      }
-      .numberDiv {
-        margin 1.5vh 0
+      .tip {
         display flex
         align-items center
-        .number {
-          font-size 1.2rem
-          color: #2EA2F8;
-        }
-        .tip {
-          margin 0 2.5vw
-          font-size 1rem
-          color: #2EA2F8;
+        justify-content space-around
+        margin-top 2.5vh
+        .text {
+          font-weight normal
+          font-size 0.85rem
+          color #2EA2F8
         }
       }
     }

@@ -1,11 +1,10 @@
 <template lang="pug">
-  .agreement
+  .rules
     .content(v-html="$t('order.order_trade_notice_content')")
     .footer
       el-button(class="submitButton" type='primary' @click="submit") {{$t('public.confirm')}}
 </template>
 <script type="es6">
-import {$getLanguage} from '../../utils'
 import {Button} from 'element-ui'
 import Vue from 'vue'
 
@@ -21,18 +20,15 @@ export default {
     submit () {
       this.$emit('close', 1)
     }
-  },
-  created () {
-    this.text = language[$getLanguage()]
   }
 }
 </script>
 
 <style lang="stylus" scoped>
-  .agreement {
+  .rules {
     line-height 1.5
     .content {
-      height 88vh
+      height 100 - $footerHeight
       width 100vw
       padding 5vh 8vw
       overflow: scroll;
@@ -56,7 +52,7 @@ export default {
       }
     }
     .footer{
-      height 12vh
+      height $footerHeight
       width 100vw
       display flex
       align-items center
