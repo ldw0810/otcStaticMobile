@@ -1,5 +1,5 @@
 <template lang="pug">
-  .orderCompleteConfirm
+  .adCompleteConfirm
     mt-header(:title="$t('order.order_complete')" fixed)
       span(slot="left")
         mt-button(icon="back" @click="goBack")
@@ -25,7 +25,7 @@ Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 
 export default {
-  name: 'orderCompleteConfirm',
+  name: 'adCompleteConfirm',
   props: {
     ad: {},
     form: {
@@ -68,7 +68,7 @@ export default {
 </script>
 <style lang='stylus' scoped>
   buttonHeight = 15vh
-  .orderCompleteConfirm {
+  .adCompleteConfirm {
     width 100vw
     height 100vh
     background #fafafa

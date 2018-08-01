@@ -510,6 +510,7 @@
     "ad_selling": "賣"
   },
   "order": {
+    "order_detail": "訂單詳情",
     "order_unit_price": "單價({0})",
     "remark_required": "請輸入訂單相關內容",
     "order_unfinished": "未完成訂單",

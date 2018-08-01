@@ -510,6 +510,7 @@
     "ad_local_trading_tip": "当面交易需填写含有地址信息的备注"
   },
   "order": {
+    "order_detail": "订单详情",
     "order_unit_price": "单价({0})",
     "remark_required": "请输入订单相关内容",
     "order_unfinished": "未完成订单",

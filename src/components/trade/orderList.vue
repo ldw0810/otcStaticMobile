@@ -2,7 +2,7 @@
   .order(v-if="+orders.error === 0")
     <!--mt-loadmore(:top-method="loadTop" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" ref="loadmore")-->
     .itemList(v-if="orders.list.length")
-      .item(v-for="(order, index) in orders.list" :key="index")
+      .item(v-for="(order, index) in orders.list" :key="index" @click="goOrder(order)")
         .notice(:class="{'noticeShow': order.notice_order !== 0}")
         .wrapper
           .content
@@ -71,7 +71,13 @@ export default {
         this.$message.error(this.$t('order.order_data_request_fail'))
       })
     },
-    submit () {
+    goOrder (item) {
+      this.$router.push({
+        path: '/order',
+        query: {
+          id: item.id
+        }
+      })
     },
     init () {
       this.showOrders()

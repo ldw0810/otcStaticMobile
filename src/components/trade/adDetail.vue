@@ -46,7 +46,7 @@
             OrderCreateConfirm(:ad="ad" :form="form" @close="showConfirmFlag = false" @success="createOrder")
         .popup(class="popup-right" v-if="showCompleteFlag")
           slot
-            OrderCompleteConfirm(:ad="ad" :form="form" @close="showCompleteFlag = false" @success="init()")
+            AdCompleteConfirm(:ad="ad" :form="form" @close="showCompleteFlag = false" @success="init()")
         .popup(class="popup-right" v-if="showRulesFlag")
           slot
             Rules(@close="showRulesFlag = false" @success="init()")
@@ -56,7 +56,7 @@ import Policy from '../policy/policy'
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
 import OrderCreateConfirm from './orderCreateConfirm'
-import OrderCompleteConfirm from './orderCompleteConfirm'
+import AdCompleteConfirm from './adCompleteConfirm'
 import Rules from '../policy/rules'
 import {Button, Field, Header, Loadmore} from 'mint-ui'
 import Vue from 'vue'
@@ -74,7 +74,7 @@ export default {
     Avatar,
     EmptyList,
     OrderCreateConfirm,
-    OrderCompleteConfirm,
+    AdCompleteConfirm,
     Rules
   },
   data () {
