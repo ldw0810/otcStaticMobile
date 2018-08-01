@@ -33,9 +33,9 @@
         .border
         .adForm
           .label {{adType === 0 ? $t('order.order_buy_title', {'0': currency.toUpperCase()}): $t('order.order_sell_title', {'0': currency.toUpperCase()})}}
-          mt-field(type="number" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input="changeInput('amount')")
+          mt-field(type="number" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input.native.prevent="changeAmount")
             .currency {{targetCurrency.toUpperCase()}}
-          mt-field(type="number" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input="changeInput('number')")
+          mt-field(type="number" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input.native.prevent="changeNumber")
             .currency {{currency.toUpperCase()}}
       .footer(class="mintSubmit")
         mt-button(class="submitButton" type='primary' @click="submit" :disabled="!formStateAll || isSelfOrder") {{isSelfOrder ? $t('order.order_join_own_otc_ad') : (adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm'))}}
@@ -172,10 +172,10 @@ export default {
           if (!/^[0-9]+.?[0-9]*$/.test(this.form.amount)) {
             this.formState.amount = 'error'
             this.formMessage.amount = this.$t('validate.must_be_number')
-          } else if (this.form.amount < this.ad.min_limit) {
+          } else if (+this.form.amount < +this.ad.min_limit) {
             this.formState.amount = 'error'
             this.formMessage.amount = this.$t('ad.ad_floor_limit')
-          } else if (this.form.amount > this.ad.order_limit) {
+          } else if (+this.form.amount > +this.ad.order_limit) {
             this.formState.amount = 'error'
             this.formMessage.amount = this.$t('ad.ad_ceiling_limit')
           } else if (!this.checkBalance(value)) {
@@ -194,7 +194,7 @@ export default {
           if (!/^[0-9]+.?[0-9]*$/.test(this.form.number)) {
             this.formState.number = 'error'
             this.formMessage.number = this.$t('validate.must_be_number')
-          } else if (this.form.number < 0) {
+          } else if (+this.form.number < 0) {
             this.formState.number = 'error'
             this.formMessage.number = this.$t('public.input_number_required')
           } else if (!this.checkBalance(value)) {
@@ -225,25 +225,30 @@ export default {
         }
       }
     },
-    changeInput (value) {
-      if (value === 'amount') {
-        if (+this.form.amount >= 0) {
-          if (+this.form.amount > this.ad.order_limit) {
-            this.form.amount = this.ad.order_limit
-          }
-          const tempNumber = $dividedBy(+this.form.amount, +this.ad.current_price)
-          this.form.number = $fixDecimalAuto(tempNumber, this.currency)
+    changeAmount () {
+      const value = +event.target.value
+      if (value >= 0) {
+        if (value > +this.ad.order_limit) {
+          this.form.amount = this.ad.order_limit
+        } else {
+          this.form.amount = value
         }
-      } else if (value === 'number') {
-        if (+this.form.number >= 0) {
-          const tempAmount = $multipliedBy(+this.form.number, +this.ad.current_price)
-          this.form.amount = $fixDecimalAuto(tempAmount, this.targetCurrency)
-          if (+this.form.amount > this.ad.order_limit) {
-            this.form.amount = this.ad.order_limit
-          }
-          const tempNumber = $dividedBy(+this.form.amount, +this.ad.current_price)
-          this.form.number = $fixDecimalAuto(tempNumber, this.currency)
+        const tempNumber = $dividedBy(value, +this.ad.current_price)
+        this.form.number = $fixDecimalAuto(tempNumber, this.currency)
+      }
+      this.checkAllState()
+    },
+    changeNumber () {
+      const value = +event.target.value
+      if (value >= 0) {
+        let tempAmount = $multipliedBy(value, +this.ad.current_price)
+        tempAmount = $fixDecimalAuto(tempAmount, this.targetCurrency)
+        if (+tempAmount > +this.ad.order_limit) {
+          tempAmount = this.ad.order_limit
         }
+        this.form.amount = tempAmount
+        const tempNumber = $dividedBy(+this.form.amount, +this.ad.current_price)
+        this.form.number = $fixDecimalAuto(tempNumber, this.currency)
       }
       this.checkAllState()
     },
