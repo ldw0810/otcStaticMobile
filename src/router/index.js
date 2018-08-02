@@ -54,7 +54,7 @@ const me = {
 const routers = [
   {
     path: '/',
-    redirect: '/buy',
+    // redirect: '/buy',
     component: page.home,
     meta: {
       needLogin: true
