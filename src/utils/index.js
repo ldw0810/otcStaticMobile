@@ -186,3 +186,17 @@ export const $dividedBy = function (...args) {
   const bigNumber = new BigNumber(args[0])
   return bigNumber.dividedBy(args[1])
 }
+
+/**
+ * @description 光标设置到节点的末尾
+ * @param {element} 节点
+ */
+export function $setCursorPosition (el) {
+  el.focus()
+  const range = document.createRange()
+  range.selectNodeContents(el)
+  range.collapse(false)
+  const sel = window.getSelection()
+  sel.removeAllRanges()
+  sel.addRange(range)
+}

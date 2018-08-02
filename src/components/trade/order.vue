@@ -35,7 +35,7 @@
               .text {{order.amount | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
             .btn(@click="triggerInfo") {{$t('order.order_show_detail')}}
         .oper
-          .tip {{stepTip}}
+          .tip(v-if="stepTip" v-html="stepTip")
           .submit(class="mintSubmit" v-if="order.status === 'timeout'")
             mt-button(disabled) {{$t('order.order_deal_timeout')}}
           .submit(class="mintSubmit" v-else-if="['cancel', 'judge_seller'].indexOf(order.status) > -1")
@@ -59,6 +59,10 @@
             mt-button(class="orderSubmitBtn" @click="orderOper('evaluate')") {{$t('order.order_eval')}}
           .submit(class="mintSubmit" v-else)
             mt-button(disabled) {{$t('order.order_status_over')}}
+        .chat
+          Chat(ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder")
+        .footer
+          <!--mt-field(type="textarea" :placeholder="")-->
     transition(name="slide-right" mode="out-in")
       .popPage
         .popup(class="popup-right" v-if="confirmFlag.cancel")
@@ -88,6 +92,7 @@ import OrderPayConfirm from './orderPayConfirm'
 import OrderReleaseConfirm from './orderReleaseConfrim'
 import OrderCancelConfirm from './orderCancelConfirm'
 import OrderCompleteConfirm from './orderCompleteConfrim'
+import Chat from './chat'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
@@ -103,7 +108,8 @@ export default {
     Policy,
     Avatar,
     EmptyList,
-    Rules
+    Rules,
+    Chat
   },
   data () {
     return {
@@ -140,6 +146,24 @@ export default {
     },
     id () {
       return this.$route.query.id
+    },
+    chatList () {
+      let tempList = []
+      let tempTime = 0
+      if (this.chat.length) {
+        for (let i = this.chat.length - 1; i >= 0; i--) {
+          let timeFlag = +this.chat[i].from === 0 ? false : +this.chat[i].created_at * 1000 - tempTime > 3 * 60 * 1000
+          tempTime = timeFlag ? +this.chat[i].created_at * 1000 : tempTime
+          tempList[this.chat.length - (i + 1)] = {
+            type: +this.chat[i].from === 0 ? 9 : this.chat[i].to === this.order.member.member_id ? 0 : 1,
+            data: this.chat[i].msg,
+            time: +this.chat[i].created_at * 1000,
+            compareTime: tempTime,
+            timeFlag: timeFlag
+          }
+        }
+      }
+      return tempList
     }
   },
   methods: {
@@ -159,7 +183,7 @@ export default {
             hour = hour / 10 < 1 ? '0' + hour : hour
             minute = minute / 10 < 1 ? '0' + minute : minute
             second = second / 10 < 1 ? '0' + second : second
-            this.stepTip = this.$t('order.order_info_timer', {'0': `<a style="cursor: text;">${+hour > 0 ? (hour + ':') : ''}${minute}:${second}</a>`})
+            this.stepTip = this.$t('order.order_info_timer', {'0': `<a style="cursor: text; color: #ED1C24;">${+hour > 0 ? (hour + ':') : ''}${minute}:${second}</a>`})
             this.remainTime--
           }
         } else {
@@ -178,7 +202,7 @@ export default {
         if (res.data && +res.data.error === 0) {
           this.order = res.data.info
           this.chat = res.data.chat
-          this.remainTime = +(res.data.info.remainTime || 0)
+          this.remainTime = +(res.data.info.remain_time || 0)
           this.showTip()
         }
       }).catch(() => {
@@ -383,11 +407,17 @@ export default {
         border-top 1px solid #EEEEEE
         border-bottom 1px solid #EEEEEE
         .tip {
-
+          font-size 0.85rem
+          font-weight normal
+          color #333333
+          padding 0 6vw 1.5vh
         }
         .input {
 
         }
+      }
+      .chat {
+
       }
     }
   }

@@ -48,10 +48,6 @@ export default {
           {
             required: true,
             message: this.$t('user.auth_google_code_required')
-          },
-          {
-            type: 'number',
-            message: this.$t('validate.must_be_number')
           }
         ]
       }
