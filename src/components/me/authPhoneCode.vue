@@ -81,6 +81,9 @@ export default {
         this.formState.pinCode = this.form.pinCode ? 'success' : ''
       }
     },
+    getMe () {
+      this.$store.dispatch('axios_me')
+    },
     submit () {
       if (this.formMessageAll) {
         this.$message.error(this.formMessageAll)
@@ -93,6 +96,7 @@ export default {
           }).then(res => {
             if (res.data && +res.data.error === 0) {
               this.$message.success(this.$t('user.auth_phone_unbind_success'))
+              this.getMe()
               this.$router.push('/me/settings')
             }
           }).catch(() => {
@@ -107,6 +111,7 @@ export default {
           }).then(res => {
             if (res.data && +res.data.error === 0) {
               this.$message.success(this.$t('user.auth_phone_bind_success'))
+              this.getMe()
               this.$router.push('/me/settings')
             }
           }).catch(() => {
@@ -116,6 +121,7 @@ export default {
       }
     },
     init () {
+      this.$loading.close()
       if (!this.userInfo.mobile) {
         this.formState.password = 'success'
         this.formMessage.password = ''

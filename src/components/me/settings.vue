@@ -34,6 +34,7 @@ export default {
   },
   methods: {
     getMe () {
+      this.$loading.open()
       if (!this.userInfo.id) {
         this.$store.dispatch('axios_me')
       } else {

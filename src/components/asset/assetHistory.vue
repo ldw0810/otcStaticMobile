@@ -55,7 +55,7 @@
                         .tip {{'Txid: '}}
                         .txid(@click="goBlockUrl(item)") {{item.fund_uid}}
                   .noDataPage(v-else)
-                    EmptyList(class="emptyDiv" :text="$t('piublic.no_asset_withdraw')")
+                    EmptyList(class="emptyDiv" :text="$t('public.no_asset_withdraw')")
     transition(name="slide-right" mode="out-in")
       .popup(class="popup-right" v-if="withdrawEmailFlag")
         slot

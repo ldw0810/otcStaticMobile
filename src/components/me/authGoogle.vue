@@ -84,13 +84,14 @@ export default {
         this.$message.error(this.formMessageAll)
       } else {
         this.$loading.open()
-        if (this.app_two_factor) {
+        if (this.userInfo.app_two_factor) {
           this.$store.dispatch('axios_unbind_google', {
             password: this.form.password,
             code: this.form.googleCode
           }).then(res => {
             if (res.data && +res.data.error === 0) {
               this.$message.success(this.$t('user.auth_google_del_success'))
+              this.getMe()
               this.$router.push('/me/settings')
             }
           }).catch(() => {
@@ -104,6 +105,7 @@ export default {
           }).then(res => {
             if (res.data && +res.data.error === 0) {
               this.$message.success(this.$t('user.auth_google_add_success'))
+              this.getMe()
               this.$router.push('/me/settings')
             }
           }).catch(() => {
