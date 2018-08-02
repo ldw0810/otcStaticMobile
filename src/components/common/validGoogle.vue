@@ -1,5 +1,5 @@
 <template lang="pug">
-  .validateGoogle
+  .validGoogle
     mt-header(:title="$t('user.login_auth') + ' - ' + $t('user.auth_google')" fixed)
       span(slot="left")
         mt-button(icon="back" @click="goBack")
@@ -24,7 +24,7 @@ Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
 
 export default {
-  name: 'validateGoogle',
+  name: 'validGoogle',
   props: {
     needAuth: {
       type: Boolean,
@@ -115,7 +115,7 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  .validateGoogle {
+  .validGoogle {
     width 100vw
     height 100vh
     background #fafafa

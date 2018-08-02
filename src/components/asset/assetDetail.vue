@@ -68,10 +68,10 @@
             WithdrawConfirm(:currency="currency" :form="form" :currencyFee="withdraw.withdraw_channels.fee" @close="withdrawConfirmFlag = false" @success="showAuth")
         .popup(class="popup-right" v-if="withdrawAuthPhoneFlag")
           slot
-            ValidatePhone(:needAuth="false" @close="withdrawAuthPhoneFlag = false" @success="doWithdraw" @change="changeValidate(0)")
+            ValidPhone(:needAuth="false" @close="withdrawAuthPhoneFlag = false" @success="doWithdraw" @change="changeValidate(0)")
         .popup(class="popup-right" v-if="withdrawAuthGoogleFlag")
           slot
-            ValidateGoogle(:needAuth="false" @close="withdrawAuthGoogleFlag = false" @success="doWithdraw" @change="changeValidate(1)")
+            ValidGoogle(:needAuth="false" @close="withdrawAuthGoogleFlag = false" @success="doWithdraw" @change="changeValidate(1)")
         .popup(class="popup-right" v-if="WithdrawEmailFlag")
           slot
             WithdrawEmail(@close="WithdrawEmailFlag = false" :withdraw_id="withdrawId" :currency="currency")
@@ -84,8 +84,8 @@ import SelectWithdrawAddress from './selectWithdrawAddress'
 import WithdrawConfirm from './withdrawConfirm'
 import {$fixDecimalsAsset} from '../../utils'
 import {VALI_ADDRESS_LABEL, VALI_NUMBER} from '../../utils/validator'
-import ValidatePhone from '../common/ValidatePhone'
-import ValidateGoogle from '../common/ValidateGoogle'
+import ValidPhone from '../common/ValidPhone'
+import ValidGoogle from '../common/ValidGoogle'
 import WithdrawEmail from './withdrawEmail'
 
 const configure = require('../../../configure')
@@ -100,7 +100,7 @@ Vue.component(TabContainerItem.name, TabContainerItem)
 
 export default {
   name: 'assetDetail',
-  components: {WithdrawEmail, ValidatePhone, ValidateGoogle, WithdrawConfirm, SelectWithdrawAddress},
+  components: {WithdrawEmail, ValidPhone, ValidGoogle, WithdrawConfirm, SelectWithdrawAddress},
   data () {
     return {
       assetOperIndex: this.$route.query.oper === 'deposit' ? 0 : 1,

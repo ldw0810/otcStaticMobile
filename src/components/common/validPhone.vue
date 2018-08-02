@@ -1,5 +1,5 @@
 <template lang="pug">
-  .validatePhone
+  .validPhone
     mt-header(:title="$t('user.login_auth') + ' - ' + $t('user.auth_phone')" fixed)
       span(slot="left")
         mt-button(icon="back" @click="goBack")
@@ -26,7 +26,7 @@ Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
 
 export default {
-  name: 'validatePhone',
+  name: 'validPhone',
   components: {
     SendCode
   },
@@ -130,7 +130,7 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  .validatePhone {
+  .validPhone {
     width 100vw
     height 100vh
     background #fafafa
