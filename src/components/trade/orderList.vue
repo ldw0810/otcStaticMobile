@@ -21,7 +21,7 @@
                 .infoItem
                   .text {{$t("order.order_money_amount")}}:
                   .value {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
-              mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary' @click="goOrder(order)" disabled) {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
+              mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary' @click="goOrder(order)") {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
             .border
             .status(:class="{'complete': ['over', 'complete'].indexOf(order.status) > -1}") {{$t("order.order_status_" + order.status)}}
       EmptyList(:text='emptyMessage' :loading="ordersLoading" v-else)

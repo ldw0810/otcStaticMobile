@@ -301,12 +301,9 @@ export default {
           }
         } else if (res.data && +res.data.error === 100052) {
           this.$router.push(this.backLink)
-        } else {
-          this.init()
         }
       }).catch(() => {
         this.$message.error(this.$t('order.order_deal_request_fail'))
-        this.init()
       })
     },
     init () {

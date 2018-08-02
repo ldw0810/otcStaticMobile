@@ -12,7 +12,7 @@
               .label {{$t('order.order_id')}}:
               .label {{$t('order.order_money_amount')}}:
               .label {{$t('order.order_order_price')}}:
-              .label {{orderType === 0 ? $t("order.order_buy_number_title") : $t("order.order_sell_number_title")}}:
+              .label {{orderType === 0 ? $t('order.order_buy_number_title') : $t('order.order_sell_number_title')}}:
               .label {{$t('order.order_order_payment')}}:
             .textList
               .text {{order.id}}
@@ -43,27 +43,36 @@
           .submit(class="mintSubmit" v-else-if="order.status === 'over'")
             mt-button(disabled) {{$t('order.order_deal_complete')}}
           .submit(class="orderSubmit" v-else-if="order.status === 'fresh' && !orderType")
-            mt-button(@click="orderOper('pay')") {{$t('order.order_pay_complete')}}
-            mt-button(@click="orderOper('cancel')") {{$t('order.order_pay_cancel')}}
+            mt-button(class="orderSubmitBtn" @click="orderOper('pay')") {{$t('order.order_pay_complete')}}
+            mt-button(class="orderCancelBtn" @click="orderOper('cancel')") {{$t('order.order_pay_cancel')}}
           .submit(class="orderSubmit" v-else-if="order.status === 'pay' && !orderType")
-            mt-button(disabled) {{$t('order.order_pay_completed')}}
-            mt-button(disabled) {{$t('order.order_pay_cancel')}}
+            mt-button(class="orderSubmitBtn" disabled) {{$t('order.order_pay_completed')}}
+            mt-button(class="orderCancelBtn" disabled) {{$t('order.order_pay_cancel')}}
           .submit(class="mintSubmit" v-else-if="['fresh', 'pay'].indexOf(order.status) > -1 && orderType")
             mt-button(@click="orderOper('release')") {{$t('order.order_pay_release')}}
           .submit(class="orderSubmit" v-else-if="order.status === 'release' || (order.status === 'sell_eval' && !orderType) || (order.status === 'buy_eval' && orderType)")
-            .radio(class="radio" :class="{'radioChecked': radioIndex === 0}" @click="radioIndex = 0") {{$t("order.order_pay_evaluate_good")}}
-            .radio(class="radio" :class="{'radioChecked': radioIndex === 1}" @click="radioIndex = 1") {{$t("order.order_pay_evaluate_bad")}}
-            mt-button(@click="orderOper('evaluate')") {{$t('order.order_eval')}}
+            .radioDiv
+              .radio(:class="{'radioChecked': evaluateIndex === 0}" @click="evaluateIndex = 0")
+              .radioText {{$t('order.order_pay_evaluate_good')}}
+              .radio(class="rightRadio" :class="{'radioChecked': evaluateIndex === 1}" @click="evaluateIndex = 1")
+              .radioText  {{$t('order.order_pay_evaluate_bad')}}
+            mt-button(class="orderSubmitBtn" @click="orderOper('evaluate')") {{$t('order.order_eval')}}
           .submit(class="mintSubmit" v-else)
             mt-button(disabled) {{$t('order.order_status_over')}}
     transition(name="slide-right" mode="out-in")
       .popPage
+        .popup(class="popup-right" v-if="confirmFlag.cancel")
+          slot
+            OrderCancelConfirm(@close="confirmFlag.cancel = false" @success="doOper('cancel')")
         .popup(class="popup-right" v-if="confirmFlag.pay")
           slot
-            OrderCreateConfirm(:ad="ad" :form="form" @close="confirmFlag.pay = false" @success="init()")
+            OrderPayConfirm(@close="confirmFlag.pay = false" @success="doOper('pay')")
         .popup(class="popup-right" v-if="confirmFlag.release")
           slot
-            OrderCompleteConfirm(:ad="ad" :form="form" @close="confirmFlag.release = false" @success="init()")
+            OrderReleaseConfirm(:order="order" @close="confirmFlag.release = false" @success="doRelease")
+        .popup(class="popup-right" v-if="confirmFlag.complete")
+          slot
+            OrderCompleteConfirm(:order="order" @close="confirmFlag.complete = false" @success="doOper('complete')")
         .popup(class="popup-right" v-if="showRulesFlag")
           slot
             Rules(@close="showRulesFlag = false" @success="init()")
@@ -72,11 +81,13 @@
 import Policy from '../policy/policy'
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
-import OrderCreateConfirm from './orderCreateConfirm'
-import OrderCompleteConfirm from './adCompleteConfirm'
 import Rules from '../policy/rules'
 import {Button, Field, Header} from 'mint-ui'
 import Vue from 'vue'
+import OrderPayConfirm from './orderPayConfirm'
+import OrderReleaseConfirm from './orderReleaseConfrim'
+import OrderCancelConfirm from './orderCancelConfirm'
+import OrderCompleteConfirm from './orderCompleteConfrim'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
@@ -85,11 +96,13 @@ Vue.component(Field.name, Field)
 export default {
   name: 'order',
   components: {
+    OrderCompleteConfirm,
+    OrderCancelConfirm,
+    OrderReleaseConfirm,
+    OrderPayConfirm,
     Policy,
     Avatar,
     EmptyList,
-    OrderCreateConfirm,
-    OrderCompleteConfirm,
     Rules
   },
   data () {
@@ -106,14 +119,14 @@ export default {
       },
       triggerInfoFlag: true,
       showRulesFlag: false,
-      evaluate: '0',
+      evaluateIndex: -1,
       cancelFlag: true,
       authFlag: false,
       chatFlag: false,
       chatMessage: '',
       remainTime: 0,
       timer: 0,
-      radioIndex: -1
+      password: ''
     }
   },
   watch: {
@@ -178,10 +191,11 @@ export default {
       } else if (operStr === 'release') {
         this.confirmFlag.release = true
       } else if (operStr === 'evaluate') {
-        if (+this.evaluate) {
+        if (+this.evaluateIndex >= 0) {
+          this.$loading.open()
           this.$store.dispatch('axios_order_evaluate', {
             order_id: this.id,
-            good: +this.evaluate
+            good: +this.evaluateIndex
           }).then(res => {
             if (res.data && +res.data.error === 0) {
               this.$message.success(this.$t('order.order_pay_evaluate_success'))
@@ -200,8 +214,13 @@ export default {
       } else {
       }
     },
+    doRelease (value) {
+      this.password = value
+      this.doOper('release')
+    },
     doOper (operStr, authJson) {
       if (operStr === 'pay') {
+        this.$loading.open()
         this.$store.dispatch('axios_order_pay', {
           order_id: this.id
         }).then(res => {
@@ -218,11 +237,12 @@ export default {
       } else if (operStr === 'release') {
         let requestData = {
           order_id: this.id,
-          password: this.form.password
+          password: this.password
         }
         if (authJson) {
           requestData = Object.assign(authJson, requestData)
         }
+        this.$loading.open()
         this.$store.dispatch('axios_order_release', requestData).then(res => {
           if (res.data && res.data.error === 0) {
             this.confirmFlag.release = false
@@ -249,6 +269,7 @@ export default {
         }
       } else if (operStr === 'cancel') {
         if (this.cancelFlag) {
+          this.$loading.open()
           this.$store.dispatch('axios_order_cancel', {
             order_id: this.id
           }).then(res => {
@@ -369,6 +390,86 @@ export default {
         }
       }
     }
+  }
+
+  .orderSubmit {
+    display flex
+    align-items center
+    justify-content space-around
+    .radioDiv {
+      display flex
+      align-items center
+      .radio {
+        box-sizing: border-box;
+        display: inline-block;
+        background-color: #fff;
+        border-radius: 100%;
+        border: 1px solid #ccc;
+        position: relative;
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+        &:after {
+          content: " ";
+          border-radius: 100%;
+          top: 5px;
+          left: 5px;
+          position: absolute;
+          width: 8px;
+          height: 8px;
+          -webkit-transition: -webkit-transform .2s;
+          transition: -webkit-transform .2s;
+          transition: transform .2s;
+          -webkit-transform: scale(0);
+          transform: scale(0);
+        }
+      }
+      .rightRadio {
+        margin-left 6vw
+      }
+      .radioChecked {
+        background-image linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%)
+        border-image linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%)
+        &:after {
+          background-color: #fff;
+          -webkit-transform: scale(1);
+          transform: scale(1);
+        }
+      }
+      .radioText {
+        margin-left 1vw
+        font-size 1rem
+        font-weight normal
+        color #333333
+      }
+    }
+  }
+
+  /deep/ .orderSubmitBtn {
+    width 36vw
+    color #FFFFFF
+    background-image: linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%);
+    box-shadow: 0 5px 5px 0 rgba(102, 187, 191, 0.14);
+    border-radius: 2px;
+    .mint-button-text {
+      font-size 1rem
+    }
+  }
+
+  /deep/ .orderCancelBtn {
+    width 36vw
+    color #333333
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.03);
+    border-radius: 2px;
+    .mint-button-text {
+      font-size 1rem
+    }
+  }
+
+  /deep/ .mint-button.is-disabled {
+    background: #C8D4E0;
   }
 
   .footer {

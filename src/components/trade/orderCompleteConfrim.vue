@@ -1,13 +1,12 @@
 <template lang="pug">
-  .adCompleteConfirm
+  .orderCompleteConfirm
     mt-header(:title="$t('order.order_complete')" fixed)
       span(slot="left")
         mt-button(icon="back" @click="goBack")
     .wrapper
       .content
         .info
-          .text(v-if="ad.op_type === 'sell'" v-html="$t('order.order_complete_info', {'0': form.number, '1': ad.currency.toUpperCase()})")
-          .text(v-else v-html="$t('order.order_complete_info', {'0': form.amount, '1': ad.target_currency.toUpperCase()})")
+          .text(v-html="$t('order.order_complete_info', {'0': $fixDecimalAuto(order.price_sum, order.target_currency), '1': order.target_currency.toUpperCase()})")
         .tip
           .text(@click="$router.push('/orderList')") {{$t("order.order_show_order")}}
           .text(@click="goAsset") {{$t("order.order_show_asset")}}
@@ -16,31 +15,27 @@
           mt-button(class="submitBtn" @click="success") {{$t('public.confirm')}}
 </template>
 <script type="es6">
-import {Header, Button} from 'mint-ui'
+import {Header, Button, Field} from 'mint-ui'
 import Vue from 'vue'
+import {$fixDecimalAuto} from '../../utils'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
+Vue.component(Field.name, Field)
 
 export default {
-  name: 'adCompleteConfirm',
+  name: 'orderCompleteConfirm',
   props: {
-    ad: {},
-    form: {
-      amount: '',
-      number: ''
-    }
+    order: {}
   },
   data () {
     return {
     }
   },
-  computed: {
-    isLegalTrade () {
-      return this.$store.state.code.payable.indexOf(this.ad.target_currency) > -1
-    }
-  },
   methods: {
+    $fixDecimalAuto (value, currency) {
+      return $fixDecimalAuto(value, currency)
+    },
     goBack () {
       this.$emit('close', 1)
     },
@@ -48,7 +43,7 @@ export default {
       this.$router.push({
         path: '/asset',
         query: {
-          currency: this.ad.op_type === 'sell' ? this.ad.currency : this.ad.traget_currency
+          currency: this.order.op_type === 'sell' ? this.order.currency : this.order.traget_currency
         }
       })
     },
@@ -66,7 +61,7 @@ export default {
 </script>
 <style lang='stylus' scoped>
   buttonHeight = 15vh
-  .adCompleteConfirm {
+  .orderCompleteConfirm {
     width 100vw
     height 100vh
     background #fafafa
