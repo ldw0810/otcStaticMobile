@@ -183,7 +183,7 @@ export default {
             hour = hour / 10 < 1 ? '0' + hour : hour
             minute = minute / 10 < 1 ? '0' + minute : minute
             second = second / 10 < 1 ? '0' + second : second
-            this.stepTip = this.$t('order.order_info_timer', {'0': `<a style="cursor: text; color: #ED1C24;">${+hour > 0 ? (hour + ':') : ''}${minute}:${second}</a>`})
+            this.stepTip = this.$t('order.order_info_timer', {'0': `<span class="tipTime">${+hour > 0 ? (hour + ':') : ''}${minute}:${second}</span>`})
             this.remainTime--
           }
         } else {
@@ -473,6 +473,13 @@ export default {
         color #333333
       }
     }
+  }
+
+  /deep/ .tipTime {
+    font-size 1rem
+    font-weight normal
+    color: #ED1C24;
+    text-align center
   }
 
   /deep/ .orderSubmitBtn {

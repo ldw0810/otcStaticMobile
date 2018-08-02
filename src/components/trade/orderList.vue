@@ -2,7 +2,7 @@
   .order(v-if="+orders.error === 0" :style="{'-webkit-overflow-scrolling': scrollMode}")
     mt-loadmore(:autoFill="false" :top-method="loadTop" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
       .itemList(v-if="orders.list.length")
-        .item(v-for="(order, index) in orders.list" :key="index" @click="goOrder(order)")
+        .item(v-for="(order, index) in orders.list" :key="index")
           .notice(:class="{'noticeShow': order.notice_order !== 0}")
           .wrapper
             .content
