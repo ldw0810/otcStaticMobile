@@ -84,8 +84,8 @@ import SelectWithdrawAddress from './selectWithdrawAddress'
 import WithdrawConfirm from './withdrawConfirm'
 import {$fixDecimalsAsset} from '../../utils'
 import {VALI_ADDRESS_LABEL, VALI_NUMBER} from '../../utils/validator'
-import ValidPhone from '../common/ValidPhone'
-import ValidGoogle from '../common/ValidGoogle'
+import ValidPhone from '../common/validPhone'
+import ValidGoogle from '../common/validGoogle'
 import WithdrawEmail from './withdrawEmail'
 
 const configure = require('../../../configure')
