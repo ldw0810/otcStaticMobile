@@ -126,7 +126,6 @@ export default {
       triggerInfoFlag: true,
       showRulesFlag: false,
       evaluateIndex: -1,
-      cancelFlag: true,
       authFlag: false,
       chatFlag: false,
       chatMessage: '',
@@ -251,8 +250,8 @@ export default {
         }).then(res => {
           if (res.data && +res.data.error === 0) {
             this.confirmFlag.pay = false
-            this.$refs.chat.inputText = this.remarkForm.remark
-            this.$refs.chat.sendInfo()
+            // this.$refs.chat.inputText = this.form.remark
+            // this.$refs.chat.sendInfo()
             this.$message.success(this.$t('order.order_pay_complete_success'))
             this.getOrder()
           }
@@ -293,27 +292,18 @@ export default {
           complete: false
         }
       } else if (operStr === 'cancel') {
-        if (this.cancelFlag) {
-          this.$loading.open()
-          this.$store.dispatch('axios_order_cancel', {
-            order_id: this.id
-          }).then(res => {
-            if (res.data && +res.data.error === 0) {
-              this.cancelFlag = false
-              this.confirmFlag.cancel = false
-              this.$Message.success(
-                this.$t('order.order_pay_cancel_success')
-              )
-              this.getOrder()
-            } else {
-              this.cancelFlag = false
-              // this.$Message.error(this.$t("order.order_pay_cancel_fail"));
-            }
-          }).catch(() => {
-            this.cancelFlag = false
-            // this.$Message.error(this.$t("order.order_pay_cancel_fail"));
-          })
-        }
+        this.$loading.open()
+        this.$store.dispatch('axios_order_cancel', {
+          order_id: this.id
+        }).then(res => {
+          if (res.data && +res.data.error === 0) {
+            this.confirmFlag.cancel = false
+            this.$message.success(this.$t('order.order_pay_cancel_success'))
+            this.getOrder()
+          }
+        }).catch(() => {
+          this.$message.error(this.$t('order.order_pay_cancel_fail'))
+        })
       }
     },
     submit () {
