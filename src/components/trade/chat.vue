@@ -186,42 +186,40 @@ export default {
       }
     },
     getMsg () {
-      this.$store
-        .dispatch('axios_chat', {
-          order: this.order.id
-        }).then(res => {
+      this.$store.dispatch('axios_chat', {
+        order: this.order.id
+      }).then(res => {
+        this.scrollToBottom()
+        if (res.data && +res.data.error === 0) {
+          let compareTime = this.msgList.length ? this.msgList[this.msgList.length - 1].compareTime : 0
+          let timeFlag = +res.data.from === 0 ? false : new Date().getTime() - compareTime > 3 * 60 * 1000
+          this.$set(this.msgList, this.msgList.length, {
+            type: +res.data.from === 0 ? 9 : 1,
+            data: res.data.msg,
+            time: $getDateStr(new Date()),
+            compareTime: timeFlag ? new Date().getTime() : compareTime,
+            timeFlag: timeFlag
+          })
           this.scrollToBottom()
-          if (res.data && +res.data.error === 0) {
-            let compareTime = this.msgList.length ? this.msgList[this.msgList.length - 1].compareTime : 0
-            let timeFlag = +res.data.from === 0 ? false : new Date().getTime() - compareTime > 3 * 60 * 1000
-            this.$set(this.msgList, this.msgList.length, {
-              type: +res.data.from === 0 ? 9 : 1,
-              data: res.data.msg,
-              time: $getDateStr(new Date()),
-              compareTime: timeFlag ? new Date().getTime() : compareTime,
-              timeFlag: timeFlag
-            })
-            this.scrollToBottom()
-            if (+res.data.from === 0) {
-              this.$emit('refresh', 1)
-            }
-            this.getMsg()
-          } else if (res.data && +res.data.error === 100002) { // timeout
-            this.getMsg()
-          } else {
-            let that = this
-            if (res.data && +res.data.cancel === 1) {
-            } else {
-              this.timeout && clearTimeout(this.timeout)
-              this.timeout = setTimeout(() => {
-                that.$emit('refresh', 1)
-                that.getMsg()
-              }, 6 * 1000)
-            }
+          if (+res.data.from === 0) {
+            this.$emit('refresh', 1)
           }
-        }).catch(() => {
-          this.$message.error(this.$t(''))
-        })
+          this.getMsg()
+        } else if (res.data && +res.data.error === 100002) { // timeout
+          this.getMsg()
+        } else {
+          let that = this
+          if (res.data && +res.data.cancel === 1) {
+          } else {
+            this.timeout && clearTimeout(this.timeout)
+            this.timeout = setTimeout(() => {
+              that.$emit('refresh', 1)
+              that.getMsg()
+            }, 6 * 1000)
+          }
+        }
+      }).catch(() => {
+      })
     },
     inputKey (event) {
       if (+event.keyCode === 13) {

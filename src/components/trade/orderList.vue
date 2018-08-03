@@ -58,6 +58,11 @@ export default {
       return this.$store.state.orders || {list: []}
     }
   },
+  watch: {
+    $route: function () {
+      this.init()
+    }
+  },
   methods: {
     loadTop () {
       this.getOrders(1).then(() => {
