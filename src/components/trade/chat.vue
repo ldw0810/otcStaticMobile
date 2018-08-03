@@ -143,15 +143,12 @@ export default {
         }
       })
     },
-    sendInfo () {
-      if (this.inputText.trim()) {
-        const inputInfo = this.htmlEncode(this.inputText.trim())
+    sendInfo (value) {
+      if (value.trim()) {
+        const inputInfo = this.htmlEncode(value.trim())
         const tempTime = new Date()
-        this.$refs.input.innerHTML = ''
-        this.inputText = ''
-        let compareTime = this.msgList.length
-          ? this.msgList[this.msgList.length - 1].compareTime
-          : 0
+        this.$emit('sendSuccess', 1)
+        let compareTime = this.msgList.length ? this.msgList[this.msgList.length - 1].compareTime : 0
         let timeFlag = tempTime.getTime() - compareTime > 3 * 60 * 1000
         this.$set(this.msgList, this.msgList.length, {
           type: 0,
@@ -190,14 +187,15 @@ export default {
         order: this.order.id
       }).then(res => {
         this.scrollToBottom()
+        let tempTime = new Date().getTime()
         if (res.data && +res.data.error === 0) {
           let compareTime = this.msgList.length ? this.msgList[this.msgList.length - 1].compareTime : 0
-          let timeFlag = +res.data.from === 0 ? false : new Date().getTime() - compareTime > 3 * 60 * 1000
+          let timeFlag = +res.data.from === 0 ? false : tempTime - compareTime > 3 * 60 * 1000
           this.$set(this.msgList, this.msgList.length, {
             type: +res.data.from === 0 ? 9 : 1,
             data: res.data.msg,
-            time: $getDateStr(new Date()),
-            compareTime: timeFlag ? new Date().getTime() : compareTime,
+            time: $getDateStr(tempTime),
+            compareTime: timeFlag ? tempTime : compareTime,
             timeFlag: timeFlag
           })
           this.scrollToBottom()

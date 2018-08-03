@@ -60,9 +60,9 @@
           .submit(class="mintSubmit" v-else)
             mt-button(disabled) {{$t('order.order_status_over')}}
         .chat
-          Chat(ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder")
+          Chat(ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="inputValue = ''")
       .footer
-        mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue")
+        mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue" @blur.native.capture="sendInfo")
     transition(name="slide-right" mode="out-in")
       .popPage
         .popup(class="popup-right" v-if="confirmFlag.cancel")
@@ -306,12 +306,8 @@ export default {
         })
       }
     },
-    submit () {
-      if (this.formMessageAll) {
-        this.$message.error(this.formMessageAll)
-      } else {
-        this.showConfirmFlag = true
-      }
+    sendInfo () {
+      this.$refs.chat.sendInfo(this.inputValue)
     },
     init () {
       this.getOrder()
