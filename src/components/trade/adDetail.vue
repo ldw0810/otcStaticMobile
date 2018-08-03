@@ -325,9 +325,13 @@ export default {
     flex-direction column
     .content {
       flex 1
-      margin-top $mintHeaderHeight
-      height 100 - $footerHeight - $mintHeaderHeight
+      position absolute
+      left 0
+      top $mintHeaderHeight
+      width 100vw
+      height 100 - @top - $footerHeight
       overflow-y scroll
+      -webkit-overflow-scrolling touch
       .user {
         display flex
         flex-direction column
@@ -432,12 +436,18 @@ export default {
     }
   }
   .footer {
+    position fixed
+    left 0
+    right 0
+    bottom 0
     height $footerHeight
     display flex
     align-items center
     justify-content center
     font-size 0.8rem
     color #999999
+    background #fafafa
+    border-top 1px solid #EEEEEE
   }
   /deep/ .currency {
     font-weight normal

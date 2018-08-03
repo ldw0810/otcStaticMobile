@@ -628,7 +628,8 @@
     "order_chat_img": "聊天圖片",
     "order_chat_send_msg_fail": "消息發送失敗",
     "order_chat_type_nonsupport": "不支持的消息類型",
-    "order_data_request_fail": "訂單數據獲取失敗"
+    "order_data_request_fail": "訂單數據獲取失敗",
+    "order_chat_placeholder": "說點什麽"
   },
   "request": {
     "100000": "服務器操作失敗",

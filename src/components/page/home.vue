@@ -62,6 +62,7 @@ export default {
 </script>
 <style lang='stylus' scoped>
   .footer {
+    border-top 1px solid #EEEEEE
     height $tabbarFooterHeight
   }
 

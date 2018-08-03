@@ -67,8 +67,13 @@ export default {
     background #fafafa
     overflow hidden
     .content {
+      position absolute
+      left 0
+      top $mintHeaderHeight + 1
       width 100vw
-      margin-top $mintHeaderHeight + 1
+      height 100 - @top
+      overflow-y scroll
+      -webkit-overflow-scrolling touch
       background #FFFFFF
       display flex
       padding 5vh 6vw

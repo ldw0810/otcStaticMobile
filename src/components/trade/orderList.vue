@@ -23,7 +23,9 @@
                   .value {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
               mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary' @click="goOrder(order)") {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
             .border
-            .status(:class="{'complete': ['over', 'complete'].indexOf(order.status) > -1}") {{$t("order.order_status_" + order.status)}}
+            .status(class="ongoing" v-if="(['fresh', 'pay', 'release'].indexOf(order.status) > -1) || (order.status === 'sell_eval' && order.op_type === 'buy') || (order.status === 'buy_eval' && order.op_type === 'sell')") {{$t("order.order_status_" + order.status)}}
+            .status(class="cancel" v-else-if="['judge_seller', 'timeout', 'cancel'].indexOf(order.status) > -1") {{$t("order.order_status_" + order.status)}}
+            .status(class="complete" v-else) {{$t("order.order_status_" + order.status)}}
       EmptyList(:text='emptyMessage' :loading="ordersLoading" v-else)
 </template>
 <script type="es6">
@@ -212,6 +214,11 @@ export default {
             justify-content center
             font-size 0.9rem
             font-weight normal
+          }
+          .ongoing {
+            color #ED1C24
+          }
+          .cancel {
             color #999999
           }
           .complete {

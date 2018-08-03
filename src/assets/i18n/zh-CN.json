@@ -628,7 +628,8 @@
     "order_chat_img": "聊天图片",
     "order_chat_send_msg_fail": "消息发送失败",
     "order_chat_type_nonsupport": "不支持的消息类型",
-    "order_data_request_fail": "订单数据获取失败"
+    "order_data_request_fail": "订单数据获取失败",
+    "order_chat_placeholder": "说点什么"
   },
   "request": {
     "100000": "服务器操作失败",

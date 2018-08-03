@@ -219,16 +219,8 @@ export default {
               }, 6 * 1000)
             }
           }
-        }).catch(err => {
-          let that = this
-          if (err && +err.cancel === 1) {
-          } else {
-            this.timeout && clearTimeout(this.timeout)
-            this.timeout = setTimeout(() => {
-              that.$emit('refresh', 1)
-              that.getMsg()
-            }, 6 * 1000)
-          }
+        }).catch(() => {
+          this.$message.error(this.$t(''))
         })
     },
     inputKey (event) {
@@ -302,7 +294,7 @@ export default {
   mounted () {
     this.scrollToBottom()
   },
-  destroyed () {
+  beforeDestroy () {
     this.axios_source_chat && this.axios_source_chat.cancel({cancel: 1})
     this.timeout && clearTimeout(this.timeout)
   }

@@ -10,7 +10,7 @@
       .balance
         .number {{tradePrice | $fixDecimalAuto(targetCurrency)}}
         .targetCurrency {{targetCurrency.toUpperCase()}}
-    mt-navbar(v-model="navbarIndex" class="navbar")
+    mt-navbar(v-model="navbarIndex" class="navbar" fixed)
       LinkBarItem(:class="'navbarItem_' + index" v-for="(item, index) in navList" :id="index" :route="getNavbarRoute(index)" :key="index")
         i(class="text" :class="{'focus': +navbarIndex === index}") {{item.name}}
         mt-badge(type="error" size="small" v-if="index === navList.length - 1 && notice > 0") {{notice}}
@@ -236,7 +236,7 @@ export default {
     .navbar {
       display flex
       align-items center
-      position absolute
+      position fixed
       left 0
       top $currencyHeaderHeight
       width 100vw
@@ -250,6 +250,8 @@ export default {
       top $currencyHeaderHeight + $navbarHeaderHeight
       width 100vw
       height 100 - $currencyHeaderHeight - $navbarHeaderHeight - $tabbarFooterHeight
+      overflow-y scroll
+      -webkit-overflow-scrolling touch
     }
     .popupBg {
       position: fixed;

@@ -628,7 +628,8 @@
     "order_chat_img": "Chat image",
     "order_chat_send_msg_fail": "Message sending failure",
     "order_chat_type_nonsupport": "Unsupport message type",
-    "order_data_request_fail": "Oder data request fail"
+    "order_data_request_fail": "Oder data request fail",
+    "order_chat_placeholder": "Say something"
   },
   "request": {
     "100000": "Server error",

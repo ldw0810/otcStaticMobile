@@ -61,8 +61,8 @@
             mt-button(disabled) {{$t('order.order_status_over')}}
         .chat
           Chat(ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder")
-        .footer
-          <!--mt-field(type="textarea" :placeholder="")-->
+      .footer
+        mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue")
     transition(name="slide-right" mode="out-in")
       .popPage
         .popup(class="popup-right" v-if="confirmFlag.cancel")
@@ -132,7 +132,8 @@ export default {
       chatMessage: '',
       remainTime: 0,
       timer: 0,
-      password: ''
+      password: '',
+      inputValue: ''
     }
   },
   watch: {
@@ -342,7 +343,7 @@ export default {
     .content {
       flex 1
       margin-top $mintHeaderHeight
-      height 100 - $footerHeight - $mintHeaderHeight
+      height 100 - $chatFooterHeight - $mintHeaderHeight
       overflow-y scroll
       .info {
         display flex
@@ -420,6 +421,54 @@ export default {
 
       }
     }
+    .footer {
+      height $chatFooterHeight
+      background #fafafa
+      display flex
+      align-items center
+      justify-content center
+      border-top 1px solid #EEEEEE
+      .footerInput {
+        border 1px solid #EEEEEE
+        height $chatFooterHeight - 3
+        width 88vw
+        font-size 0.85rem
+        font-weight normal
+        color #999999
+        text-indent 2vw
+        &:active, &:focus, &:hover {
+          outline none
+        }
+      }
+
+      .footerInput::-webkit-input-placeholder {
+        /* WebKit browsers */
+        color: #CCCCCC;
+        opacity 0.7
+        text-indent 2vw
+      }
+
+      .footerInput:-moz-placeholder {
+        /* WebKit browsers */
+        color: #CCCCCC;
+        opacity 0.7
+        text-indent 2vw
+      }
+
+      .footerInput::-moz-placeholder {
+        /* WebKit browsers */
+        color: #CCCCCC;
+        opacity 0.7
+        text-indent 2vw
+      }
+
+      .footerInput::-ms-input-placeholder {
+        /* WebKit browsers */
+        color: #CCCCCC;
+        opacity 0.7
+        text-indent 2vw
+      }
+    }
   }
 
   .orderSubmit {
@@ -474,7 +523,9 @@ export default {
       }
     }
   }
-
+  /deep/ .footerInput {
+    width 88vw
+  }
   /deep/ .tipTime {
     font-size 1rem
     font-weight normal
@@ -507,15 +558,6 @@ export default {
 
   /deep/ .mint-button.is-disabled {
     background: #C8D4E0;
-  }
-
-  .footer {
-    height $footerHeight
-    display flex
-    align-items center
-    justify-content center
-    font-size 0.8rem
-    color #999999
   }
 
   /deep/ .currency {
