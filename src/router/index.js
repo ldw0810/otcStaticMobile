@@ -19,6 +19,7 @@ const entry = {
   modifyPassword: r => require.ensure([], () => r(require('../components/entry/modifyPassword')))
 }
 const page = {
+  loginPage: r => require.ensure([], () => r(require('../components/page/loginPage'))),
   home: r => require.ensure([], () => r(require('../components/page/home'))),
   error: r => require.ensure([], () => r(require('../components/page/error'))),
   notFound: r => require.ensure([], () => r(require('../components/page/notFound')))
@@ -55,131 +56,138 @@ const routers = [
   {
     path: '/',
     redirect: '/buy',
-    component: page.home,
+    component: page.loginPage,
     meta: {
       needLogin: true
     },
     children: [
       {
-        path: 'trade',
-        component: trade.index,
-        meta: {
-          tabbarIndex: 0
-        },
+        path: '/home',
+        redirect: '/buy',
+        component: page.home,
         children: [
           {
-            path: 'buy',
-            alias: ['/buy'],
-            component: trade.adList,
+            path: 'trade',
+            component: trade.index,
             meta: {
-              navbarIndex: 0
-            }
+              tabbarIndex: 0
+            },
+            children: [
+              {
+                path: 'buy',
+                alias: ['/buy'],
+                component: trade.adList,
+                meta: {
+                  navbarIndex: 0
+                }
+              },
+              {
+                path: 'sell',
+                alias: ['/sell'],
+                component: trade.adList,
+                meta: {
+                  navbarIndex: 1
+                }
+              },
+              {
+                path: 'orderList',
+                alias: ['/orderList'],
+                component: trade.orderList,
+                meta: {
+                  navbarIndex: 2
+                }
+              }
+            ]
           },
           {
-            path: 'sell',
-            alias: ['/sell'],
-            component: trade.adList,
+            path: 'asset',
             meta: {
-              navbarIndex: 1
-            }
+              tabbarIndex: 1
+            },
+            component: asset.index
           },
           {
-            path: 'orderList',
-            alias: ['/orderList'],
-            component: trade.orderList,
+            path: 'me',
             meta: {
-              navbarIndex: 2
-            }
+              tabbarIndex: 2
+            },
+            component: me.userCenter
           }
         ]
       },
       {
-        path: 'asset',
-        meta: {
-          tabbarIndex: 1
-        },
-        component: asset.index
+        path: '/adDetail',
+        alias: ['/ad'],
+        component: trade.adDetail
       },
       {
-        path: 'me',
-        meta: {
-          tabbarIndex: 2
-        },
-        component: me.userCenter
+        path: '/assetDetail',
+        alias: ['/asset'],
+        component: asset.assetDetail
+      },
+      {
+        path: '/assetHistory',
+        component: asset.assetHistory
+      },
+      {
+        path: '/order',
+        alias: ['/orderDetail'],
+        component: trade.order
+      },
+      {
+        path: '/me/authEmail',
+        component: me.authEmail
+      },
+      {
+        path: '/me/about',
+        component: me.about
+      },
+      {
+        path: '/me/changeLanguage',
+        component: me.changeLanguage
+      },
+      {
+        path: '/me/settings',
+        component: me.settings
+      },
+      {
+        path: '/me/addCollection',
+        component: me.addCollection
+      },
+      {
+        path: '/me/addCollection/addAlipay',
+        component: me.addAlipay
+      },
+      {
+        path: '/me/addCollection/addBankcard',
+        component: me.addBankcard
+      },
+      {
+        path: '/me/collectionList',
+        component: me.collectionList
+      },
+      {
+        path: '/me/modifyPassword',
+        component: me.modifyPassword
+      },
+      {
+        path: '/me/authPhone',
+        component: me.authPhone
+      },
+      {
+        path: '/me/addGoogle',
+        component: me.addGoogle
+      },
+      {
+        path: '/me/authGoogle',
+        component: me.authGoogle
+      },
+      {
+        path: '/me/invite',
+        alias: '/invite',
+        component: me.invite
       }
     ]
-  },
-  {
-    path: '/adDetail',
-    alias: ['/ad'],
-    component: trade.adDetail
-  },
-  {
-    path: '/assetDetail',
-    alias: ['/asset'],
-    component: asset.assetDetail
-  },
-  {
-    path: '/assetHistory',
-    component: asset.assetHistory
-  },
-  {
-    path: '/order',
-    alias: ['/orderDetail'],
-    component: trade.order
-  },
-  {
-    path: '/me/authEmail',
-    component: me.authEmail
-  },
-  {
-    path: '/me/about',
-    component: me.about
-  },
-  {
-    path: '/me/changeLanguage',
-    component: me.changeLanguage
-  },
-  {
-    path: '/me/settings',
-    component: me.settings
-  },
-  {
-    path: '/me/addCollection',
-    component: me.addCollection
-  },
-  {
-    path: '/me/addCollection/addAlipay',
-    component: me.addAlipay
-  },
-  {
-    path: '/me/addCollection/addBankcard',
-    component: me.addBankcard
-  },
-  {
-    path: '/me/collectionList',
-    component: me.collectionList
-  },
-  {
-    path: '/me/modifyPassword',
-    component: me.modifyPassword
-  },
-  {
-    path: '/me/authPhone',
-    component: me.authPhone
-  },
-  {
-    path: '/me/addGoogle',
-    component: me.addGoogle
-  },
-  {
-    path: '/me/authGoogle',
-    component: me.authGoogle
-  },
-  {
-    path: '/me/invite',
-    alias: '/invite',
-    component: me.invite
   },
   {
     path: '/entry',

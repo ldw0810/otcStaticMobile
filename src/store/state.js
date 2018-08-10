@@ -60,5 +60,5 @@ export default {
   axiosCancel: {}, // axios的CancelToken
   timeout: {}, // 定时器
   device: 0, // 设备 0--PC端 1--手机端,
-  isFirstLogin: false
+  isFirstLogin: true
 }
