@@ -59,5 +59,6 @@ export default {
   showAuthEmail: false,
   axiosCancel: {}, // axios的CancelToken
   timeout: {}, // 定时器
-  device: 0 // 设备 0--PC端 1--手机端
+  device: 0, // 设备 0--PC端 1--手机端,
+  isFirstLogin: false
 }

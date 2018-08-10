@@ -130,6 +130,7 @@ export default {
         if (resMe.data && +resMe.data.error === 0 && resLan.data && +resLan.data.error === 0) {
           this.$message.success(this.$t('user.login_success'))
           this.$router.push(this.$route.query.redirect || '/buy')
+          this.$store.commit('isFirstLogin_setter', true)
         }
       })).catch(() => {
         this.$message.error(this.$t('public.url_request_fail'))

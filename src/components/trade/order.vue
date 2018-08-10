@@ -16,9 +16,9 @@
               .label {{$t('order.order_order_payment')}}:
             .textList
               .text {{order.id}}
-              .text {{order.amount | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
+              .text {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
               .text {{order.price | $fixDecimalAuto(order.currency)}} {{order.target_currency.toUpperCase() + '/' + order.currency.toUpperCase()}}
-              .text {{order.price_sum | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
+              .text {{order.amount | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
               .text {{order.pay_kind ? $t('public.' + order.pay_kind) : ''}}
             .btn(@click="triggerInfo") {{$t('order.order_hide_detail')}}
           .border
