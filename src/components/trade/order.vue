@@ -62,7 +62,7 @@
         .chat
           Chat(ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="inputValue = ''")
       .footer
-        mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue" @blur.native.capture="sendInfo")
+        mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue" @keyup.enter.native.capture="sendInfo")
     transition(name="slide-right" mode="out-in")
       .popPage
         .popup(class="popup-right" v-if="confirmFlag.cancel")
@@ -306,7 +306,8 @@ export default {
         })
       }
     },
-    sendInfo () {
+    sendInfo (event) {
+      event && event.preventDefault()
       this.$refs.chat.sendInfo(this.inputValue)
     },
     init () {
