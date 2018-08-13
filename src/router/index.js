@@ -101,6 +101,7 @@ const routers = [
           },
           {
             path: 'asset',
+            alias: ['/asset'],
             meta: {
               tabbarIndex: 1
             },
@@ -122,7 +123,6 @@ const routers = [
       },
       {
         path: '/assetDetail',
-        alias: ['/asset'],
         component: asset.assetDetail
       },
       {
