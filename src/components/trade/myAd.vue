@@ -152,7 +152,14 @@ export default {
       }
     },
     shareAd (ad) {
-      console.log('shareAd')
+      if (ad && ad.id) {
+        this.$router.push({
+          path: '/adShare',
+          query: {
+            id: ad.id
+          }
+        })
+      }
     },
     init () {
       this.getMyAds()
@@ -204,7 +211,7 @@ export default {
               .infoItem {
                 display flex
                 .text {
-                  min-width 20vw
+                  min-width 18vw
                   font-size 0.85rem
                   color #2A2A2A
                 }

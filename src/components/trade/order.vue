@@ -70,7 +70,7 @@
             OrderCancelConfirm(@close="confirmFlag.cancel = false" @success="doOper('cancel')")
         .popup(class="popup-right" v-if="confirmFlag.pay")
           slot
-            OrderPayConfirm(@close="confirmFlag.pay = false" @success="doOper('pay')")
+            OrderPayConfirm(@close="confirmFlag.pay = false" @success="doPay")
         .popup(class="popup-right" v-if="confirmFlag.release")
           slot
             OrderReleaseConfirm(:order="order" @close="confirmFlag.release = false" @success="doRelease")
@@ -131,6 +131,7 @@ export default {
       chatMessage: '',
       remainTime: 0,
       timer: 0,
+      remark: '',
       password: '',
       inputValue: ''
     }
@@ -238,6 +239,10 @@ export default {
       } else {
       }
     },
+    doPay (value) {
+      this.remark = value
+      this.doOper('pay')
+    },
     doRelease (value) {
       this.password = value
       this.doOper('release')
@@ -250,8 +255,9 @@ export default {
         }).then(res => {
           if (res.data && +res.data.error === 0) {
             this.confirmFlag.pay = false
-            // this.$refs.chat.inputText = this.form.remark
-            // this.$refs.chat.sendInfo()
+            if (this.remark && this.remark.trim()) {
+              this.$refs.chat.sendInfo(this.remark)
+            }
             this.$message.success(this.$t('order.order_pay_complete_success'))
             this.getOrder()
           }

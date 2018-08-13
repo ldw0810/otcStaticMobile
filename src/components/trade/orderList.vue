@@ -26,7 +26,7 @@
             .status(class="ongoing" v-if="(['fresh', 'pay', 'release'].indexOf(order.status) > -1) || (order.status === 'sell_eval' && order.op_type === 'buy') || (order.status === 'buy_eval' && order.op_type === 'sell')") {{$t("order.order_status_" + order.status)}}
             .status(class="cancel" v-else-if="['judge_seller', 'timeout', 'cancel'].indexOf(order.status) > -1") {{$t("order.order_status_" + order.status)}}
             .status(class="complete" v-else) {{$t("order.order_status_" + order.status)}}
-      EmptyList(:text="$t('public.no_order_list')" :loading="ordersLoading" v-else)
+      EmptyList(class="emptyDiv" :text="$t('public.no_order_list')" :loading="ordersLoading" v-else)
 </template>
 <script type="es6">
 import Avatar from '../common/avatar'
@@ -234,5 +234,9 @@ export default {
         }
       }
     }
+  }
+  .emptyDiv {
+    width 100vw
+    height 100 - $currencyHeaderHeight - $navbarHeaderHeight - $tabbarFooterHeight
   }
 </style>

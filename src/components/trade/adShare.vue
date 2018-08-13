@@ -1,16 +1,15 @@
 <template lang="pug">
-  .orderPayConfirm
-    mt-header(:title="$t('order.order_confirm_pay_title')" fixed)
-      span(slot="left")
-        mt-button(icon="back" @click="goBack")
+  .adShare
+    mt-header(:title="$t('order.order_cancel_order_title')" fixed)
+      router-link(to="/myAds" slot="left")
+        mt-button(icon="back")
     .wrapper
       .content
-        .tip {{$t("order.order_confirm_pay_remark_tip")}}
-        mt-field(class="remark" type="textarea" :placeholder="$t('order.order_confirm_pay_remark')" v-model="form.remark")
-        .warn {{$t("order.order_confirm_pay_warn")}}
+        .tip {{$t("order.order_cancel_order_tip")}}
+        .warn {{$t("order.order_cancel_order_warn")}}
       .submit
         .mintSubmit
-          mt-button(class="submitBtn" @click="success") {{$t('order.order_confirm_payed')}}
+          mt-button(class="submitBtn" @click="success") {{$t('order.order_pay_cancel')}}
         .mintCancel
           mt-button(class="cancelBtn" @click="goBack") {{$t('public.cancel')}}
 </template>
@@ -23,12 +22,9 @@ Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
 
 export default {
-  name: 'orderPayConfirm',
+  name: 'adShare',
   data () {
     return {
-      form: {
-        remark: ''
-      }
     }
   },
   computed: {
@@ -39,7 +35,7 @@ export default {
     },
     success () {
       this.$emit('close', 1)
-      this.$emit('success', this.form.remark)
+      this.$emit('success', 1)
     },
     init () {
     }
@@ -51,14 +47,19 @@ export default {
 </script>
 <style lang='stylus' scoped>
   buttonHeight = 15vh
-  .orderPayConfirm {
+  .adShare {
     width 100vw
     height 100vh
     background #fafafa
     overflow hidden
     .content {
+      position absolute
+      left 0
+      top $mintHeaderHeight + 1
       width 100vw
-      margin-top $mintHeaderHeight + 1
+      height 100 - @top
+      overflow-y scroll
+      -webkit-overflow-scrolling touch
       background #FFFFFF
       display flex
       padding 5vh 6vw
