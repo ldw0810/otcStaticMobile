@@ -40,6 +40,9 @@ export default {
   orders_setter (state, value) {
     state.orders = value
   },
+  myAds_setter (state, value) {
+    state.myAds = value
+  },
   deposit_setter (state, value) {
     state.deposit = value
   },

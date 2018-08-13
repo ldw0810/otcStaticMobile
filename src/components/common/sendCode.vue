@@ -1,9 +1,9 @@
 <!--手机发送验证码按钮-->
 <template>
   <div class='send'>
-    <a @click="send" class='btn primary' v-if="subOnce">{{text || $t("user.auth_phone_code_send")}}</a>
-    <a disabled class='btn disabled' v-else-if="subTime > 0">{{$t("user.auth_phone_code_reSend_seconds", {'0': subTime})}}</a>
-    <a @click="send" class='btn primary' v-else>{{reText || $t("user.auth_phone_code_reSend")}}</a>
+    <a @click="send" class='btn primary' v-if="subOnce">{{text || $t('user.auth_phone_code_send')}}</a>
+    <a disabled class='btn disabled' v-else-if="subTime > 0">{{$t('user.auth_phone_code_reSend_seconds', {'0': subTime})}}</a>
+    <a @click="send" class='btn primary' v-else>{{reText || $t('user.auth_phone_code_reSend')}}</a>
   </div>
 </template>
 

@@ -23,7 +23,7 @@
             .item {{$t('public.invite_omt')}}: {{inviteAmount}}
         .rules
           .rulesTitle {{$t("public.invite_rules")}}
-          .rulesContent(v-html='$t("public.invite_rules_content")')
+          .rulesContent(v-html="$t('public.invite_rules_content')")
       transition(name="fade" mode="out-in")
         .popupImage(v-show="popImageFlag" id="popupImage" @click="closePopImage")
           QrCode(v-if="qrCodeFlag" ref="qrCode" class="qrCode" :value='qrCodeConfig.value' :size='qrCodeConfig.size')

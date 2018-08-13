@@ -26,7 +26,7 @@
             .status(class="ongoing" v-if="(['fresh', 'pay', 'release'].indexOf(order.status) > -1) || (order.status === 'sell_eval' && order.op_type === 'buy') || (order.status === 'buy_eval' && order.op_type === 'sell')") {{$t("order.order_status_" + order.status)}}
             .status(class="cancel" v-else-if="['judge_seller', 'timeout', 'cancel'].indexOf(order.status) > -1") {{$t("order.order_status_" + order.status)}}
             .status(class="complete" v-else) {{$t("order.order_status_" + order.status)}}
-      EmptyList(:text='emptyMessage' :loading="ordersLoading" v-else)
+      EmptyList(:text="$t('public.no_order_list')" :loading="ordersLoading" v-else)
 </template>
 <script type="es6">
 import Avatar from '../common/avatar'
@@ -127,7 +127,8 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-  itemHeight = 22vh
+  itemHeight = 23vh
+  itemContentHeight = 18vh
   noticeWidth = 1vw
   .order {
     width 100vw
@@ -158,6 +159,7 @@ export default {
           .content {
             flex 1
             width 100 - noticeWidth
+            height itemContentHeight
             align-self flex-start
             display flex
             align-items flex-start
@@ -167,6 +169,7 @@ export default {
             }
             .info {
               flex 1
+              height itemContentHeight
               display flex
               flex-direction column
               font-size 0.85rem
@@ -213,15 +216,14 @@ export default {
             background #EEEEEE
           }
           .status {
-            height 4vh
+            height itemHeight - itemContentHeight
             display flex
             align-items center
             justify-content center
             font-size 0.9rem
-            font-weight normal
           }
           .ongoing {
-            color #ED1C24
+            color #999999
           }
           .cancel {
             color #999999

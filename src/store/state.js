@@ -28,9 +28,11 @@ export default {
     default_collection: {}
   },
   ads: {
-    list: []
   },
   orders: {
+    list: []
+  },
+  myAds: {
     list: []
   },
   deposit: {

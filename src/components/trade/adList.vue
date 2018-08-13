@@ -12,9 +12,12 @@
                   .tradeNumber {{$t("order.order_trade_count", {'0': ad.member.stat.trade_count})}}
                   .border |
                   .goodRate {{$t("order.order_praise_rate")}}: {{ad.member.stat.good_rate}}%
-                  .icon
-                    img(src="../../assets/images/trade/C-Alipay.png" v-if="!ad.member.bank")
-                    img(src="../../assets/images/trade/C-Card.png" v-else-if="ad.member.bank")
+                  .pay(v-if="ad.pay_kind === 'local'")
+                    .border |
+                    .text {{$t('public.local')}}
+                  .icon(v-else)
+                    img(src="../../assets/images/trade/C-Alipay.png" v-if="ad.pay_kind === 'alipay'")
+                    img(src="../../assets/images/trade/C-Card.png" v-else-if="ad.pay_kind === 'bank'")
               el-button(class="operation" :class="{'sell': adType === 1}" type='primary' @click="submit(ad.id)") {{adType === 0 ? $t('public.buy') : $t('public.sell')}}
             .contentDown
               .price
@@ -22,7 +25,7 @@
                 .text {{$t('order.order_unit_price', {'0': currency.toUpperCase()})}}
               .border
               .limit
-                .number {{ad.min_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | $fixDecimalAuto( ad.target_currency)}}
+                .number {{ad.min_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | $fixDecimalAuto(ad.target_currency)}}
                 .text {{$t('order.order_limit')}}
       EmptyList(class="emptyDiv" :text='emptyMessage' :loading="adsLoading" v-else)
 </template>
@@ -209,14 +212,14 @@ export default {
               flex 1
               margin-left 2.5vw
               .name {
-                font-size 0.8rem
+                font-size 0.85rem
                 font-weight normal
                 color #333333
               }
               .pack {
                 display flex
                 align-items center
-                font-size 0.8rem
+                font-size 0.85rem
                 color #999999
                 .tradeNumber {
 
@@ -226,6 +229,14 @@ export default {
                 }
                 .goodRate {
 
+                }
+                .pay {
+                  display flex
+                  align-items center
+                  .text {
+                    font-size 0.85rem
+                    color #CCC
+                  }
                 }
                 .icon {
                   width 2.5vh
@@ -267,10 +278,10 @@ export default {
               padding-left 5vw
               .number {
                 font-weight normal
-                font-size 0.9rem
+                font-size 1rem
               }
               .text {
-                font-size 0.8rem
+                font-size 0.85rem
                 color #CCCCCC
               }
             }
@@ -287,10 +298,10 @@ export default {
               font-weight normal
               .number {
                 font-weight normal
-                font-size 0.9rem
+                font-size 0.95rem
               }
               .text {
-                font-size 0.8rem
+                font-size 0.85rem
                 color #CCCCCC
               }
             }

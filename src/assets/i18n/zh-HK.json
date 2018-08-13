@@ -141,8 +141,10 @@
     "no_buy_ad": "没有出售 {0} 的广告",
     "no_complete_order": "您沒有未完成的訂單",
     "no_unfinished_order": "您沒有未完成的訂單",
+    "no_order_list": "您還沒有訂單",
     "no_underway_ad": "您沒有進行中的廣告",
     "no_off_ad": "您沒有已下架的廣告",
+    "no_ad": "您還沒有廣告",
     "no_asset_recharge": "沒有充值的信息",
     "no_asset_withdraw": "沒有提現的信息",
     "success_title_default": "成功",
@@ -150,7 +152,8 @@
     "loadMore_topPullText": "下拉刷新",
     "loadMore_bottomPullText": "上拉刷新",
     "loadMore_dropText": "釋放刷新",
-    "loadMore_loadingText": "加載中..."
+    "loadMore_loadingText": "加載中...",
+    "share": "分享"
   },
   "user": {
     "register_error": "請輸入正確的註冊信息",

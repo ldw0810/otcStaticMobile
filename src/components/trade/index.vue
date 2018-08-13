@@ -53,6 +53,10 @@ export default {
           path: '/sell'
         },
         {
+          name: this.$t('public.myAd'),
+          path: '/myAd'
+        },
+        {
           name: this.$t('public.order'),
           path: '/orderList'
         }
@@ -260,7 +264,7 @@ export default {
       height 100%
       background-color rgba(55, 55, 55, 0.6)
     }
-    for row in 0 1 2 {
+    for row in 0 1 2 3 {
       .navbarItem_{row} {
         /deep/ .mint-tab-item-label {
           font-size 0.9rem

@@ -141,8 +141,10 @@
     "no_buy_ad": "Currently no ad for {0}",
     "no_complete_order": "Currently no order",
     "no_unfinished_order": "Currently no order",
+    "no_order_list": "Currently no order",
     "no_underway_ad": "Currently no ad",
     "no_off_ad": "Currently no ad",
+    "no_ad": "Currently no ad",
     "no_asset_recharge": "No recharge information",
     "no_asset_withdraw": "No withdraw information",
     "success_title_default": "Success",
@@ -150,7 +152,8 @@
     "loadMore_topPullText": "Pull refresh",
     "loadMore_bottomPullText": "Pull up refresh",
     "loadMore_dropText": "Drop refresh",
-    "loadMore_loadingText": "loading..."
+    "loadMore_loadingText": "loading...",
+    "share": "Share"
   },
   "user": {
     "register_error": "Enter valid email address",

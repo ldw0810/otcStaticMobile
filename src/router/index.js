@@ -29,7 +29,8 @@ const trade = {
   adList: r => require.ensure([], () => r(require('../components/trade/adList'))),
   adDetail: r => require.ensure([], () => r(require('../components/trade/adDetail'))),
   orderList: r => require.ensure([], () => r(require('../components/trade/orderList'))),
-  order: r => require.ensure([], () => r(require('../components/trade/order')))
+  order: r => require.ensure([], () => r(require('../components/trade/order'))),
+  myAd: r => require.ensure([], () => r(require('../components/trade/myAd')))
 }
 const asset = {
   index: r => require.ensure([], () => r(require('../components/asset/index'))),
@@ -90,11 +91,19 @@ const routers = [
                 }
               },
               {
+                path: 'myAd',
+                alias: ['/myAd'],
+                component: trade.myAd,
+                meta: {
+                  navbarIndex: 2
+                }
+              },
+              {
                 path: 'orderList',
                 alias: ['/orderList'],
                 component: trade.orderList,
                 meta: {
-                  navbarIndex: 2
+                  navbarIndex: 3
                 }
               }
             ]
@@ -109,6 +118,7 @@ const routers = [
           },
           {
             path: 'me',
+            alias: ['/me'],
             meta: {
               tabbarIndex: 2
             },
