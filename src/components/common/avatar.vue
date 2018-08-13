@@ -65,8 +65,8 @@ export default {
     right: 0;
     top: 0;
     border-radius: 50%;
-    width: 2vh;
-    height: 2vh;
+    width: 1.5vh;
+    height: 1.5vh;
     border: 1px solid #fff;
   }
   .online .afterStatus {
