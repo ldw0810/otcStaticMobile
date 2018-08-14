@@ -5,25 +5,38 @@
         mt-button(icon="back")
     .wrapper
       .content
-        qrcode-vue(v-if="qrCodeFlag" ref="qrCode" class="pop-qrCode" :value='qrCodeConfig.value' :size='qrCodeConfig.size')
+        qrcode-vue(ref="qrCode" class="qrCode" :value='qrCodeConfig.value' :size='qrCodeConfig.size')
         .image(ref="image")
-        mt-button(@click="success") {{$t('public.invite_image_info_text')}}
+        <!--mt-button(class="popDownload" @click="success") {{$t('public.invite_image_info_text')}}-->
 </template>
 <script type="es6">
 import {Header, Button, Field} from 'mint-ui'
 import Vue from 'vue'
+import QrcodeVue from 'qrcode.vue'
+import {$getAxiosLanguage} from '../../utils'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
 
+const configure = require('../../../configure')
+
 export default {
   name: 'adShare',
+  components: {
+    QrcodeVue
+  },
   data () {
     return {
     }
   },
   computed: {
+    language () {
+      return $getAxiosLanguage()
+    },
+    shareImg () {
+      return require(`../../assets/images/me/invite-${this.language}.jpg`)
+    },
     id () {
       return this.$route.query.id || ''
     },
@@ -35,10 +48,10 @@ export default {
     },
     qrCodeConfig () {
       return {
-        value: location.protocol + '//' + location.host + '/ad?id=' + this.id + 'shareId=' + this.id,
+        value: location.protocol + '//' + location.host + '/ad?id=' + this.id + '&shareId=' + this.id,
         imagePath: require('../../assets/images/trade/QC-Code-BG.png'),
         filter: 'canvas',
-        size: 245
+        size: 90
       }
     }
   },
@@ -47,8 +60,56 @@ export default {
       this.$emit('close', 1)
       this.$emit('success', 1)
     },
+    convertCanvasToImage (canvas) {
+      let image = new Image()
+      image.src = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
+      return image.src
+    },
+    createImage () {
+      let qrCodeImg = this.convertCanvasToImage(this.$refs.qrCode.$el.children[0])
+      let imgArr = [this.shareImg, qrCodeImg]
+      let c = document.createElement('canvas')
+      let ctx = c.getContext('2d')
+      c.width = 750
+      c.height = 1334
+      ctx.rect(0, 0, c.width, c.height)
+      ctx.fillStyle = '#ccc'
+      ctx.fill()
+      const drawing = (number) => {
+        let index = +number || 0
+        if (index < imgArr.length) {
+          let img = new Image()
+          img.src = imgArr[index]
+          img.onload = () => {
+            if (index === 1) {
+              ctx.drawImage(img, configure.qrCode_adShare.left, configure.qrCode_adShare.top, configure.qrCode_adShare.size, configure.qrCode_adShare.size)
+              drawing(++index)
+            } else {
+              ctx.drawImage(img, 0, 0, c.width, c.height)
+              drawing(++index)
+            }
+          }
+        } else {
+          this.imageData = c.toDataURL('image/png').replace('image/png', 'image/octet-stream')
+          this.$refs.image.innerHTML = "<img width='" + this.clientHeight * 0.45 +
+            "' height='" + this.clientHeight * 0.8 + "' src='" + this.imageData + "'>"
+        }
+      }
+      drawing()
+    },
+    downloadImage () {
+      if (this.imageData) {
+        let a = document.createElement('a')
+        a.href = this.imageData
+        a.download = 'img.png'
+        this.$refs.popImage.appendChild(a)
+        a.click()
+        a.remove()
+      }
+    },
     init () {
       this.$loading.close()
+      this.createImage()
     }
   },
   mounted () {
@@ -70,27 +131,41 @@ export default {
       width 100vw
       height 100 - @top
       overflow-y scroll
-      -webkit-overflow-scrolling touch
       background #FFFFFF
       display flex
-      padding 5vh 6vw
+      padding 0 6vw 5vh
       flex-direction column
       border-top 1px solid #EEEEEE
       border-bottom 1px solid #EEEEEE
-      .tip {
-        font-weight normal
-        font-size 0.85rem
-        color #333333
+      .qrCode {
+        position: absolute;
+        top: -100vh;
+        left: -100vw;
+        visibility: hidden;
       }
-      .remark {
-        margin 2.5vh 0
-        border 1px solid #EEEEEE
+      .image {
+        display: flex;
+        align-items: center;
+        width 88vw
+        height 156.6vw
+        /deep/ img {
+          object-fit: cover;
+          object-position: 0 0;
+          width: 100%;
+          height: 100%;
+        }
       }
-      .warn {
+      .popDownload {
         margin-top 2.5vh
-        font-weight normal
-        font-size 0.85rem
-        color #ED1C24
+        min-width: 36vw;
+        background: #FFFFFF;
+        border: 1px solid rgba(0, 0, 0, 0.10);
+        box-shadow: 0 1vw 1vw 0 rgba(0, 0, 0, 0.03);
+        border-radius: 2px;
+        font-family: SFUIDisplay-Light sans-serif;
+        font-size: 0.85rem;
+        color: #333333;
+        text-align: center;
       }
     }
     .submit {

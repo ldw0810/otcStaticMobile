@@ -166,7 +166,7 @@ export default {
           img.src = imgArr[index]
           img.onload = () => {
             if (index === 1) {
-              ctx.drawImage(img, configure.QRCODE_POSITION_LEFT, configure.QRCODE_POSITION_TOP, configure.QRCODE_SIZE, configure.QRCODE_SIZE)
+              ctx.drawImage(img, configure.qrCode_invite.left, configure.qrCode_invite.top, configure.qrCode_invite.size, configure.qrCode_invite.size)
               drawing(++index)
             } else {
               ctx.drawImage(img, 0, 0, c.width, c.height)

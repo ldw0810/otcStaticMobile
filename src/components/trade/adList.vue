@@ -26,7 +26,7 @@
               .border
               .limit
                 .number {{ad.min_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | $fixDecimalAuto(ad.target_currency)}}
-                .text {{$t('order.order_limit')}}
+                .text {{$t('order.order_limit') + '(' + ad.target_currency.toUpperCase() + ')'}}
       EmptyList(class="emptyDiv" :text='emptyMessage' :loading="adsLoading" v-else)
 </template>
 <script type="es6">

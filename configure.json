@@ -34,9 +34,16 @@
   "axios_TIMEOUT": 20000,
   "axios_BASEURL": "/",
   "ZENDESK_DOMAIN_URL": "https://otcmaker.zendesk.com",
-  "QRCODE_POSITION_LEFT": 260,
-  "QRCODE_POSITION_TOP": 751,
-  "QRCODE_SIZE": 230,
+  "qrCode_invite": {
+    "left": 260,
+    "top": 751,
+    "size": 230
+  },
+  "qrCode_adShare": {
+    "left": 263,
+    "top": 754,
+    "size": 225
+  },
   "const postfixImg": "",
   "HOME_CAROUSEL": {
     "defaultIndex": 1,
