@@ -4,9 +4,12 @@
       router-link(to="/me/settings" slot="left")
         mt-button(icon="back")
     .wrapper(v-if="userInfo.id")
-      .content
-        mt-cell(:title="country[0] + ' +' + country[2]" @click.native.prevent="countryFlag = true" is-link v-if="!userInfo.mobile")
+      .content(v-if="!userInfo.mobile")
+        mt-cell(:title="country[0] + ' +' + country[2]" @click.native.prevent="countryFlag = true" is-link)
         mt-field(type="number" :label="$t('user.auth_phone_number')" :placeholder="$t('user.auth_phone_number_required')" v-model="form.phoneNumber" :state="formState.phoneNumber" :disabled="userInfo.mobile" @input="checkState('phoneNumber')")
+      .content(v-else class="closeContent")
+        .label {{$t('user.auth_phone_number')}}
+        .number {{userInfo.phone_number}}
       .submit(class="mintSubmit")
         mt-button(@click="submit" :disabled="!formStateAll") {{$t('user.auth_phone_code_send')}}
     transition(name="slide-right" mode="out-in")
@@ -148,6 +151,11 @@ export default {
       }
     },
     init () {
+      console.log(this.userInfo)
+      if (this.userInfo.mobile) {
+        console.log(this.userInfo)
+        this.form.phoneNumber = this.userInfo.phone_number
+      }
       this.getMe()
       this.checkAllState()
     }
@@ -168,7 +176,23 @@ export default {
   .content {
     margin-top $mintHeaderHeight + 1
   }
-
+  .closeContent {
+    display flex
+    align-items center
+    width 100vw
+    .label {
+      margin-left 2.5vw
+      font-size 1rem
+      font-weight normal
+    }
+    .number {
+      flex 1
+      font-size 1rem
+      display flex
+      align-items center
+      justify-content center
+    }
+  }
   .submit {
     margin-top 2.5vh
   }
@@ -181,6 +205,7 @@ export default {
     overflow-scrolling touch
     -webkit-overflow-scrolling: touch;
   }
+
   /deep/ .mint-field-core {
     height 6vh
   }

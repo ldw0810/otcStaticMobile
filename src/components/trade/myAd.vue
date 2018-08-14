@@ -28,6 +28,7 @@
                   .value(v-else-if="ad.pay_kind === 'bank'") {{$t("public.bank")}}
                   .value(v-else-if="ad.pay_kind === 'local'") {{$t("public.local")}}
               .button
+                .text(v-if="+ad.locked > 0") {{$t("ad.ad_trading")}}
                 mt-button(v-if="ad.status === 'ongoing'" class="operation" type='primary' @click="shareAd(ad)") {{$t('public.share')}}
                 mt-button(v-if="ad.status === 'closed'" class="operation" type='primary' @click="openAd(ad)") {{$t('ad.ad_open')}}
                 mt-button(v-else class="operation" type='primary' @click="closeAd(ad)") {{$t('ad.ad_close')}}
