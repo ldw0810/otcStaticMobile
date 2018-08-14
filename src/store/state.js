@@ -4,6 +4,7 @@ export default {
   pinCodeRefresh: 0, // 是否刷新PIN码
   googleKey: '', // 谷歌验证码
   googleCode: '', // 谷歌二维码的值
+  shareId: '',
   loginInfo: {
     mobile: '',
     loginToken: ''

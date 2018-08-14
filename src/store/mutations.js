@@ -15,6 +15,9 @@ export default {
   googleCode_setter (state, value) {
     state.googleCode = value
   },
+  shareId_setter (state, value) {
+    state.shareId = value
+  },
   loginInfo_setter (state, value) {
     state.loginInfo = value
   },
@@ -89,5 +92,8 @@ export default {
   },
   device_setter (state, value) {
     state.device = value
+  },
+  isFirstLogin_setter (state, value) {
+    state.isFirstLogin = value
   }
 }

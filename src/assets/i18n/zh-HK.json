@@ -511,9 +511,10 @@
     "ad_asset_deficiency": "資產不足",
     "ad_max_price_limit": "最大限額9999999999",
     "ad_deal_with_self": "您不可以和自己交易",
-    "ad_local_trading_tip": "當面交易需填寫含有地址信息的備註",
     "ad_buying": "買",
-    "ad_selling": "賣"
+    "ad_selling": "賣",
+    "ad_local_trading_tip": "當面交易需填寫含有地址信息的備註",
+    "ad_share": "廣告分享"
   },
   "order": {
     "order_detail": "訂單詳情",

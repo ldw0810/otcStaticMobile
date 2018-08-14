@@ -31,6 +31,9 @@ export default {
     },
     homeCarouselList () {
       return this.$store.state.homeCarouselList
+    },
+    userInfo () {
+      return this.$store.state.userInfo
     }
   },
   methods: {
@@ -46,10 +49,19 @@ export default {
       }).catch(() => {
       })
     },
+    getMe () {
+      this.$store.dispatch('axios_me')
+    },
     init () {
       // if (this.isFirstLogin) {
       //   this.getBanner()
       // }
+      if (!this.userInfo.id) {
+        this.getMe()
+      }
+      if (this.$route.query.shareId) {
+        this.$store.commit('shareId_setter', this.$route.query.shareId)
+      }
     }
   },
   mounted () {

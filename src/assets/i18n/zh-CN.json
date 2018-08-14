@@ -513,7 +513,8 @@
     "ad_deal_with_self": "您不可以和自己交易",
     "ad_buying": "买",
     "ad_selling": "卖",
-    "ad_local_trading_tip": "当面交易需填写含有地址信息的备注"
+    "ad_local_trading_tip": "当面交易需填写含有地址信息的备注",
+    "ad_share": "广告分享"
   },
   "order": {
     "order_detail": "订单详情",

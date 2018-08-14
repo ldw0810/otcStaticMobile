@@ -134,7 +134,6 @@ const routers = [
       },
       {
         path: '/adShare',
-        alias: ['/adShare'],
         component: trade.adShare
       },
       {

@@ -27,7 +27,7 @@
             .label {{$t('ad.ad_remark')}}:
           .textList
             .text {{ad.current_price | $fixDecimalAuto(targetCurrency)}} {{targetCurrency.toUpperCase() + '/' + currency.toUpperCase()}}
-            .text {{ad.min_limit | $fixDecimalAuto(targetCurrency)}} - {{ad.order_limit | $fixDecimalAuto(targetCurrency)}}
+            .text {{ad.min_limit | $fixDecimalAuto(targetCurrency)}}&nbsp;-&nbsp;{{ad.order_limit | $fixDecimalAuto(targetCurrency)}}&nbsp;{{targetCurrency.toUpperCase()}}
             .text {{ad.pay_kind ? $t('public.' + ad.pay_kind) : ''}}
             .textArea {{ad.remark}}
         .border
@@ -115,6 +115,9 @@ export default {
     },
     id () {
       return this.$route.query.id
+    },
+    shareId () {
+      return this.$store.state.shareId
     },
     backLink () {
       return {
@@ -262,7 +265,6 @@ export default {
           this.isSelfOrder = (this.ad.member.id === this.userInfo.id)
           if (this.ad.member.id === this.userInfo.id) {
             this.$message.error(this.$t('order.order_join_own_otc_ad'))
-            this.$router.push(this.backLink)
           } else if (res.data.info.status === 'closed') {
             this.$message.error(this.$t('order.order_closed'))
             this.$router.push(this.backLink)
@@ -286,7 +288,8 @@ export default {
       this.$store.dispatch('axios_order_buy', {
         id: this.id,
         price: +this.ad.current_price,
-        price_sum: +this.form.amount
+        price_sum: +this.form.amount,
+        share_id: this.shareId
       }).then(res => {
         if (res.data && +res.data.error === 0) {
           if (this.isLegalTrade) {

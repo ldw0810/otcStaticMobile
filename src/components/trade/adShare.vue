@@ -1,17 +1,13 @@
 <template lang="pug">
-  .adShare
-    mt-header(:title="$t('order.order_cancel_order_title')" fixed)
-      router-link(to="/myAds" slot="left")
+  .adShare(v-if="id")
+    mt-header(:title="$t('ad.ad_share')" fixed)
+      router-link(to="/myAd" slot="left")
         mt-button(icon="back")
     .wrapper
       .content
-        .tip {{$t("order.order_cancel_order_tip")}}
-        .warn {{$t("order.order_cancel_order_warn")}}
-      .submit
-        .mintSubmit
-          mt-button(class="submitBtn" @click="success") {{$t('order.order_pay_cancel')}}
-        .mintCancel
-          mt-button(class="cancelBtn" @click="goBack") {{$t('public.cancel')}}
+        qrcode-vue(v-if="qrCodeFlag" ref="qrCode" class="pop-qrCode" :value='qrCodeConfig.value' :size='qrCodeConfig.size')
+        .image(ref="image")
+        mt-button(@click="success") {{$t('public.invite_image_info_text')}}
 </template>
 <script type="es6">
 import {Header, Button, Field} from 'mint-ui'
@@ -28,16 +24,31 @@ export default {
     }
   },
   computed: {
+    id () {
+      return this.$route.query.id || ''
+    },
+    link () {
+      return this.$t('public.invite_content') + '\n' + this.linkUrl
+    },
+    linkUrl () {
+      return window.location.href.replace('adShare', 'ad')
+    },
+    qrCodeConfig () {
+      return {
+        value: location.protocol + '//' + location.host + '/ad?id=' + this.id + 'shareId=' + this.id,
+        imagePath: require('../../assets/images/trade/QC-Code-BG.png'),
+        filter: 'canvas',
+        size: 245
+      }
+    }
   },
   methods: {
-    goBack () {
-      this.$emit('close', 1)
-    },
     success () {
       this.$emit('close', 1)
       this.$emit('success', 1)
     },
     init () {
+      this.$loading.close()
     }
   },
   mounted () {

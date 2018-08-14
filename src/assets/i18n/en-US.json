@@ -513,7 +513,8 @@
     "ad_deal_with_self": "You can not trade with yourself",
     "ad_buying": "buying",
     "ad_selling": "selling",
-    "ad_local_trading_tip": "To fill in the remark with address information in a face to face transaction"
+    "ad_local_trading_tip": "To fill in the remark with address information in a face to face transaction",
+    "ad_share": "Advertising sharing"
   },
   "order": {
     "order_detail": "Order detail",

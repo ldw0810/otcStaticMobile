@@ -19,6 +19,11 @@ export default {
   },
   data () {
     return {}
+  },
+  mounted () {
+    if (this.$route.query.shareId) {
+      this.$store.commit('shareId_setter', this.$route.query.shareId)
+    }
   }
 }
 </script>
