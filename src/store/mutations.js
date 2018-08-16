@@ -37,6 +37,9 @@ export default {
   userInfo_notice_setter (state, value) {
     state.userInfo.notice = value
   },
+  tradePriceData_setter (state, jsonData) {
+    state.tradePriceData[jsonData.key] = jsonData.value
+  },
   ads_setter (state, jsonData) {
     state.ads[jsonData.key] = jsonData.value
   },

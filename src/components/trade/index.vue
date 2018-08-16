@@ -8,7 +8,7 @@
         .icon(:class="{'show': currencyListFlag}")
           img(src="../../assets/images/icon/PullDown-999999.svg")
       .balance
-        .number {{tradePrice | $fixDecimalAuto(targetCurrency)}}
+        .number {{+tradePrice | $fixDecimalAuto(targetCurrency)}}
         .targetCurrency {{targetCurrency.toUpperCase()}}
     mt-navbar(v-model="navbarIndex" class="navbar" fixed)
       LinkBarItem(:class="'navbarItem_' + index" v-for="(item, index) in navList" :id="index" :route="getNavbarRoute(index)" :key="index")
@@ -103,6 +103,12 @@ export default {
   watch: {
     $route: function () {
       this.init()
+    },
+    '$store.state.tradePriceData': {
+      handle: () => {
+        this.getTradePrice()
+      },
+      deep: true
     }
   },
   methods: {
@@ -111,6 +117,9 @@ export default {
         path: this.navList[index].path,
         query: this.$route.query
       }
+    },
+    getTradePrice () {
+      this.tradePrice = this.$store.state.tradePriceData[this.currency + '_' + this.targetCurrency] || 0
     },
     changeCurrency (tempCurrency) {
       if (tempCurrency && tempCurrency !== this.currency) {
@@ -126,23 +135,30 @@ export default {
     getCurrencyCode () {
       this.$store.dispatch('axios_currency_code')
     },
-    getTradePrice () {
-      this.tradePrice = 0
-      this.$store.dispatch('axios_trade_price', {
-        symbol: this.currency,
-        target: this.targetCurrency
-      }).then(res => {
-        if (res.data && +res.data.error === 0) {
-          this.tradePrice = res.data.price || 0
-          this.tradeFee = res.data.otc_fee || 0
-        } else {
+    getTradePriceData () {
+      return new Promise((resolve, reject) => {
+        this.$store.dispatch('axios_trade_price', {
+          symbol: this.currency,
+          target: this.targetCurrency
+        }).then(res => {
+          if (res.data && +res.data.error === 0) {
+            this.$store.commit('tradePriceData_setter', {
+              key: this.currency + '_' + this.targetCurrency,
+              value: res.data.price || 0
+            })
+            this.tradeFee = res.data.otc_fee || 0
+          } else {
+            this.$message.error(this.$t('ad.ad_reference_price_request_fail'))
+          }
+          resolve()
+        }).catch(() => {
+          resolve()
           this.$message.error(this.$t('ad.ad_reference_price_request_fail'))
-        }
-      }).catch(() => {
-        this.$message.error(this.$t('ad.ad_reference_price_request_fail'))
+        }).finally(() => {
+          this.tradePriceTimer && clearTimeout(this.tradePriceTimer)
+          this.tradePriceTimer = setTimeout(this.getTradePriceData, 1000 * 60 * 10)
+        })
       })
-      this.tradePriceTimer && clearTimeout(this.tradePriceTimer)
-      this.tradePriceTimer = setTimeout(this.getTradePrice, 1000 * 60 * 10)
     },
     getNotice () {
       this.$store.dispatch('axios_notice').then(res => {
@@ -157,6 +173,9 @@ export default {
       this.$store.commit('tradePath_setter', this.$route.fullPath)
       this.getCurrencyCode()
       this.getTradePrice()
+      this.getTradePriceData().then(() => {
+        this.getTradePrice()
+      })
       this.getNotice()
     }
   },

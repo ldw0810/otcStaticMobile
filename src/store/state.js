@@ -28,6 +28,7 @@ export default {
     },
     default_collection: {}
   },
+  tradePriceData: {},
   ads: {
   },
   orders: {
