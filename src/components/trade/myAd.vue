@@ -28,10 +28,10 @@
                   .value(v-else-if="ad.pay_kind === 'bank'") {{$t("public.bank")}}
                   .value(v-else-if="ad.pay_kind === 'local'") {{$t("public.local")}}
               .button
-                .text(v-if="+ad.locked > 0") {{$t("ad.ad_trading")}}
                 mt-button(v-if="ad.status === 'ongoing'" class="operation" type='primary' @click="shareAd(ad)") {{$t('public.share')}}
                 mt-button(v-if="ad.status === 'closed'" class="operation" type='primary' @click="openAd(ad)") {{$t('ad.ad_open')}}
                 mt-button(v-else class="operation" type='primary' @click="closeAd(ad)") {{$t('ad.ad_close')}}
+                mt-button(v-if="+ad.locked > 0" class="operation operationCancel" type='primary' disabled) {{$t('ad.ad_trading')}}
             .border
             .status(class="ongoing" v-if="ad.status === 'ongoing'") {{$t("ad.ad_ongoing")}}
             .status(class="closed" v-else) {{$t("ad.ad_closed")}}
@@ -239,6 +239,9 @@ export default {
                 /deep/ span {
                   margin-top -0.85vh
                 }
+              }
+              .operationCancel {
+                background: #C8D4E0;
               }
             }
           }
