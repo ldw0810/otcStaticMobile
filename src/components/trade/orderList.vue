@@ -8,10 +8,14 @@
             .content
               Avatar(class="avatar" :status="order.member.online" :statusType="1" :size="6")
               .info
-                .name {{order.member.nickname}}
-                .infoItem
-                  .text {{$t("order.order_id")}}:
-                  .value {{order.id}}
+                .packDiv
+                  .pack
+                    .infoItem
+                      .name {{order.member.nickname}}
+                    .infoItem
+                      .text {{$t("order.order_id")}}:
+                      .value {{order.id}}
+                  mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary' @click="goOrder(order)") {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
                 .infoItem
                   .text {{$t("order.order_time")}}:
                   .value {{+order.created_at * 1000 | $getDateStr()}}
@@ -21,7 +25,6 @@
                 .infoItem
                   .text {{$t("order.order_money_amount")}}:
                   .value {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
-              mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary' @click="goOrder(order)") {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
             .border
             .status(class="ongoing" v-if="(['fresh', 'pay', 'release'].indexOf(order.status) > -1) || (order.status === 'sell_eval' && order.op_type === 'buy') || (order.status === 'buy_eval' && order.op_type === 'sell')") {{$t("order.order_status_" + order.status)}}
             .status(class="cancel" v-else-if="['judge_seller', 'timeout', 'cancel'].indexOf(order.status) > -1") {{$t("order.order_status_" + order.status)}}
@@ -173,10 +176,25 @@ export default {
               display flex
               flex-direction column
               font-size 0.85rem
+              .packDiv {
+                display flex
+                align-items center
+              }
+              .pack {
+                flex 1
+                display flex
+                align-items flex-start
+                flex-direction column
+              }
               .name {
                 font-weight normal
                 font-size 0.85rem
                 color #333333
+              }
+              .operation {
+                font-size 0.8rem
+                margin-right 5vw
+                height 5vh
               }
               .infoItem {
                 display flex
@@ -191,14 +209,6 @@ export default {
                   color #2A2A2A
                 }
               }
-            }
-            .operation {
-              position relative
-              align-items center
-              justify-content center
-              font-size 0.8rem
-              margin-right 5vw
-              height 5vh
             }
             .buyBtn {
               background #1BB934

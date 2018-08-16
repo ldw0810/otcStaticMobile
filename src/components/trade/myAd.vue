@@ -7,7 +7,7 @@
             .content
               .info
                 .infoItem
-                  .text(class="bolder") {{$t('ad.ad_type')}}
+                  .text(class="bolder") {{$t('ad.ad_type')}}:
                   .value(class="bolder") {{ad.op_type === 'buy' ? $t("public.buy") : $t("public.sell")}} {{ad.currency.toUpperCase()}}
                 .infoItem
                   .text {{$t("ad.ad_time")}}:
@@ -19,10 +19,10 @@
                   .text {{$t("order.order_limit")}}:
                   .value {{+ad.min_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{+ad.order_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;{{ad.target_currency.toUpperCase()}}
                 .infoItem
-                  .text {{$t("ad.ad_premium")}}
+                  .text {{$t("ad.ad_premium")}}:
                   .value {{+ad.margin + '%'}}
                 .infoItem
-                  .text {{$t("ad.ad_payment")}}
+                  .text {{$t("ad.ad_payment")}}:
                   .value(v-if="!ad.pay_kind") {{$t("public.currencyExchange")}}
                   .value(v-else-if="ad.pay_kind === 'alipay'") {{$t("public.alipay")}}
                   .value(v-else-if="ad.pay_kind === 'bank'") {{$t("public.bank")}}
@@ -172,8 +172,8 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  myAdItemHeight = 25vh
-  myAdItemContentHeight = 20vh
+  myAdItemHeight = 26vh
+  myAdItemContentHeight = 21.5vh
   .myAd {
     width 100vw
     height 100 - $currencyHeaderHeight - $navbarHeaderHeight - $tabbarFooterHeight
@@ -268,7 +268,7 @@ export default {
     }
   }
   .bolder {
-    font-weight normal
+    font-weight bolder
   }
   .emptyDiv {
     width 100vw
