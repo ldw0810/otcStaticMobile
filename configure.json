@@ -37,12 +37,14 @@
   "qrCode_invite": {
     "left": 260,
     "top": 751,
-    "size": 230
+    "size": 230,
+    "multiple": 4
   },
   "qrCode_adShare": {
-    "left": 263,
-    "top": 754,
-    "size": 135
+    "left": 132,
+    "top": 410,
+    "size": 110,
+    "multiple": 4
   },
   "const postfixImg": "",
   "HOME_CAROUSEL": {
