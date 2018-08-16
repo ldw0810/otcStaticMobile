@@ -220,12 +220,12 @@ const routers = [
       },
       {
         path: 'forgetPassword',
-        alias: '/forgetPassword',
+        alias: ['/forgetPassword', '/user/forgetPassword'],
         component: entry.forgetPassword
       },
       {
         path: 'modifyPassword',
-        alias: '/modifyPassword',
+        alias: ['/modifyPassword', '/user/modifyPassword'],
         component: entry.modifyPassword
       }
     ]

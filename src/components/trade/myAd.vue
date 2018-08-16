@@ -3,7 +3,7 @@
     mt-loadmore(:autoFill="false" :top-method="loadTop" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
       .itemList(v-if="myAds.list.length")
         .item(v-for="(ad, index) in myAds.list" :key="index")
-          .wrapper
+          .wrapper(v-if="ad.id")
             .content
               .info
                 .infoItem
@@ -14,10 +14,10 @@
                   .value {{+ad.created_at * 1000 | $getDateStr()}}
                 .infoItem
                   .text {{$t("public.price")}}:
-                  .value {{ad.current_price | $fixDecimalAuto(ad.target_currency)}} {{ad.target_currency.toUpperCase()}}
+                  .value {{+ad.current_price | $fixDecimalAuto(ad.target_currency)}} {{ad.target_currency.toUpperCase()}}
                 .infoItem
                   .text {{$t("order.order_limit")}}:
-                  .value {{ad.min_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;{{ad.target_currency.toUpperCase()}}
+                  .value {{+ad.min_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{+ad.order_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;{{ad.target_currency.toUpperCase()}}
                 .infoItem
                   .text {{$t("ad.ad_premium")}}
                   .value {{+ad.margin + '%'}}
@@ -96,7 +96,173 @@ export default {
         this.$store.dispatch('axios_ads_my', requestData).then(res => {
           this.myAdsLoading = false
           if (res.data && +res.data.error === 0) {
-            let tempData = res.data
+            let tempData = {
+              'error': 0,
+              'list': [{
+                'id': 25,
+                'currency': 'omt',
+                'target_currency': 'dai',
+                'op_type': 'buy',
+                'min_limit': '50.0',
+                'max_limit': '100.0',
+                'margin': '1.0',
+                'pay_kind': '',
+                'status': 'ongoing',
+                'price': null,
+                'remark': '',
+                'locked': '0.0',
+                'currency_collections_id': 0,
+                'city_id': 0,
+                'current_price': '0.01',
+                'member': {
+                  'id': 2,
+                  'nickname': 'wpftest',
+                  'mobile': true,
+                  'stat': {
+                    'trade_count': 32,
+                    'good_count': 7,
+                    'good_rate': '87.5'
+                  },
+                  'online': true
+                },
+                'created_at': 1534387805,
+                'order_limit': '100.0',
+                'balance_limit': '18396.9403715466335944',
+                'city': null
+              }, {
+                'id': 20,
+                'currency': 'dai',
+                'target_currency': 'jpy',
+                'op_type': 'sell',
+                'min_limit': '500000.0',
+                'max_limit': '1000000.0',
+                'margin': '10.0',
+                'pay_kind': 'local',
+                'status': 'closed',
+                'price': null,
+                'remark': '',
+                'locked': '0.0',
+                'currency_collections_id': 0,
+                'city_id': 1648526,
+                'current_price': '123.88',
+                'member': {
+                  'id': 2,
+                  'nickname': 'wpftest',
+                  'mobile': true,
+                  'stat': {
+                    'trade_count': 32,
+                    'good_count': 7,
+                    'good_rate': '87.5'
+                  },
+                  'online': true
+                },
+                'created_at': 1530090909,
+                'order_limit': '1000000.0',
+                'balance_limit': '2276752.0182645763820393',
+                'city': {
+                  'id': 1648526,
+                  'name': 'tokyo',
+                  'country_name': 'Japan'
+                }
+              }, {
+                'id': 13,
+                'currency': 'eth',
+                'target_currency': 'dai',
+                'op_type': 'buy',
+                'min_limit': '50.0',
+                'max_limit': '2000.0',
+                'margin': '1.0',
+                'pay_kind': '',
+                'status': 'ongoing',
+                'price': null,
+                'remark': '',
+                'locked': '0.0',
+                'currency_collections_id': 0,
+                'city_id': 0,
+                'current_price': '286.83',
+                'member': {
+                  'id': 2,
+                  'nickname': 'wpftest',
+                  'mobile': true,
+                  'stat': {
+                    'trade_count': 32,
+                    'good_count': 7,
+                    'good_rate': '87.5'
+                  },
+                  'online': true
+                },
+                'created_at': 1526955480,
+                'order_limit': '2000.0',
+                'balance_limit': '18396.9403715466335944',
+                'city': null
+              }, {
+                'id': 5,
+                'currency': 'dai',
+                'target_currency': 'cny',
+                'op_type': 'buy',
+                'min_limit': '60.0',
+                'max_limit': '2000.0',
+                'margin': '1.0',
+                'pay_kind': 'alipay',
+                'status': 'ongoing',
+                'price': null,
+                'remark': '',
+                'locked': '60.0',
+                'currency_collections_id': 0,
+                'city_id': 0,
+                'current_price': '7.09',
+                'member': {
+                  'id': 2,
+                  'nickname': 'wpftest',
+                  'mobile': true,
+                  'stat': {
+                    'trade_count': 32,
+                    'good_count': 7,
+                    'good_rate': '87.5'
+                  },
+                  'online': true
+                },
+                'created_at': 1525329943,
+                'order_limit': '1940.0',
+                'balance_limit': '',
+                'city': null
+              }, {
+                'id': 3,
+                'currency': 'dai',
+                'target_currency': 'cny',
+                'op_type': 'sell',
+                'min_limit': '100.0',
+                'max_limit': '2000.0',
+                'margin': '60.0',
+                'pay_kind': 'alipay',
+                'status': 'closed',
+                'price': null,
+                'remark': '',
+                'locked': '0.0',
+                'currency_collections_id': 0,
+                'city_id': 0,
+                'current_price': '11.24',
+                'member': {
+                  'id': 2,
+                  'nickname': 'wpftest',
+                  'mobile': true,
+                  'stat': {
+                    'trade_count': 32,
+                    'good_count': 7,
+                    'good_rate': '87.5'
+                  },
+                  'online': true
+                },
+                'created_at': 1525325754,
+                'order_limit': '2000.0',
+                'balance_limit': '206645.2486108135847836',
+                'city': null
+              }],
+              'page': 1,
+              'total_count': 5,
+              'total_pages': 1,
+              'per_page': 10
+            }
             if (type === 1) {
               tempData.list = unionBy(tempData.list, this.myAds.list, 'id')
             } else if (type === 2) {

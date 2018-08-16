@@ -110,7 +110,7 @@ export default {
   .footer {
     width: 100vw;
     height $footerHeight
-    font-family: SFUIDisplay-Regular sans-serif;
+    font-family: SFUIDisplay-Regular, sans-serif;
     .copyright {
       height: 6vh;
       display: flex;

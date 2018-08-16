@@ -284,7 +284,7 @@ export default {
         flex-direction: column;
         padding: 2vh 0 0 0;
         .input {
-          font-family: SFUIDisplay-Light sans-serif;
+          font-family: SFUIDisplay-Light, sans-serif;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -312,7 +312,7 @@ export default {
         border: 1px solid rgba(0, 0, 0, 0.10);
         box-shadow: 0 1vw 1vw 0 rgba(0, 0, 0, 0.03);
         border-radius: 2px;
-        font-family: SFUIDisplay-Light sans-serif;
+        font-family: SFUIDisplay-Light, sans-serif;
         font-size: 0.85rem;
         color: #333333;
         text-align: center;
@@ -321,7 +321,7 @@ export default {
         padding: 2vh 0 2vh 0;
         margin-left -1vw
         .input {
-          font-family: SFUIDisplay-Light sans-serif;
+          font-family: SFUIDisplay-Light, sans-serif;
           width: 92vw;
           height: 20vw;
           background: #FFFFFF url(../../assets/images/me/Invite-pic-bg.png) no-repeat center;
@@ -369,7 +369,7 @@ export default {
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-family: PingFangSC-Light sans-serif;
+      font-family: PingFangSC-Light, sans-serif;
       .rulesTitle {
         color #333333
         font-weight: normal;
@@ -413,7 +413,7 @@ export default {
       border: 1px solid rgba(0, 0, 0, 0.10);
       box-shadow: 0 1vw 1vw 0 rgba(0, 0, 0, 0.03);
       border-radius: 2px;
-      font-family: SFUIDisplay-Light sans-serif;
+      font-family: SFUIDisplay-Light, sans-serif;
       font-size: 0.85rem;
       color: #333333;
       text-align: center;

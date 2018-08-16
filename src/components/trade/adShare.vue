@@ -162,7 +162,7 @@ export default {
         border: 1px solid rgba(0, 0, 0, 0.10);
         box-shadow: 0 1vw 1vw 0 rgba(0, 0, 0, 0.03);
         border-radius: 2px;
-        font-family: SFUIDisplay-Light sans-serif;
+        font-family: SFUIDisplay-Light, sans-serif;
         font-size: 0.85rem;
         color: #333333;
         text-align: center;

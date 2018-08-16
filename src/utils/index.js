@@ -137,6 +137,9 @@ export const $fixDecimal = function (value, limit) {
     while (tempValue >= 1000 && tempLimit >= 0) {
       tempLimit -= 1
       tempValue /= 10
+      if (tempLimit === 0) {
+        break
+      }
     }
   } else if (tempValue === 0) {
     tempLimit = 0

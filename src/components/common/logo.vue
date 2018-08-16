@@ -1,6 +1,6 @@
 <template lang="pug">
   .logo
-    .btn(@click="$router.push('/')")
+    .btn(@click="$router.push('/login')")
       img(src="../../assets/images/public/logo.svg")
 </template>
 <script type="es6">
