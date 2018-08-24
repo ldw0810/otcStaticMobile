@@ -212,6 +212,10 @@ export default {
               flex 1
               margin-left 2.5vw
               .name {
+                max-width 60vw
+                text-overflow ellipsis
+                overflow hidden
+                white-space nowrap
                 font-size 0.85rem
                 font-weight normal
                 color #333333
