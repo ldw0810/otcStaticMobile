@@ -53,5 +53,6 @@
     "list": [
     ]
   },
-  "LIST_NUMBER_PER_PAGE": 10
+  "LIST_NUMBER_PER_PAGE": 10,
+  "registerPauseFlag": true
 }

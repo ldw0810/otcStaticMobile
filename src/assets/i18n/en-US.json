@@ -156,10 +156,11 @@
     "share": "Share"
   },
   "user": {
+    "registerConfirm": "Suspension of registration",
     "register_error": "Enter valid email address",
     "register_success": "Register success",
     "register_toLogin": "Login",
-    "register_ad_info": "Get 200OMT after register and phone verification!",
+    "register_ad_info": "Get 200 OMT after register and phone verification!",
     "userName": "Nickname",
     "userName_required": "Enter nickname",
     "userName_notValid": "Nick name must consists with 6-16 letters or numbers",
@@ -342,7 +343,8 @@
     "password_strong": "strong",
     "user_settings": "User Settings",
     "user_change_language": "Change language",
-    "user_invite_friends": "Invite friends"
+    "user_invite_friends": "Invite friends",
+    "authSetting_pause": "Two-factor Authentication paused"
   },
   "asset": {
     "asset_resend_email": "Resend",

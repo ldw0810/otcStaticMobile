@@ -156,6 +156,7 @@
     "share": "分享"
   },
   "user": {
+    "registerConfirm": "暂停注册",
     "register_error": "请输入正确的注册信息",
     "register_success": "注册成功",
     "register_toLogin": "前往登录",
@@ -342,7 +343,8 @@
     "password_strong": "强",
     "user_settings": "账户设置",
     "user_change_language": "切换语言",
-    "user_invite_friends": "邀请好友"
+    "user_invite_friends": "邀请好友",
+    "authSetting_pause": "二次验证已停用"
   },
   "asset": {
     "asset_resend_email": "重发邮件",

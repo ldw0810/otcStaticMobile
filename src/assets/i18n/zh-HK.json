@@ -156,6 +156,7 @@
     "share": "分享"
   },
   "user": {
+    "registerConfirm": "暫停註冊",
     "register_error": "請輸入正確的註冊信息",
     "register_success": "註冊成功",
     "register_toLogin": "前往登錄",
@@ -342,7 +343,8 @@
     "password_strong": "強",
     "user_settings": "賬戶設置",
     "user_change_language": "切換語言",
-    "user_invite_friends": "邀請好友"
+    "user_invite_friends": "邀請好友",
+    "authSetting_pause": "二次驗證已停用"
   },
   "asset": {
     "asset_resend_email": "重發郵件",
