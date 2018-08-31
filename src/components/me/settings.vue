@@ -74,4 +74,7 @@ export default {
     flex 1
     margin-top $mintHeaderHeight + 1
   }
+  /deep/ .mint-cell-value {
+    margin-right 5vw
+  }
 </style>
