@@ -196,12 +196,12 @@ const routers = [
       {
         path: '/me/authGoogle',
         component: me.authGoogle
+      },
+      {
+        path: '/me/invite',
+        alias: '/invite',
+        component: me.invite
       }
-      // {
-      //   path: '/me/invite',
-      //   alias: '/invite',
-      //   component: me.invite
-      // }
     ]
   },
   {

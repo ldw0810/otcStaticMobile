@@ -16,7 +16,7 @@
         span {{!userInfo.mobile ? $t('user.unAuthenticated') : ($t('user.authenticated') + '(' + userInfo.phone_number + ')')}}
       mt-cell(:title="$t('user.user_settings')" to="/me/settings" is-link)
       mt-cell(:title="$t('user.user_change_language')" to="/me/changeLanguage" is-link)
-      <!--mt-cell(:title="$t('user.user_invite_friends')" to="/invite" is-link)-->
+      mt-cell(:title="$t('user.user_invite_friends')" to="/invite" is-link)
       mt-cell(:title="$t('public.about')" to="/me/about" is-link)
       mt-cell(class="logout" :title="$t('public.logout')" @click.native.prevent="actionFlag = true")
     mt-actionsheet(v-model="actionFlag" :actions="actions")
@@ -25,7 +25,6 @@
 import Avatar from '../common/avatar'
 import {Cell, Actionsheet} from 'mint-ui'
 import Vue from 'vue'
-const configure = require('../../../configure')
 
 Vue.component(Cell.name, Cell)
 Vue.component(Actionsheet.name, Actionsheet)
@@ -45,8 +44,7 @@ export default {
             this.goLink('logout')
           }
         }
-      ],
-      pauseFlag: configure.registerPauseFlag
+      ]
     }
   },
   computed: {
@@ -65,11 +63,7 @@ export default {
         }
       } else if (itemStr === 'phone') {
         if (!this.userInfo.mobile) {
-          if (this.pauseFlag) {
-            this.$message.error('user.authSetting_pause')
-          } else {
-            this.$router.push('/me/authPhone')
-          }
+          this.$router.push('/me/authPhone')
         }
       } else if (itemStr === 'logout') {
         this.$store.commit('delToken')

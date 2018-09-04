@@ -2,9 +2,7 @@
   .register
     .bg
     .content
-      .title
-        span {{$t('public.register')}}
-        span(class="redText") ({{$t('user.registerConfirm')}})
+      .title(v-text="$t('public.register')")
       el-form(ref="form" class="form" :model="form" :rules="rules" @submit.native.prevent="submit" status-icon)
         el-form-item(prop="email" class="formItem" :show-message="false")
           el-input(class="input" v-model="form.email" :placeholder="$t('user.email_required')")
@@ -22,7 +20,7 @@
           el-checkbox(v-model="form.checkbox") {{$t('user.terms_allowed')}}
             span(class="showLink" @click="showAgreement") {{$t('user.terms_name')}}
         el-form-item(class="formItem submit")
-          el-button(class="submitButton" type='primary' @click="submit" :disabled="captchaStatus === 'loading' || pauseFlag")
+          el-button(class="submitButton" type='primary' @click="submit" :disabled="captchaStatus === 'loading'")
             slot(v-if="captchaStatus === 'loading'")
               .imageLoading
             slot(v-else-if="captchaStatus === 'error'") {{$t('public.reload')}}
@@ -43,8 +41,6 @@ import Vue from 'vue'
 import {$getAxiosLanguage, $getNicknameByHash} from '../../utils'
 import '../../utils/gt'
 import {VALI_PASSWORD_NUMBER} from '../../utils/validator'
-
-const configure = require('../../../configure')
 
 Vue.component(Button.name, Button)
 Vue.component(Form.name, Form)
@@ -157,8 +153,7 @@ export default {
       captchaObj: '',
       captchaStatus: '',
       popupFlag: false,
-      emailRepeatList: [],
-      pauseFlag: configure.registerPauseFlag
+      emailRepeatList: []
     }
   },
   watch: {
@@ -264,10 +259,10 @@ export default {
       }
     }
     .showLink {
-      word-break: normal;
-      display: block;
-      white-space: pre-wrap;
-      overflow: hidden;
+      word-break:normal;
+      display:block;
+      white-space:pre-wrap;
+      overflow:hidden;
       text-decoration underline
     }
   }
@@ -279,10 +274,5 @@ export default {
     overflow: scroll;
     overflow-scrolling touch
     -webkit-overflow-scrolling: touch;
-  }
-
-  .redText {
-    margin-left 5vw
-    color #ED1C24
   }
 </style>
