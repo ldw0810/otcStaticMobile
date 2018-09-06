@@ -2,7 +2,7 @@
   .order(v-if="+orders.error === 0" :style="{'-webkit-overflow-scrolling': scrollMode}")
     mt-loadmore(:autoFill="false" :top-method="loadTop" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
       .itemList(v-if="orders.list.length")
-        .item(v-for="(order, index) in orders.list" :key="index")
+        .item(v-for="(order, index) in orders.list" :key="index" @click="goOrder(order)")
           .notice(:class="{'noticeShow': order.notice_order !== 0}")
           .wrapper
             .content
@@ -15,7 +15,7 @@
                     .infoItem
                       .text {{$t("order.order_id")}}:
                       .value {{order.id}}
-                  mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary' @click="goOrder(order)") {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
+                  mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary') {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
                 .infoItem
                   .text {{$t("order.order_time")}}:
                   .value {{+order.created_at * 1000 | $getDateStr()}}

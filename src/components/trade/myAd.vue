@@ -113,7 +113,7 @@ export default {
           resolve()
         }).catch(() => {
           this.myAdsLoading = false
-          this.$message.error(this.$t('ad.ad_data_request_fail'))
+          // this.$message.error(this.$t('ad.ad_data_request_fail'))
           resolve()
         })
       })
