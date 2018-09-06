@@ -429,6 +429,7 @@ export default {
   }
 
   .content {
+    @extend .scrollPage
     flex 1
     margin-top $mintHeaderHeight
     height 100 - $mintHeaderHeight - footerHeight
@@ -677,6 +678,9 @@ export default {
   }
 
   .footer {
+    position fixed
+    width 100vw
+    bottom 0
     height footerHeight
     display flex
     align-items center

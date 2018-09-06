@@ -175,10 +175,8 @@ export default {
   myAdItemHeight = 26vh
   myAdItemContentHeight = 21.5vh
   .myAd {
-    width 100vw
+    @extend .scrollPage
     height 100 - $currencyHeaderHeight - $navbarHeaderHeight - $tabbarFooterHeight
-    background-color: #fafafa;
-    overflow-y scroll
     .itemList {
       margin-bottom 1vh
       .item {
@@ -224,6 +222,8 @@ export default {
               }
             }
             .button {
+              position absolute
+              right 6vw
               .operation {
                 display flex
                 align-items center

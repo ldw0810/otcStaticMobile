@@ -328,12 +328,9 @@ export default {
     flex-direction column
     .content {
       flex 1
-      position absolute
-      left 0
+      @extend .scrollPage
       top $mintHeaderHeight
-      width 100vw
       height 100 - @top - $footerHeight
-      overflow-y scroll
       -webkit-overflow-scrolling touch
       .user {
         display flex
@@ -440,8 +437,7 @@ export default {
   }
   .footer {
     position fixed
-    left 0
-    right 0
+    width 100vw
     bottom 0
     height $footerHeight
     display flex

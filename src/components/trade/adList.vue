@@ -184,10 +184,8 @@ export default {
 </script>
 <style lang='stylus' scoped>
   .adList {
-    width 100vw
+    @extend .scrollPage
     height 100 - $currencyHeaderHeight - $navbarHeaderHeight - $tabbarFooterHeight
-    background-color: #fafafa;
-    overflow-y scroll
     .itemList {
       margin-bottom 1vh
       .item {
@@ -212,10 +210,6 @@ export default {
               flex 1
               margin-left 2.5vw
               .name {
-                max-width 60vw
-                text-overflow ellipsis
-                overflow hidden
-                white-space nowrap
                 font-size 0.85rem
                 font-weight normal
                 color #333333
@@ -226,7 +220,6 @@ export default {
                 font-size 0.85rem
                 color #999999
                 .tradeNumber {
-
                 }
                 .border {
                   margin 0 2vw
@@ -256,12 +249,13 @@ export default {
               }
             }
             .operation {
+              position absolute
+              right 6vw
               display flex
               align-items center
               justify-content center
               min-width 18vw
               height 2vh
-              margin-right 5vw
               color #FFFFFF
               background-image: linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%);
               box-shadow: 0 0.5vh 0.5vh 0 rgba(102,187,191,0.14);

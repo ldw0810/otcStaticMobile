@@ -58,6 +58,7 @@
     height 4.5vw
   }
 }
+
 .goDiv {
   display: flex;
   margin: 0 14vw;
@@ -82,7 +83,7 @@
     width 72vw
     color #FFFFFF
     background-image: linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%);
-    box-shadow: 0 5px 5px 0 rgba(102,187,191,0.14);
+    box-shadow: 0 5px 5px 0 rgba(102, 187, 191, 0.14);
     border-radius: 2px;
     .mint-button-text {
       font-size 1rem
@@ -92,6 +93,7 @@
     background: #C8D4E0;
   }
 }
+
 /deep/ .mintCancel {
   display flex
   align-items center
@@ -100,8 +102,8 @@
     width 72vw
     color #333333
     background: #FFFFFF;
-    border: 1px solid rgba(0,0,0,0.10);
-    box-shadow: 0 5px 5px 0 rgba(0,0,0,0.03);
+    border: 1px solid rgba(0, 0, 0, 0.10);
+    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.03);
     border-radius: 2px;
     .mint-button-text {
       font-size 1rem
@@ -192,4 +194,25 @@
   left: 0;
   -webkit-transform: translate3d(0, -50%, 0);
   transform: translate3d(0, -50%, 0);
+}
+
+.scrollPage {
+  position absolute
+  overflow-x hidden
+  overflow-y scroll
+  width 100vw
+  background-color #fafafa
+}
+
+.noScrollPage {
+  position absolute
+  overflow-x hidden
+  width 100vw
+  background-color #fafafa
+}
+
+.text-over {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

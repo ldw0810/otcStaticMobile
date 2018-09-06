@@ -82,10 +82,10 @@ export default {
   }
 
   .content {
+    @extend .scrollPage
     flex 1
     margin-top $mintHeaderHeight
     height 100 - $mintHeaderHeight - $tabbarFooterHeight
-    overflow-y scroll
     .item {
       display flex
       flex-direction column

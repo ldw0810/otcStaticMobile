@@ -334,6 +334,7 @@ export default {
     display flex
     flex-direction column
     .content {
+      @extend .scrollPage
       flex 1
       margin-top $mintHeaderHeight
       height 100 - $chatFooterHeight - $mintHeaderHeight
@@ -366,6 +367,8 @@ export default {
             }
           }
           .btn {
+            position absolute
+            right 6vw
             margin-top 2.5vh
             color #2EA2F8
             font-size 1rem
@@ -415,6 +418,9 @@ export default {
       }
     }
     .footer {
+      position fixed
+      bottom 0
+      width 100vw
       height $chatFooterHeight
       background #fafafa
       display flex

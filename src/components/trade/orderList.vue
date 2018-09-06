@@ -134,10 +134,8 @@ export default {
   itemContentHeight = 18vh
   noticeWidth = 1vw
   .order {
-    width 100vw
+    @extend .scrollPage
     height 100 - $currencyHeaderHeight - $navbarHeaderHeight - $tabbarFooterHeight
-    background-color: #fafafa;
-    overflow-y scroll
     .itemList {
       margin-bottom 1vh
       .item {
@@ -192,6 +190,8 @@ export default {
                 color #333333
               }
               .operation {
+                position absolute
+                right 0
                 font-size 0.8rem
                 margin-right 5vw
                 height 5vh

@@ -288,87 +288,91 @@ export default {
           width 80vw
           background #EEEEEE
         }
-        .wrapper {
-          overflow-y scroll
-          .historyPage {
-            display flex
-            flex-direction column
-            align-items center
-            background #FFFFFF
-            width 100vw
-            .item {
+        .operContent {
+          @extend .scrollPage
+          .wrapper {
+            .historyPage {
               display flex
               flex-direction column
-              justify-content center
-              padding 2.5vh 6vw
-              border-top 1px solid #EEEEEE
-              border-bottom 1px solid #EEEEEE
-              .info {
+              align-items center
+              background #FFFFFF
+              width 100vw
+              .item {
                 display flex
-                align-items center
-                .time {
-                  flex 1
-                  font-size 0.9rem
-                  color #999999
-                }
-                .state {
+                flex-direction column
+                justify-content center
+                padding 2.5vh 6vw
+                border-top 1px solid #EEEEEE
+                border-bottom 1px solid #EEEEEE
+                .info {
                   display flex
                   align-items center
-                  .button {
+                  .time {
+                    flex 1
                     font-size 0.9rem
-                    font-weight normal
-                    color #2EA2F8
-                    padding-left 5vw
+                    color #999999
                   }
-                  .text {
+                  .state {
+                    position absolute
+                    right 6vw
+                    display flex
+                    align-items center
+                    .button {
+                      font-size 0.9rem
+                      font-weight normal
+                      color #2EA2F8
+                      padding-left 5vw
+                    }
+                    .text {
+                      font-size 0.9rem
+                      font-weight normal
+                      color #333333
+                    }
+                  }
+                }
+                .numberDiv {
+                  display flex
+                  align-items center
+                  padding-top 1vh
+                  .tip {
                     font-size 0.9rem
                     font-weight normal
                     color #333333
                   }
+                  .number {
+                    font-size 0.9rem
+                    font-weight normal
+                    color #333333
+                    margin-left 2.5vw
+                  }
                 }
-              }
-              .numberDiv {
-                display flex
-                align-items center
-                padding-top 1vh
-                .tip {
-                  font-size 0.9rem
-                  font-weight normal
-                  color #333333
-                }
-                .number {
-                  font-size 0.9rem
-                  font-weight normal
-                  color #333333
-                  margin-left 2.5vw
-                }
-              }
-              .txidDiv {
-                display flex
-                align-items center
-                padding-top 1vh
-                .tip {
-                  font-size 0.9rem
-                  font-weight normal
-                  color #333333
-                }
-                .txid {
-                  font-size 0.9rem
-                  font-weight normal
-                  color #2EA2F8
-                  margin-left 2.5vw
-                  word-break break-all
+                .txidDiv {
+                  display flex
+                  align-items center
+                  padding-top 1vh
+                  .tip {
+                    font-size 0.9rem
+                    font-weight normal
+                    color #333333
+                  }
+                  .txid {
+                    font-size 0.9rem
+                    font-weight normal
+                    color #2EA2F8
+                    margin-left 2.5vw
+                    word-break break-all
+                  }
                 }
               }
             }
-          }
-          .noDataPage {
-            display flex
-            align-items center
-            justify-content center
-            background #FFFFFF
-            width 100vw
-            height 100 - $subTitleHeaderHeight - $mintHeaderHeight
+            .noDataPage {
+              display flex
+              align-items center
+              justify-content center
+              background #FFFFFF
+              width 100vw
+              height 100 - $subTitleHeaderHeight - $mintHeaderHeight
+            }
           }
         }
       }
