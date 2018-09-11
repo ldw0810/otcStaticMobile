@@ -471,6 +471,7 @@ export default {
         }
         .amount {
           flex 1
+          max-width 50vw
           display flex
           align-items center
           justify-content center
@@ -484,6 +485,7 @@ export default {
           flex-direction column
           justify-content center
           .number {
+            max-width 50vw
             color #666666
             font-size 1rem
           }
@@ -583,7 +585,6 @@ export default {
           display flex
           flex-direction column
           align-items center
-          justify-content center
           height 55vh
           overflow-y scroll
           .addressForm {

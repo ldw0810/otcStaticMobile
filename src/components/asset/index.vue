@@ -137,6 +137,7 @@ export default {
           flex-direction column
           justify-content center
           .number {
+            max-width 50vw
             color #666666
             font-size 1rem
           }
@@ -152,6 +153,7 @@ export default {
           flex-direction column
           justify-content center
           .number {
+            max-width 50vw
             color #666666
             font-size 1rem
           }

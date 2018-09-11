@@ -38,7 +38,7 @@
 import {Button, Checkbox, Form, FormItem, Input} from 'element-ui'
 import UserAgreement from '../policy/userAgreement'
 import Vue from 'vue'
-import {$getAxiosLanguage, $getNicknameByHash} from '../../utils'
+import {$getAxiosLanguage} from '../../utils'
 import '../../utils/gt'
 import {VALI_PASSWORD_NUMBER} from '../../utils/validator'
 
@@ -211,7 +211,7 @@ export default {
                 password: this.form.password,
                 password_confirmation: this.form.password,
                 invite_code: this.form.invitationCode || '',
-                nickname: $getNicknameByHash(this.form.email),
+                nickname: this.form.email,
                 ln: $getAxiosLanguage(),
                 geetest_challenge: result.geetest_challenge,
                 geetest_validate: result.geetest_validate,

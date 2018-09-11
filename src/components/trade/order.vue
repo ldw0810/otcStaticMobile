@@ -6,7 +6,7 @@
       .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
     .wrapper(v-if="order.id")
       .content
-        .info(v-if="triggerInfoFlag")
+        .info(class="showInfo" v-if="triggerInfoFlag")
           .list
             .labelList
               .label {{$t('order.order_id')}}:
@@ -25,7 +25,7 @@
           .remark
             .label {{$t('ad.ad_remark')}}:
             .text {{order.remark}}
-        .info(v-else)
+        .info(class="closeInfo" v-else)
           .list
             .labelList
               .label {{$t('order.order_id')}}:
@@ -522,6 +522,8 @@ export default {
       }
     }
   }
+  .showInfo
+    animation top
   /deep/ .footerInput {
     width 88vw
   }
