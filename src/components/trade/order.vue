@@ -6,7 +6,7 @@
       .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
     .wrapper(v-if="order.id")
       .content
-        .info(class="showInfo" v-if="triggerInfoFlag")
+        .info(ref="showInfo" class="showInfo" v-if="triggerInfoFlag")
           .list
             .labelList
               .label {{$t('order.order_id')}}:
@@ -25,7 +25,7 @@
           .remark
             .label {{$t('ad.ad_remark')}}:
             .text {{order.remark}}
-        .info(class="closeInfo" v-else)
+        .info(ref="closeInfo" class="closeInfo" v-else)
           .list
             .labelList
               .label {{$t('order.order_id')}}:
@@ -48,7 +48,9 @@
           .submit(class="orderSubmit" v-else-if="order.status === 'pay' && !orderType")
             mt-button(class="orderSubmitBtn" disabled) {{$t('order.order_pay_completed')}}
             mt-button(class="orderCancelBtn" disabled) {{$t('order.order_pay_cancel')}}
-          .submit(class="mintSubmit" v-else-if="['fresh', 'pay'].indexOf(order.status) > -1 && orderType")
+          .submit(class="mintSubmit" v-else-if="order.status === 'fresh' && orderType")
+            mt-button(@click="orderOper('release')" disabled) {{$t('order.order_pay_release')}}
+          .submit(class="mintSubmit" v-else-if="order.status === 'pay' && orderType")
             mt-button(@click="orderOper('release')") {{$t('order.order_pay_release')}}
           .submit(class="orderSubmit" v-else-if="order.status === 'release' || (order.status === 'sell_eval' && !orderType) || (order.status === 'buy_eval' && orderType)")
             .radioDiv
@@ -80,6 +82,12 @@
         .popup(class="popup-right" v-if="showRulesFlag")
           slot
             Rules(@close="showRulesFlag = false" @success="init()")
+        .popup(class="popup-right" v-if="confirmFlag.authPhone")
+          slot
+            ValidPhone(:needAuth="false" @close="confirmFlag.authPhone = false" @success="doAuthClose" @change="changeValidate(0)")
+        .popup(class="popup-right" v-if="confirmFlag.authGoogle")
+          slot
+            ValidGoogle(:needAuth="false" @close="confirmFlag.authGoogle = false" @success="doAuthClose" @change="changeValidate(1)")
 </template>
 <script type="es6">
 import Policy from '../policy/policy'
@@ -93,6 +101,8 @@ import OrderReleaseConfirm from './orderReleaseConfrim'
 import OrderCancelConfirm from './orderCancelConfirm'
 import OrderCompleteConfirm from './orderCompleteConfrim'
 import Chat from './chat'
+import ValidPhone from '../common/validPhone'
+import ValidGoogle from '../common/validGoogle'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
@@ -109,7 +119,9 @@ export default {
     Avatar,
     EmptyList,
     Rules,
-    Chat
+    Chat,
+    ValidPhone,
+    ValidGoogle
   },
   data () {
     return {
@@ -121,12 +133,13 @@ export default {
         pay: false,
         release: false,
         cancel: false,
-        complete: false
+        complete: false,
+        authGoogle: false,
+        authPhone: false
       },
       triggerInfoFlag: true,
       showRulesFlag: false,
       evaluateIndex: -1,
-      authFlag: false,
       chatFlag: false,
       chatMessage: '',
       remainTime: 0,
@@ -142,6 +155,9 @@ export default {
     }
   },
   computed: {
+    userInfo () {
+      return this.$store.state.userInfo
+    },
     orderType () {
       return this.order.op_type === 'buy' ? 0 : 1
     },
@@ -169,7 +185,26 @@ export default {
   },
   methods: {
     triggerInfo () {
+      if (this.$refs.showInfo) {
+        if (this.triggerInfoFlag) {
+          console.log(this.$refs.showInfo.classList)
+          this.$refs.showInfo.classList.remove('closeOrderInfo')
+          this.$refs.showInfo.classList.add('showOrderInfo')
+        } else {
+          this.$refs.showInfo.classList.remove('showOrderInfo')
+          this.$refs.showInfo.addClass('closeOrderInfo')
+        }
+      }
       this.triggerInfoFlag = !this.triggerInfoFlag
+    },
+    changeValidate (value) {
+      if (+value === 0) {
+        this.confirmFlag.authPhone = false
+        this.confirmFlag.authGoogle = true
+      } else {
+        this.confirmFlag.authGoogle = false
+        this.confirmFlag.authPhone = true
+      }
     },
     showTip () {
       this.timer && clearTimeout(this.timer)
@@ -194,6 +229,16 @@ export default {
       } else {
         this.stepTip = ''
       }
+    },
+    showAuth () {
+      if (this.userInfo.mobile) {
+        this.confirmFlag.authPhone = true
+      } else if (this.userInfo.app_two_factor) {
+        this.confirmFlag.authGoogle = true
+      }
+    },
+    getMe () {
+      this.$store.dispatch('axios_me')
     },
     getOrder () {
       this.$loading.open()
@@ -247,6 +292,9 @@ export default {
       this.password = value
       this.doOper('release')
     },
+    doAuthClose (value) {
+      this.doOper('release', value)
+    },
     doOper (operStr, authJson) {
       if (operStr === 'pay') {
         this.$loading.open()
@@ -284,7 +332,7 @@ export default {
               this.$store.commit('loginInfo_setter', {
                 mobile: res.data.mobile
               })
-              this.authFlag = true
+              this.showAuth()
             }
           }
         }).catch(() => {
@@ -317,6 +365,7 @@ export default {
       this.$refs.chat.sendInfo(this.inputValue)
     },
     init () {
+      this.getMe()
       this.getOrder()
     }
   },
