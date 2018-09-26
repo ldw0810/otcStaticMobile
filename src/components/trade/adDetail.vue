@@ -46,10 +46,10 @@
             OrderCreateConfirm(:ad="ad" :form="form" @close="showConfirmFlag = false" @success="createOrder")
         .popup(class="popup-right" v-if="showCompleteFlag")
           slot
-            AdCompleteConfirm(:ad="ad" :form="form" @close="showCompleteFlag = false" @success="init()")
+            AdCompleteConfirm(:ad="ad" :form="form" @close="showCompleteFlag = false" @success="init")
         .popup(class="popup-right" v-if="showRulesFlag")
           slot
-            Rules(@close="showRulesFlag = false" @success="init()")
+            Rules(@close="showRulesFlag = false" @success="init")
 </template>
 <script type="es6">
 import Policy from '../policy/policy'

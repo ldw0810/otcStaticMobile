@@ -6,34 +6,25 @@
       .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
     .wrapper(v-if="order.id")
       .content
-        .info(ref="showInfo" class="showInfo" v-if="triggerInfoFlag")
+        .info(ref="showInfo" class="showInfo")
           .list
             .labelList
               .label {{$t('order.order_id')}}:
               .label {{$t('order.order_money_amount')}}:
-              .label {{$t('order.order_order_price')}}:
-              .label {{orderType === 0 ? $t('order.order_buy_number_title') : $t('order.order_sell_number_title')}}:
-              .label {{$t('order.order_order_payment')}}:
+              .label(v-if="triggerInfoFlag") {{$t('order.order_order_price')}}:
+              .label(v-if="triggerInfoFlag") {{orderType === 0 ? $t('order.order_buy_number_title') : $t('order.order_sell_number_title')}}:
+              .label(v-if="triggerInfoFlag") {{$t('order.order_order_payment')}}:
             .textList
               .text {{order.id}}
               .text {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
-              .text {{order.price | $fixDecimalAuto(order.currency)}} {{order.target_currency.toUpperCase() + '/' + order.currency.toUpperCase()}}
-              .text {{order.amount | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
-              .text {{order.pay_kind ? $t('public.' + order.pay_kind) : ''}}
+              .text(v-if="triggerInfoFlag") {{order.price | $fixDecimalAuto(order.currency)}} {{order.target_currency.toUpperCase() + '/' + order.currency.toUpperCase()}}
+              .text(v-if="triggerInfoFlag") {{order.amount | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
+              .text(v-if="triggerInfoFlag") {{order.pay_kind ? $t('public.' + order.pay_kind) : ''}}
             .btn(@click="triggerInfo") {{$t('order.order_hide_detail')}}
           .border
           .remark
             .label {{$t('ad.ad_remark')}}:
             .text {{order.remark}}
-        .info(ref="closeInfo" class="closeInfo" v-else)
-          .list
-            .labelList
-              .label {{$t('order.order_id')}}:
-              .label {{$t('order.order_money_amount')}}:
-            .textList
-              .text {{order.id}}
-              .text {{order.amount | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
-            .btn(@click="triggerInfo") {{$t('order.order_show_detail')}}
         .oper
           .tip(v-if="stepTip" v-html="stepTip")
           .submit(class="mintSubmit" v-if="order.status === 'timeout'")
@@ -81,7 +72,7 @@
             OrderCompleteConfirm(:order="order" @close="confirmFlag.complete = false" @success="doOper('complete')")
         .popup(class="popup-right" v-if="showRulesFlag")
           slot
-            Rules(@close="showRulesFlag = false" @success="init()")
+            Rules(@close="showRulesFlag = false" @success="init")
         .popup(class="popup-right" v-if="confirmFlag.authPhone")
           slot
             ValidPhone(:needAuth="false" @close="confirmFlag.authPhone = false" @success="doAuthClose" @change="changeValidate(0)")
@@ -138,6 +129,9 @@ export default {
         authPhone: false
       },
       triggerInfoFlag: true,
+      triggerInfoTimer: 0,
+      triggerInfoHeight: 0,
+      triggerInfoMinHeight: 10,
       showRulesFlag: false,
       evaluateIndex: -1,
       chatFlag: false,
@@ -185,16 +179,6 @@ export default {
   },
   methods: {
     triggerInfo () {
-      if (this.$refs.showInfo) {
-        if (this.triggerInfoFlag) {
-          console.log(this.$refs.showInfo.classList)
-          this.$refs.showInfo.classList.remove('closeOrderInfo')
-          this.$refs.showInfo.classList.add('showOrderInfo')
-        } else {
-          this.$refs.showInfo.classList.remove('showOrderInfo')
-          this.$refs.showInfo.addClass('closeOrderInfo')
-        }
-      }
       this.triggerInfoFlag = !this.triggerInfoFlag
     },
     changeValidate (value) {
@@ -387,7 +371,6 @@ export default {
       flex 1
       margin-top $mintHeaderHeight
       height 100 - $chatFooterHeight - $mintHeaderHeight
-      overflow-y scroll
       .info {
         display flex
         flex-direction column
@@ -463,7 +446,7 @@ export default {
         }
       }
       .chat {
-
+        overflow-y scroll
       }
     }
     .footer {
@@ -571,11 +554,14 @@ export default {
       }
     }
   }
+
   .showInfo
     animation top
+
   /deep/ .footerInput {
     width 88vw
   }
+
   /deep/ .tipTime {
     font-size 1rem
     font-weight normal
