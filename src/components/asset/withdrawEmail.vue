@@ -61,8 +61,10 @@ export default {
             this.$message.success(this.$t('asset.asset_withdraw_email_success'))
             this.remainTime = +res.data.remain || 120
           }
+          resolve()
         }).catch(() => {
           this.$message.error(this.$t('asset.asset_withdraw_email_fail'))
+          resolve()
         })
       })
     },
@@ -74,6 +76,7 @@ export default {
       }
     },
     init () {
+      debugger
       this.sendEmail().then(() => {
         this.$refs.sendCode.init()
       })
