@@ -58,23 +58,22 @@
                     mt-button(class="goBtn" @click.native.prevent="$router.push('/me/settings')") {{$t('asset.asset_go_set_auth')}}
       .footer(class="historyButton")
         mt-button(@click="$router.push('/assetHistory')") {{$t('asset.asset_withdraw_and_recharge_history')}}
-    transition(name="slide-right" mode="out-in")
-      .popPage
-        .popup(class="popup-right" v-if="withdrawAddressFlag")
-          slot
-            SelectWithdrawAddress(@close="withdrawAddressFlag = false" @success="showWithdrawAddress" @add="addWithdrawAddress")
-        .popup(class="popup-right" v-if="withdrawConfirmFlag")
-          slot
-            WithdrawConfirm(:currency="currency" :form="form" :currencyFee="withdraw.withdraw_channels.fee" @close="withdrawConfirmFlag = false" @success="showAuth")
-        .popup(class="popup-right" v-if="withdrawAuthPhoneFlag")
-          slot
-            ValidPhone(:needAuth="false" @close="withdrawAuthPhoneFlag = false" @success="doWithdraw" @change="changeValidate(0)")
-        .popup(class="popup-right" v-if="withdrawAuthGoogleFlag")
-          slot
-            ValidGoogle(:needAuth="false" @close="withdrawAuthGoogleFlag = false" @success="doWithdraw" @change="changeValidate(1)")
-        .popup(class="popup-right" v-if="WithdrawEmailFlag")
-          slot
-            WithdrawEmail(@close="WithdrawEmailFlag = false" :withdraw_id="withdrawId" :currency="currency")
+    transition-group(tag="div" name="slide-right")
+      .popup(class="popup-right" v-if="withdrawAddressFlag" :key="1")
+        slot
+          SelectWithdrawAddress(@close="withdrawAddressFlag = false" @success="showWithdrawAddress" @add="addWithdrawAddress")
+      .popup(class="popup-right" v-if="withdrawConfirmFlag" :key="2")
+        slot
+          WithdrawConfirm(:currency="currency" :form="form" :currencyFee="withdraw.withdraw_channels.fee" @close="withdrawConfirmFlag = false" @success="showAuth")
+      .popup(class="popup-right" v-if="withdrawAuthPhoneFlag" :key="3")
+        slot
+          ValidPhone(:needAuth="false" @close="withdrawAuthPhoneFlag = false" @success="doWithdraw" @change="changeValidate(0)")
+      .popup(class="popup-right" v-if="withdrawAuthGoogleFlag" :key="4")
+        slot
+          ValidGoogle(:needAuth="false" @close="withdrawAuthGoogleFlag = false" @success="doWithdraw" @change="changeValidate(1)")
+      .popup(class="popup-right" v-if="WithdrawEmailFlag" :key="5")
+        slot
+          WithdrawEmail(@close="WithdrawEmailFlag = false" :withdraw_id="withdrawId" :currency="currency")
 </template>
 <script type="es6">
 import {Button, Cell, Field, Header, MessageBox, TabContainer, TabContainerItem} from 'mint-ui'

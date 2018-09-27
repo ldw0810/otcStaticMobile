@@ -6,25 +6,34 @@
       .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
     .wrapper(v-if="order.id")
       .content
-        .info(ref="showInfo" class="showInfo")
+        .info(class="showInfo" v-if="triggerInfoFlag" key="showInfo")
           .list
             .labelList
               .label {{$t('order.order_id')}}:
               .label {{$t('order.order_money_amount')}}:
-              .label(v-if="triggerInfoFlag") {{$t('order.order_order_price')}}:
-              .label(v-if="triggerInfoFlag") {{orderType === 0 ? $t('order.order_buy_number_title') : $t('order.order_sell_number_title')}}:
-              .label(v-if="triggerInfoFlag") {{$t('order.order_order_payment')}}:
+              .label {{$t('order.order_order_price')}}:
+              .label {{orderType === 0 ? $t('order.order_buy_number_title') : $t('order.order_sell_number_title')}}:
+              .label {{$t('order.order_order_payment')}}:
             .textList
               .text {{order.id}}
               .text {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
-              .text(v-if="triggerInfoFlag") {{order.price | $fixDecimalAuto(order.currency)}} {{order.target_currency.toUpperCase() + '/' + order.currency.toUpperCase()}}
-              .text(v-if="triggerInfoFlag") {{order.amount | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
-              .text(v-if="triggerInfoFlag") {{order.pay_kind ? $t('public.' + order.pay_kind) : ''}}
+              .text {{order.price | $fixDecimalAuto(order.currency)}} {{order.target_currency.toUpperCase() + '/' + order.currency.toUpperCase()}}
+              .text {{order.amount | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
+              .text {{order.pay_kind ? $t('public.' + order.pay_kind) : ''}}
             .btn(@click="triggerInfo") {{$t('order.order_hide_detail')}}
           .border
           .remark
             .label {{$t('ad.ad_remark')}}:
             .text {{order.remark}}
+        .info(class="hideInfo" v-else key="hideInfo")
+          .list
+            .labelList
+              .label {{$t('order.order_id')}}:
+              .label {{$t('order.order_money_amount')}}:
+            .textList
+              .text {{order.id}}
+              .text {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
+            .btn(@click="triggerInfo") {{$t('order.order_show_detail')}}
         .oper
           .tip(v-if="stepTip" v-html="stepTip")
           .submit(class="mintSubmit" v-if="order.status === 'timeout'")
@@ -56,29 +65,28 @@
           Chat(ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="inputValue = ''")
       .footer
         mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue" @keyup.enter.native.capture="sendInfo")
-    transition(name="slide-right" mode="out-in")
-      .popPage
-        .popup(class="popup-right" v-if="confirmFlag.cancel")
-          slot
-            OrderCancelConfirm(@close="confirmFlag.cancel = false" @success="doOper('cancel')")
-        .popup(class="popup-right" v-if="confirmFlag.pay")
-          slot
-            OrderPayConfirm(@close="confirmFlag.pay = false" @success="doPay")
-        .popup(class="popup-right" v-if="confirmFlag.release")
-          slot
-            OrderReleaseConfirm(:order="order" @close="confirmFlag.release = false" @success="doRelease")
-        .popup(class="popup-right" v-if="confirmFlag.complete")
-          slot
-            OrderCompleteConfirm(:order="order" @close="confirmFlag.complete = false" @success="doOper('complete')")
-        .popup(class="popup-right" v-if="showRulesFlag")
-          slot
-            Rules(@close="showRulesFlag = false" @success="init")
-        .popup(class="popup-right" v-if="confirmFlag.authPhone")
-          slot
-            ValidPhone(:needAuth="false" @close="confirmFlag.authPhone = false" @success="doAuthClose" @change="changeValidate(0)")
-        .popup(class="popup-right" v-if="confirmFlag.authGoogle")
-          slot
-            ValidGoogle(:needAuth="false" @close="confirmFlag.authGoogle = false" @success="doAuthClose" @change="changeValidate(1)")
+    transition-group(tag="div" name="slide-right")
+      .popup(class="popup-right" v-if="confirmFlag.cancel" :key="1")
+        slot
+          OrderCancelConfirm(@close="confirmFlag.cancel = false" @success="doOper('cancel')")
+      .popup(class="popup-right" v-if="confirmFlag.pay" :key="2")
+        slot
+          OrderPayConfirm(@close="confirmFlag.pay = false" @success="doPay")
+      .popup(class="popup-right" v-if="confirmFlag.release" :key="3")
+        slot
+          OrderReleaseConfirm(:order="order" @close="confirmFlag.release = false" @success="doRelease")
+      .popup(class="popup-right" v-if="confirmFlag.complete" :key="4")
+        slot
+          OrderCompleteConfirm(:order="order" @close="confirmFlag.complete = false" @success="doOper('complete')")
+      .popup(class="popup-right" v-if="showRulesFlag" :key="5")
+        slot
+          Rules(@close="showRulesFlag = false" @success="init")
+      .popup(class="popup-right" v-if="confirmFlag.authPhone" :key="6")
+        slot
+          ValidPhone(:needAuth="false" @close="confirmFlag.authPhone = false" @success="doAuthClose" @change="changeValidate(0)")
+      .popup(class="popup-right" v-if="confirmFlag.authGoogle" :key="7")
+        slot
+          ValidGoogle(:needAuth="false" @close="confirmFlag.authGoogle = false" @success="doAuthClose" @change="changeValidate(1)")
 </template>
 <script type="es6">
 import Policy from '../policy/policy'
@@ -556,7 +564,10 @@ export default {
   }
 
   .showInfo
-    animation top
+    width 100vw
+
+  .hideInfo
+    width 100vw
 
   /deep/ .footerInput {
     width 88vw

@@ -39,17 +39,16 @@
             .currency {{currency.toUpperCase()}}
       .footer(class="mintSubmit")
         mt-button(class="submitButton" type='primary' @click="submit" :disabled="!formStateAll || isSelfOrder") {{isSelfOrder ? $t('order.order_join_own_otc_ad') : (adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm'))}}
-    transition(name="slide-right" mode="out-in")
-      .popPage
-        .popup(class="popup-right" v-if="showConfirmFlag")
-          slot
-            OrderCreateConfirm(:ad="ad" :form="form" @close="showConfirmFlag = false" @success="createOrder")
-        .popup(class="popup-right" v-if="showCompleteFlag")
-          slot
-            AdCompleteConfirm(:ad="ad" :form="form" @close="showCompleteFlag = false" @success="init")
-        .popup(class="popup-right" v-if="showRulesFlag")
-          slot
-            Rules(@close="showRulesFlag = false" @success="init")
+    transition-group(tag="div" name="slide-right")
+      .popup(class="popup-right" v-if="showConfirmFlag" :key="1")
+        slot
+          OrderCreateConfirm(:ad="ad" :form="form" @close="showConfirmFlag = false" @success="createOrder")
+      .popup(class="popup-right" v-if="showCompleteFlag" :key="2")
+        slot
+          AdCompleteConfirm(:ad="ad" :form="form" @close="showCompleteFlag = false" @success="init")
+      .popup(class="popup-right" v-if="showRulesFlag" :key="3")
+        slot
+          Rules(@close="showRulesFlag = false" @success="init")
 </template>
 <script type="es6">
 import Policy from '../policy/policy'
