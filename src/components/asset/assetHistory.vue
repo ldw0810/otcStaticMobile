@@ -21,7 +21,7 @@
                       .info
                         .time {{item.created_at | $getDateStr()}}
                         .state
-                          .text {{$t('asset[\'asset_recharge_status_' + item.aasm_state + '\']')}}
+                          .text {{$t('asset.asset_recharge_status_' + item.aasm_state)}}
                           .button {{item.confirmations < (deposit.deposit_channels ? +deposit.deposit_channels.max_confirm : 0) ? '&nbsp;&nbsp;' + item.confirmations + '/' + (deposit.deposit_channels ? + deposit.deposit_channels.max_confirm : 0): ''}}
                       .numberDiv
                         .tip {{$t('asset.asset_number') + ': '}}

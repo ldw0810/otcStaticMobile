@@ -57,7 +57,7 @@
                     .text {{$t('asset.asset_withdraw_no_auth', {'0': currency.toUpperCase()})}}
                     mt-button(class="goBtn" @click.native.prevent="$router.push('/me/settings')") {{$t('asset.asset_go_set_auth')}}
       .footer(class="historyButton")
-        mt-button(@click="$router.push('/assetHistory')") {{$t('asset.asset_withdraw_and_recharge_history')}}
+        mt-button(@click="goHistory") {{$t('asset.asset_withdraw_and_recharge_history')}}
     transition-group(tag="div" name="slide-right")
       .popup(class="popup-right" v-if="withdrawAddressFlag" :key="1")
         slot
@@ -214,6 +214,14 @@ export default {
     }
   },
   methods: {
+    goHistory () {
+      this.$router.push({
+        path: '/assetHistory',
+        query: {
+          currency: this.currency
+        }
+      })
+    },
     checkAllState () {
       Object.keys(this.formState).forEach((item) => {
         this.checkState(item)
