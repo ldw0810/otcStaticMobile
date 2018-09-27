@@ -6,7 +6,7 @@
     .wrapper
       .content
         .tip {{$t("order.order_confirm_pay_remark_tip")}}
-        mt-field(class="remark" type="textarea" :placeholder="$t('order.order_confirm_pay_remark')" v-model="form.remark")
+        mt-field(class="remark" type="textarea" :placeholder="$t('order.order_confirm_pay_remark')" v-model="form.remark" :state="formState.remark" @input="checkState('remark')")
         .warn {{$t("order.order_confirm_pay_warn")}}
       .submit
         .mintSubmit
@@ -65,7 +65,7 @@ export default {
     },
     checkState (value) {
       if (value === 'remark') {
-        this.formState.remark = this.form.remark ? 'success' : ''
+        this.formState.remark = this.form.remark.trim() ? 'success' : ''
       }
     },
     goBack () {
