@@ -375,7 +375,9 @@ export default {
     display flex
     flex-direction column
     .content {
-      @extend .scrollPage
+      @extend .noScrollPage
+      display flex
+      flex-direction column
       flex 1
       margin-top $mintHeaderHeight
       height 100 - $chatFooterHeight - $mintHeaderHeight
@@ -454,6 +456,7 @@ export default {
         }
       }
       .chat {
+        flex 1
         overflow-y scroll
       }
     }
