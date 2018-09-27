@@ -606,6 +606,10 @@ export default {
     }
   }
 
+  /deep/ .orderSubmitBtn[disabled], .orderCancelBtn[disabled] {
+    color #656b79
+  }
+
   /deep/ .mint-button.is-disabled {
     background: #C8D4E0;
   }

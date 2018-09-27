@@ -170,7 +170,7 @@ export default {
             }
             .info {
               flex 1
-              height itemContentHeight
+              height itemContentHeight - 2vh
               display flex
               flex-direction column
               font-size 0.85rem

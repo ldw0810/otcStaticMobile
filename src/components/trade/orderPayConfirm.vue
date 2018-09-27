@@ -10,7 +10,7 @@
         .warn {{$t("order.order_confirm_pay_warn")}}
       .submit
         .mintSubmit
-          mt-button(class="submitBtn" @click="success") {{$t('order.order_confirm_payed')}}
+          mt-button(class="submitBtn" @click="success" :disabled="!formStateAll") {{$t('order.order_confirm_payed')}}
         .mintCancel
           mt-button(class="cancelBtn" @click="goBack") {{$t('public.cancel')}}
 </template>
@@ -28,12 +28,46 @@ export default {
     return {
       form: {
         remark: ''
+      },
+      formState: {
+        remark: ''
+      },
+      formMessage: {
+        remark: ''
       }
     }
   },
   computed: {
+    formStateAll () {
+      const tempStateList = Object.keys(this.formState)
+      for (let i = 0; i < tempStateList.length; i++) {
+        if (this.formState[tempStateList[i]] === '') {
+          return false
+        }
+      }
+      return true
+    },
+    formMessageAll () {
+      const tempMessageList = Object.keys(this.formMessage)
+      for (let i = 0; i < tempMessageList.length; i++) {
+        if (this.formMessage[tempMessageList[i]] !== '') {
+          return this.formMessage[tempMessageList[i]]
+        }
+      }
+      return ''
+    }
   },
   methods: {
+    checkAllState () {
+      Object.keys(this.formState).forEach((item) => {
+        this.checkState(item)
+      })
+    },
+    checkState (value) {
+      if (value === 'remark') {
+        this.formState.remark = this.form.remark ? 'success' : ''
+      }
+    },
     goBack () {
       this.$emit('close', 1)
     },
