@@ -146,7 +146,7 @@ export default {
           resolve()
         }).catch(() => {
           this.adsLoading = false
-          this.$message.error(this.$t('public.url_request_fail'))
+          // this.$message.error(this.$t('public.url_request_fail'))
           resolve()
         })
       })

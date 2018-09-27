@@ -106,7 +106,7 @@ export default {
             }
           }).catch(() => {
             this.$refs.sendCode.refresh()
-            this.$message.error(this.$t('public.url_request_fail'))
+            // this.$message.error(this.$t('public.url_request_fail'))
           })
         } else {
           for (let i = 0; i < Object.keys(this.form).length; i++) {

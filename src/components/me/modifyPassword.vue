@@ -122,7 +122,7 @@ export default {
             this.$router.push('/me/settings')
           }
         }).catch(() => {
-          this.$message.error(this.$t('user.password_modify_fail'))
+          // this.$message.error(this.$t('user.password_modify_fail'))
         })
       }
     },

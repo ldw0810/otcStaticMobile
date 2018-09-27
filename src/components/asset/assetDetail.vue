@@ -327,7 +327,7 @@ export default {
           this.getData()
         }
       }).catch(() => {
-        this.$message.error(this.$t('asset.asset_address_request_fail'))
+        // this.$message.error(this.$t('asset.asset_address_request_fail'))
       })
     },
     getData () {
@@ -410,7 +410,7 @@ export default {
           }
         }
       }).catch(() => {
-        this.$message.error(this.$t('asset.asset_withdraw_fail'))
+        // this.$message.error(this.$t('asset.asset_withdraw_fail'))
       })
     },
     init () {

@@ -95,7 +95,7 @@ export default {
               this.$router.push('/me/settings')
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_google_del_fail'))
+            // this.$message.error(this.$t('user.auth_google_del_fail'))
           })
         } else {
           this.$store.dispatch('axios_bind_google', {
@@ -109,7 +109,7 @@ export default {
               this.$router.push('/me/settings')
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_google_add_fail'))
+            // this.$message.error(this.$t('user.auth_google_add_fail'))
           })
         }
       }

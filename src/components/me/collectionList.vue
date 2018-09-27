@@ -65,7 +65,7 @@ export default {
           this.$store.commit('collectionList_setter', list)
         }
       }).catch(() => {
-        this.$message.error(this.$t('user.receivables_del_fail'))
+        // this.$message.error(this.$t('user.receivables_del_fail'))
       })
     },
     setDefaultCollection (index) {
@@ -91,7 +91,7 @@ export default {
           }
         }).catch(() => {
           this.defaultCollectionIndex = oldIndex
-          this.$message.error(this.$t('user.receivables_set_default_fail'))
+          // this.$message.error(this.$t('user.receivables_set_default_fail'))
         })
       }
     },
@@ -107,7 +107,7 @@ export default {
           this.getDefaultCollectionIndex()
         }
       }).catch(() => {
-        this.$message.error(this.$t('user.receivables_request_fail'))
+        // this.$message.error(this.$t('user.receivables_request_fail'))
       })
     },
     submit () {

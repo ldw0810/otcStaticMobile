@@ -131,7 +131,7 @@ export default {
             this.init(1)
           }
         }).catch(() => {
-          this.$message.error(this.$t('ad.ad_close_fail'))
+          // this.$message.error(this.$t('ad.ad_close_fail'))
         })
       }
     },
@@ -148,7 +148,7 @@ export default {
             this.init(1)
           }
         }).catch(() => {
-          this.$message.error(this.$t('ad.ad_open_fail'))
+          // this.$message.error(this.$t('ad.ad_open_fail'))
         })
       }
     },

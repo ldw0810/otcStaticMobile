@@ -55,7 +55,7 @@ export default {
           this.$router.push('/me/settings')
         }
       }).catch(() => {
-        this.$message.error(this.$t('user.auth_google_request_fail'))
+        // this.$message.error(this.$t('user.auth_google_request_fail'))
       })
     },
     init () {

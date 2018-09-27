@@ -134,7 +134,7 @@ export default {
               this.authPhoneCodeFlag = true
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_phone_code_send_fail'))
+            // this.$message.error(this.$t('user.auth_phone_code_send_fail'))
           })
         } else {
           this.$store.dispatch('axios_refresh', {
@@ -144,7 +144,7 @@ export default {
               this.authPhoneCodeFlag = true
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_phone_code_send_fail'))
+            // this.$message.error(this.$t('user.auth_phone_code_send_fail'))
           })
         }
       }

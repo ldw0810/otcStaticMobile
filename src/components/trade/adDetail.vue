@@ -272,7 +272,7 @@ export default {
           this.$router.push(this.backLink)
         }
       }).catch(() => {
-        this.$message.error(this.$t('public.url_request_fail'))
+        // this.$message.error(this.$t('public.url_request_fail'))
       })
     },
     submit () {
@@ -305,7 +305,7 @@ export default {
           this.$router.push(this.backLink)
         }
       }).catch(() => {
-        this.$message.error(this.$t('order.order_deal_request_fail'))
+        // this.$message.error(this.$t('order.order_deal_request_fail'))
       })
     },
     init () {

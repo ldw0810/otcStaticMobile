@@ -107,7 +107,7 @@ export default {
           resolve()
         }).catch(() => {
           this.ordersLoading = false
-          this.$message.error(this.$t('order.order_data_request_fail'))
+          // this.$message.error(this.$t('order.order_data_request_fail'))
           resolve()
         })
       })

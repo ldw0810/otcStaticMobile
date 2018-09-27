@@ -44,7 +44,7 @@ export default {
             this.$store.commit('bankList_setter', res.data.list)
           }
         }).catch(() => {
-          this.$message.error(this.$t('user.banks_request_fail'))
+          // this.$message.error(this.$t('user.banks_request_fail'))
         })
       }
     },

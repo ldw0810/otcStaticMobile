@@ -23,7 +23,7 @@ export default {
               this.$message.success(this.$t('asset.asset_withdraw_confirm_success'))
             }
           }).catch(() => {
-            this.$message.error(this.$t('asset.asset_withdraw_confirm_fail'))
+            // this.$message.error(this.$t('asset.asset_withdraw_confirm_fail'))
           })
         } else if (this.$route.query.activation_token) {
           this.$store.dispatch('axios_email_verified', {
@@ -33,7 +33,7 @@ export default {
               this.$message.success(this.$t('public.email_activation_success'))
             }
           }).catch(() => {
-            this.$message.error(this.$t('public.activation_link_notValid'))
+            // this.$message.error(this.$t('public.activation_link_notValid'))
           })
         }
       }

@@ -59,7 +59,7 @@ export default {
           }
           resolve()
         }).catch(() => {
-          this.$message.error(this.$t('user.auth_email_send_fail'))
+          // this.$message.error(this.$t('user.auth_email_send_fail'))
           resolve()
         })
       })

@@ -223,7 +223,7 @@ export default {
                   this.$router.push('/login')
                 }
               }).catch(() => {
-                this.$message.error(this.$t('public.url_request_fail'))
+                // this.$message.error(this.$t('public.url_request_fail'))
               })
             })
           })
@@ -233,7 +233,7 @@ export default {
         }
       }).catch(() => {
         this.captchaStatus = 'error'
-        this.$message.error(this.$t('user.captcha_request_fail'))
+        // this.$message.error(this.$t('user.captcha_request_fail'))
       })
     },
     init () {

@@ -100,7 +100,7 @@ export default {
               this.$router.push('/me/settings')
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_phone_unbind_fail'))
+            // this.$message.error(this.$t('user.auth_phone_unbind_fail'))
           })
         } else {
           this.$store.dispatch('axios_sms_auth', {
@@ -115,7 +115,7 @@ export default {
               this.$router.push('/me/settings')
             }
           }).catch(() => {
-            this.$message.success(this.$t('user.auth_phone_bind_fail'))
+            // this.$message.success(this.$t('user.auth_phone_bind_fail'))
           })
         }
       }

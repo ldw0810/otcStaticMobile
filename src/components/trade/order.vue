@@ -244,7 +244,7 @@ export default {
           this.showTip()
         }
       }).catch(() => {
-        this.$message.error(this.$t('order.order_info_request_fail'))
+        // this.$message.error(this.$t('order.order_info_request_fail'))
       })
     },
     orderOper (operStr) {
@@ -264,7 +264,7 @@ export default {
               this.getOrder()
             }
           }).catch(() => {
-            this.$message.error(this.$t('order.order_pay_evaluate_fail'))
+            // this.$message.error(this.$t('order.order_pay_evaluate_fail'))
           })
         } else {
           this.$message.error(this.$t('order.order_pay_evaluate_required'))
@@ -302,7 +302,7 @@ export default {
             this.getOrder()
           }
         }).catch(() => {
-          this.$message.error(this.$t('order.order_pay_complete_fail'))
+          // this.$message.error(this.$t('order.order_pay_complete_fail'))
         })
       } else if (operStr === 'release') {
         let requestData = {
@@ -328,7 +328,7 @@ export default {
             }
           }
         }).catch(() => {
-          this.$message.error(this.$t('order.order_pay_release_fail'))
+          // this.$message.error(this.$t('order.order_pay_release_fail'))
         })
       } else if (operStr === 'complete') {
         this.confirmFlag = {
@@ -348,7 +348,7 @@ export default {
             this.getOrder()
           }
         }).catch(() => {
-          this.$message.error(this.$t('order.order_pay_cancel_fail'))
+          // this.$message.error(this.$t('order.order_pay_cancel_fail'))
         })
       }
     },

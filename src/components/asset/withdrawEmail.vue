@@ -63,7 +63,7 @@ export default {
           }
           resolve()
         }).catch(() => {
-          this.$message.error(this.$t('asset.asset_withdraw_email_fail'))
+          // this.$message.error(this.$t('asset.asset_withdraw_email_fail'))
           resolve()
         })
       })

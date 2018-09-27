@@ -100,7 +100,7 @@ export default {
               this.$emit('success', 1)
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_phone_fail'))
+            // this.$message.error(this.$t('user.auth_phone_fail'))
           })
         }
       }

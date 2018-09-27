@@ -174,7 +174,7 @@ export default {
             }
             resolve()
           }).catch(() => {
-            this.$message.error(this.$t('asset.asset_recharge_request_fail'))
+            // this.$message.error(this.$t('asset.asset_recharge_request_fail'))
             resolve()
           })
         } else {
@@ -203,7 +203,7 @@ export default {
               resolve()
             }
           }).catch(() => {
-            this.$message.error(this.$t('asset.asset_withdraw_request_fail'))
+            // this.$message.error(this.$t('asset.asset_withdraw_request_fail'))
             resolve()
           })
         }
