@@ -6,34 +6,28 @@
       .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
     .wrapper(v-if="order.id")
       .content
-        .info(class="showInfo" v-if="triggerInfoFlag" key="showInfo")
+        .info(class="showInfo")
           .list
-            .labelList
+            .item
               .label {{$t('order.order_id')}}:
-              .label {{$t('order.order_money_amount')}}:
-              .label {{$t('order.order_order_price')}}:
-              .label {{orderType === 0 ? $t('order.order_buy_number_title') : $t('order.order_sell_number_title')}}:
-              .label {{$t('order.order_order_payment')}}:
-            .textList
               .text {{order.id}}
+            .item
+              .label {{$t('order.order_money_amount')}}:
               .text {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
+            .item(v-if="triggerInfoFlag")
+              .label {{$t('order.order_order_price')}}:
               .text {{order.price | $fixDecimalAuto(order.currency)}} {{order.target_currency.toUpperCase() + '/' + order.currency.toUpperCase()}}
+            .item(v-if="triggerInfoFlag")
+              .label {{orderType === 0 ? $t('order.order_buy_number_title') : $t('order.order_sell_number_title')}}:
               .text {{order.amount | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
+            .item(v-if="triggerInfoFlag")
+              .label {{$t('order.order_order_payment')}}:
               .text {{order.pay_kind ? $t('public.' + order.pay_kind) : ''}}
             .btn(@click="triggerInfo") {{$t('order.order_hide_detail')}}
-          .border
-          .remark
+          .border(v-if="triggerInfoFlag")
+          .remark(v-if="triggerInfoFlag")
             .label {{$t('ad.ad_remark')}}:
             .text {{order.remark}}
-        .info(class="hideInfo" v-else key="hideInfo")
-          .list
-            .labelList
-              .label {{$t('order.order_id')}}:
-              .label {{$t('order.order_money_amount')}}:
-            .textList
-              .text {{order.id}}
-              .text {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
-            .btn(@click="triggerInfo") {{$t('order.order_show_detail')}}
         .oper
           .tip(v-if="stepTip" v-html="stepTip")
           .submit(class="mintSubmit" v-if="order.status === 'timeout'")
@@ -391,16 +385,15 @@ export default {
         border-bottom 1px solid #EEEEEE
         .list {
           display flex
-          .labelList {
+          flex-direction column
+          .item {
+            display flex
             .label {
               font-size 1rem
               font-weight normal
               color #333333
               margin 2.5vh 5vw 0 0
             }
-          }
-          .textList {
-            flex 1
             .text {
               font-size 1rem
               font-weight normal
