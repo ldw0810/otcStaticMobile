@@ -623,7 +623,7 @@
     "order_complete": "交易完成",
     "order_show_order": "查看订单",
     "order_show_asset": "查看资产",
-    "order_complete_info": "您获得了 {0} {1} <br>您可以",
+    "order_complete_info": "您获得了 {0} {1}",
     "order_cancel_order_title": "确认取消订单吗？",
     "order_cancel_order_tip": "多次取消订单会影响您的交易信誉",
     "order_cancel_order_warn": "请确认您还没有转账给卖家，如果您已经转账请在聊天窗口联系卖家退款后再取消订单，否则您有资金损失的风险",

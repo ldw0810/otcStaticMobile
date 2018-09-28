@@ -623,7 +623,7 @@
     "order_complete": "Order completed",
     "order_show_order": "Check order",
     "order_show_asset": "Check asset",
-    "order_complete_info": "You get {0} {1}<br>You can",
+    "order_complete_info": "You get {0} {1}",
     "order_cancel_order_title": "Are you sure to cancel？",
     "order_cancel_order_tip": "Multiple cancellation will lower your credit",
     "order_cancel_order_warn": "Please make sure that you have not yet transferred to the seller, please contact seller in chat box and reuqest a refund if you already transferred before cancel the order, otherwise you may lose your money.",

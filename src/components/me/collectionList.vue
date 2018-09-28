@@ -172,14 +172,14 @@ export default {
           display flex
           align-items center
           flex 1
-          font-size 1rem
+          font-size 0.85rem
           font-weight normal
         }
         .account {
           display flex
           align-items center
           flex 1
-          font-size 1rem
+          font-size 0.85rem
         }
       }
     }

@@ -181,12 +181,12 @@ export default {
     width 100vw
     .label {
       margin-left 2.5vw
-      font-size 1rem
+      font-size 0.85rem
       font-weight normal
     }
     .number {
       flex 1
-      font-size 1rem
+      font-size 0.85rem
       display flex
       align-items center
       justify-content center

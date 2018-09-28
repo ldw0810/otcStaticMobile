@@ -5,18 +5,21 @@
         mt-button(icon="back" @click="goBack")
     .wrapper
       .content
+        .img
+          img(src="../../assets/images/trade/Icon-Ok.png")
         .info
           .text(v-if="ad.op_type === 'sell'" v-html="$t('order.order_complete_info', {'0': form.number, '1': ad.currency.toUpperCase()})")
           .text(v-else v-html="$t('order.order_complete_info', {'0': form.amount, '1': ad.target_currency.toUpperCase()})")
-        .tip
-          .text(@click="$router.push('/orderList')") {{$t("order.order_show_order")}}
-          .text(@click="goAsset") {{$t("order.order_show_asset")}}
       .submit
+        .mintCancel
+          mt-button(class="cancelBtn" @click="goOrderList") {{$t('order.order_show_order')}}
+        .mintCancel
+          mt-button(class="cancelBtn" @click="goAsset") {{$t("order.order_show_asset")}}
         .mintSubmit
           mt-button(class="submitBtn" @click="success") {{$t('public.confirm')}}
 </template>
 <script type="es6">
-import {Header, Button} from 'mint-ui'
+import {Button, Header} from 'mint-ui'
 import Vue from 'vue'
 
 Vue.component(Header.name, Header)
@@ -32,8 +35,7 @@ export default {
     }
   },
   data () {
-    return {
-    }
+    return {}
   },
   computed: {
     isLegalTrade () {
@@ -43,6 +45,9 @@ export default {
   methods: {
     goBack () {
       this.$emit('close', 1)
+    },
+    goOrderList () {
+      this.$router.push('/orderList')
     },
     goAsset () {
       this.$router.push({
@@ -73,7 +78,7 @@ export default {
     overflow hidden
     .content {
       width 100vw
-      margin-top $mintHeaderHeight + 1
+      margin-top $mintHeaderHeight - 1
       overflow-y scroll
       -webkit-overflow-scrolling touch
       background #FFFFFF
@@ -82,24 +87,25 @@ export default {
       flex-direction column
       border-top 1px solid #EEEEEE
       border-bottom 1px solid #EEEEEE
+      align-items center
+      .img {
+        width 12vh
+        height 12vh
+        img {
+          width 100%
+          height 100%
+          object-position 0 0
+          object-fit cover
+        }
+      }
       .info {
+        margin-top 5vh
         .text {
-          font-size 1rem
+          font-size 0.85rem
           font-weight normal
           color #333333
           margin-bottom 2.5vh
           line-height 1.5
-        }
-      }
-      .tip {
-        display flex
-        align-items center
-        justify-content space-around
-        margin-top 2.5vh
-        .text {
-          font-weight normal
-          font-size 0.85rem
-          color #2EA2F8
         }
       }
     }
@@ -108,10 +114,15 @@ export default {
       flex-direction column
       align-items center
       justify-content center
-      height buttonHeight
       margin-top 5vh
-      .submitBtn {
-        margin-bottom 2.5vh
+      .mintCancel {
+        height 8.5vh
+      }
+      .mintSubmit {
+        height 8.5vh
+        .submitBtn {
+          margin-bottom 0 !important
+        }
       }
     }
   }

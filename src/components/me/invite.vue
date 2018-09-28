@@ -357,7 +357,7 @@ export default {
         font-weight: normal;
         flex: 1;
         height: 10vh;
-        font-size: 1rem;
+        font-size: 0.85rem;
         color: #FFFFFF;
       }
     }

@@ -60,7 +60,8 @@
       .footer
         form(action="javascript:return true")
           mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue" @keyup.native.capture="alertKeyup" @keyup.enter.native.capture="sendInfo")
-    transition-group(tag="div" name="slide-right")
+    transition-group(tag="div" name
+    ="slide-right")
       .popup(class="popup-right" v-if="confirmFlag.cancel" :key="1")
         slot
           OrderCancelConfirm(@close="confirmFlag.cancel = false" @success="doOper('cancel')")
@@ -394,13 +395,13 @@ export default {
           .item {
             display flex
             .label {
-              font-size 1rem
+              font-size 0.85rem
               font-weight normal
               color #333333
               margin 2.5vh 5vw 0 0
             }
             .text {
-              font-size 1rem
+              font-size 0.85rem
               font-weight normal
               color #333333
               margin-top 2.5vh
@@ -424,12 +425,12 @@ export default {
         .remark {
           padding-bottom 2.5vh
           .label {
-            font-size 1rem
+            font-size 0.85rem
             font-weight normal
             color #333333
           }
           .text {
-            font-size 1rem
+            font-size 0.85rem
             font-weight normal
             color #333333
           }
@@ -557,7 +558,7 @@ export default {
       }
       .radioText {
         margin-left 1vw
-        font-size 1rem
+        font-size 0.85rem
         font-weight normal
         color #333333
       }
@@ -575,7 +576,7 @@ export default {
   }
 
   /deep/ .tipTime {
-    font-size 1rem
+    font-size 0.85rem
     font-weight normal
     color: #ED1C24;
     text-align center
@@ -588,7 +589,7 @@ export default {
     box-shadow: 0 5px 5px 0 rgba(102, 187, 191, 0.14);
     border-radius: 2px;
     .mint-button-text {
-      font-size 1rem
+      font-size 0.85rem
     }
   }
 
@@ -600,7 +601,7 @@ export default {
     box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.03);
     border-radius: 2px;
     .mint-button-text {
-      font-size 1rem
+      font-size 0.85rem
     }
   }
 

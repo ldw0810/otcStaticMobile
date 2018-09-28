@@ -623,7 +623,7 @@
     "order_complete": "交易完成",
     "order_show_order": "查看訂單",
     "order_show_asset": "查看資產",
-    "order_complete_info": "您獲得了 {0} {1} <br>您可以",
+    "order_complete_info": "您獲得了 {0} {1}",
     "order_cancel_order_title": "確認取消訂單嗎？",
     "order_cancel_order_tip": "多次取消訂單會影響您的交易信譽",
     "order_cancel_order_warn": "請確認您還沒有轉賬給賣家，如果您已經轉賬請在聊天窗口聯系賣家退款後再取消訂單，否則您有資金損失的風險",

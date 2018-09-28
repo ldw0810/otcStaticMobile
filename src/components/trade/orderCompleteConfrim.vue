@@ -79,7 +79,7 @@ export default {
       border-bottom 1px solid #EEEEEE
       .info {
         .text {
-          font-size 1rem
+          font-size 0.85rem
           font-weight normal
           color #333333
           margin-bottom 2.5vh

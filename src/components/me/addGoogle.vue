@@ -90,7 +90,7 @@ export default {
     justify-content center
     .text {
       color #333333
-      font-size 1rem
+      font-size 0.85rem
       font-weight normal
       padding-top 4vh
       display flex
@@ -118,7 +118,7 @@ export default {
     background #FFFFFF
     .text {
       color #333333
-      font-size 1rem
+      font-size 0.85rem
       font-weight normal
       padding-top 4vh
       display flex

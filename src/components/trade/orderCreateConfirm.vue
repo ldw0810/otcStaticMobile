@@ -87,7 +87,7 @@ export default {
         display flex
         .labelList {
           .label {
-            font-size 1rem
+            font-size 0.85rem
             font-weight normal
             color #333333
             margin 0 5vw 2.5vh 0
@@ -96,7 +96,7 @@ export default {
         .textList {
           flex 1
           .text {
-            font-size 1rem
+            font-size 0.85rem
             font-weight normal
             color #333333
             margin-bottom 2.5vh

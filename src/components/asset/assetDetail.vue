@@ -42,11 +42,11 @@
                 .wrapper(v-if="withdraw.withdraw_channels.id")
                   .withdrawPage(v-if="userInfo.mobile || userInfo.app_two_factor")
                     .addressForm
-                      mt-cell(v-if="withdraw.fund_sources.length" :title="$t('asset.asset_withdraw_address')" @click.native.prevent="withdrawAddressFlag = true" is-link)
+                      mt-cell(class="submitFormItem" v-if="withdraw.fund_sources.length" :title="$t('asset.asset_withdraw_address')" @click.native.prevent="withdrawAddressFlag = true" is-link)
                         .label {{form.selectAddress.label}}
-                      mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('public.label')" :placeholder="$t('asset.asset_withdraw_label_required')" v-model="form.label" :state="formState.label" @input="checkState('label')")
-                      mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('asset.asset_withdraw_address')" :placeholder="$t('asset.asset_withdraw_address_required')" v-model="form.address" :state="formState.address" @input="checkState('address')")
-                      mt-field(type="number" class="numberBtn" :label="$t('asset.asset_withdraw_number')" :placeholder="amountText" v-model="form.number" :state="formState.number" @input="checkState('number')")
+                      mt-field(class="submitFormItem" v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('public.label')" :placeholder="$t('asset.asset_withdraw_label_required')" v-model="form.label" :state="formState.label" @input="checkState('label')")
+                      mt-field(class="submitFormItem" v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('asset.asset_withdraw_address')" :placeholder="$t('asset.asset_withdraw_address_required')" v-model="form.address" :state="formState.address" @input="checkState('address')")
+                      mt-field(class="submitFormItem numberBtn" type="number" :label="$t('asset.asset_withdraw_number')" :placeholder="amountText" v-model="form.number" :state="formState.number" @input="checkState('number')")
                         .right(name="slot")
                           .currency {{currency.toUpperCase()}}
                           mt-button(class="withdrawAllBtn" @click.native.prevent="form.number = amount") {{$t('asset.asset_withdraw_all')}}
@@ -595,6 +595,7 @@ export default {
           height 55vh
           overflow-y scroll
           .addressForm {
+            padding 0 6vw
             .label {
               max-width 68vw
               word-break break-all
@@ -702,7 +703,7 @@ export default {
     align-items center
     justify-content center
     .mint-button {
-      width 72vw
+      width 88vw
       color #333333
       background: #FFFFFF;
       border: 1px solid rgba(0, 0, 0, 0.10);
@@ -718,7 +719,6 @@ export default {
   }
 
   /deep/ .numberBtn.mint-cell {
-    width 100vw
     .mint-cell-title {
       width auto
     }
