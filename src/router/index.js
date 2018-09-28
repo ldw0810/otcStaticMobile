@@ -19,7 +19,7 @@ const entry = {
   modifyPassword: r => require.ensure([], () => r(require('../components/entry/modifyPassword')))
 }
 const page = {
-  loginPage: r => require.ensure([], () => r(require('../components/page/loginPage'))),
+  mainPage: r => require.ensure([], () => r(require('../components/page/mainPage'))),
   home: r => require.ensure([], () => r(require('../components/page/home'))),
   error: r => require.ensure([], () => r(require('../components/page/error'))),
   notFound: r => require.ensure([], () => r(require('../components/page/notFound')))
@@ -58,7 +58,7 @@ const routers = [
   {
     path: '/',
     redirect: '/buy',
-    component: page.loginPage,
+    component: page.mainPage,
     meta: {
       needLogin: true
     },
@@ -80,7 +80,8 @@ const routers = [
                 alias: ['/buy'],
                 component: trade.adList,
                 meta: {
-                  navbarIndex: 0
+                  navbarIndex: 0,
+                  needLogin: false
                 }
               },
               {
@@ -88,7 +89,8 @@ const routers = [
                 alias: ['/sell'],
                 component: trade.adList,
                 meta: {
-                  navbarIndex: 1
+                  navbarIndex: 1,
+                  needLogin: false
                 }
               },
               {

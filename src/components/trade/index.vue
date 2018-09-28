@@ -176,7 +176,9 @@ export default {
       this.getTradePriceData().then(() => {
         this.getTradePrice()
       })
-      this.getNotice()
+      if (this.$store.state.userToken) {
+        this.getNotice()
+      }
     }
   },
   destroyed () {
