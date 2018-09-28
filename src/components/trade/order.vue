@@ -58,7 +58,8 @@
         .chat
           Chat(ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="inputValue = ''")
       .footer
-        mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue" @keyup.enter.native.capture="sendInfo")
+        form(action="javascript:return true")
+          mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue" @keyup.native.capture="alertKeyup" @keyup.enter.native.capture="sendInfo")
     transition-group(tag="div" name="slide-right")
       .popup(class="popup-right" v-if="confirmFlag.cancel" :key="1")
         slot
@@ -191,6 +192,9 @@ export default {
         this.confirmFlag.authGoogle = false
         this.confirmFlag.authPhone = true
       }
+    },
+    alertKeyup (event) {
+      // alert(event.keyCode)
     },
     showTip () {
       this.timer && clearTimeout(this.timer)
@@ -371,6 +375,7 @@ export default {
     .content {
       @extend .noScrollPage
       display flex
+      overflow hidden
       flex-direction column
       flex 1
       margin-top $mintHeaderHeight
