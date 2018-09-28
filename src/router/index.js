@@ -59,9 +59,6 @@ const routers = [
     path: '/',
     redirect: '/buy',
     component: page.mainPage,
-    meta: {
-      needLogin: true
-    },
     children: [
       {
         path: '/home',
@@ -98,7 +95,8 @@ const routers = [
                 alias: ['/myAd', '/myAds'],
                 component: trade.myAd,
                 meta: {
-                  navbarIndex: 2
+                  navbarIndex: 2,
+                  needLogin: true
                 }
               },
               {
@@ -106,7 +104,8 @@ const routers = [
                 alias: ['/orderList'],
                 component: trade.orderList,
                 meta: {
-                  navbarIndex: 3
+                  navbarIndex: 3,
+                  needLogin: true
                 }
               }
             ]
@@ -115,7 +114,8 @@ const routers = [
             path: 'asset',
             alias: ['/asset'],
             meta: {
-              tabbarIndex: 1
+              tabbarIndex: 1,
+              needLogin: true
             },
             component: asset.index
           },
@@ -123,7 +123,8 @@ const routers = [
             path: 'me',
             alias: ['/me'],
             meta: {
-              tabbarIndex: 2
+              tabbarIndex: 2,
+              needLogin: true
             },
             component: me.userCenter
           }
@@ -132,76 +133,130 @@ const routers = [
       {
         path: '/adDetail',
         alias: ['/ad'],
+        meta: {
+          needLogin: true
+        },
         component: trade.adDetail
       },
       {
         path: '/adShare',
+        meta: {
+          needLogin: true
+        },
         component: trade.adShare
       },
       {
         path: '/assetDetail',
+        meta: {
+          needLogin: true
+        },
         component: asset.assetDetail
       },
       {
         path: '/assetHistory',
+        meta: {
+          needLogin: true
+        },
         component: asset.assetHistory
       },
       {
         path: '/order',
+        meta: {
+          needLogin: true
+        },
         alias: ['/orderDetail'],
         component: trade.order
       },
       {
         path: '/me/authEmail',
+        meta: {
+          needLogin: true
+        },
         component: me.authEmail
       },
       {
         path: '/me/about',
+        meta: {
+          needLogin: true
+        },
         component: me.about
       },
       {
         path: '/me/changeLanguage',
+        meta: {
+          needLogin: true
+        },
         component: me.changeLanguage
       },
       {
         path: '/me/settings',
+        meta: {
+          needLogin: true
+        },
         component: me.settings
       },
       {
         path: '/me/addCollection',
+        meta: {
+          needLogin: true
+        },
         component: me.addCollection
       },
       {
         path: '/me/addCollection/addAlipay',
+        meta: {
+          needLogin: true
+        },
         component: me.addAlipay
       },
       {
         path: '/me/addCollection/addBankcard',
+        meta: {
+          needLogin: true
+        },
         component: me.addBankcard
       },
       {
         path: '/me/collectionList',
+        meta: {
+          needLogin: true
+        },
         component: me.collectionList
       },
       {
         path: '/me/modifyPassword',
+        meta: {
+          needLogin: true
+        },
         component: me.modifyPassword
       },
       {
         path: '/me/authPhone',
+        meta: {
+          needLogin: true
+        },
         component: me.authPhone
       },
       {
         path: '/me/addGoogle',
+        meta: {
+          needLogin: true
+        },
         component: me.addGoogle
       },
       {
         path: '/me/authGoogle',
+        meta: {
+          needLogin: true
+        },
         component: me.authGoogle
       }
       // {
       //   path: '/me/invite',
       //   alias: '/invite',
+      //   meta: {
+      //     needLogin: true
+      //   },
       //   component: me.invite
       // }
     ]
