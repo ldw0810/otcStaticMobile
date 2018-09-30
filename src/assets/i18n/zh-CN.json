@@ -514,7 +514,10 @@
     "ad_buying": "买",
     "ad_selling": "卖",
     "ad_local_trading_tip": "当面交易需填写含有地址信息的备注",
-    "ad_share": "广告分享"
+    "ad_share": "广告分享",
+    "ad_share_download": "下载",
+    "ad_share_title": "我在OTCMAKER发布了一个{0}广告",
+    "ad_share_desc": "安全、快捷的数字资产交易平台"
   },
   "order": {
     "order_detail": "订单详情",

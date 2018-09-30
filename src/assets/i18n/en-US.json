@@ -514,7 +514,10 @@
     "ad_buying": "buying",
     "ad_selling": "selling",
     "ad_local_trading_tip": "To fill in the remark with address information in a face to face transaction",
-    "ad_share": "Advertising sharing"
+    "ad_share": "Advertising sharing",
+    "ad_share_download": "Download",
+    "ad_share_title": "I posted a {0} ad at OTCMAKER",
+    "ad_share_desc": "Safe and fast digital asset trading platform"
   },
   "order": {
     "order_detail": "Order detail",

@@ -60,8 +60,7 @@
       .footer
         form(action="javascript:return true")
           mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue" @keyup.native.capture="alertKeyup" @keyup.enter.native.capture="sendInfo")
-    transition-group(tag="div" name
-    ="slide-right")
+    transition-group(tag="div" name="slide-right")
       .popup(class="popup-right" v-if="confirmFlag.cancel" :key="1")
         slot
           OrderCancelConfirm(@close="confirmFlag.cancel = false" @success="doOper('cancel')")
