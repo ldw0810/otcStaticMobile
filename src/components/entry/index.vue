@@ -1,7 +1,8 @@
 <template lang="pug">
   .page
     LogoDiv
-    .bg
+    <!--.bg(v-if="!ucFlag")-->
+    <!--.bgUC(v-else)-->
     .content
       transition(name="fade" mode="out-in")
         router-view
@@ -18,7 +19,13 @@ export default {
     EntryFooter
   },
   data () {
-    return {}
+    return {
+      ucFlag: false
+    }
+  },
+  created () {
+    let UA = navigator.appVersion
+    this.ucFlag = UA.split('UCBrowser/').length > 1
   },
   mounted () {
     if (this.$route.query.shareId) {
@@ -33,8 +40,20 @@ export default {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    background-image: linear-gradient(45deg, #0BBFD5 0%, #6DD788 100%);
+    background-size: cover;
     .bg {
       background-image: linear-gradient(45deg, #0BBFD5 0%, #6DD788 100%);
+      background-size: cover;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      height: 100%;
+      width: 100%;
+    }
+    .bgUC {
+      background: #6DD788;
       background-size: cover;
       position: fixed;
       top: 0;
