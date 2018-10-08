@@ -42,11 +42,11 @@
                 .wrapper(v-if="withdraw.withdraw_channels.id")
                   .withdrawPage(v-if="userInfo.mobile || userInfo.app_two_factor")
                     .addressForm
-                      mt-cell(v-if="withdraw.fund_sources.length" :title="$t('asset.asset_withdraw_address')" @click.native.prevent="withdrawAddressFlag = true" is-link)
+                      mt-cell(class="submitFormItem" v-if="withdraw.fund_sources.length" :title="$t('asset.asset_withdraw_address')" @click.native.prevent="withdrawAddressFlag = true" is-link)
                         .label {{form.selectAddress.label}}
-                      mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('public.label')" :placeholder="$t('asset.asset_withdraw_label_required')" v-model="form.label" :state="formState.label" @input="checkState('label')")
-                      mt-field(v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('asset.asset_withdraw_address')" :placeholder="$t('asset.asset_withdraw_address_required')" v-model="form.address" :state="formState.address" @input="checkState('address')")
-                      mt-field(type="number" class="numberBtn" :label="$t('asset.asset_withdraw_number')" :placeholder="amountText" v-model="form.number" :state="formState.number" @input="checkState('number')")
+                      mt-field(class="submitFormItem" v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('public.label')" :placeholder="$t('asset.asset_withdraw_label_required')" v-model="form.label" :state="formState.label" @input="checkState('label')")
+                      mt-field(class="submitFormItem" v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('asset.asset_withdraw_address')" :placeholder="$t('asset.asset_withdraw_address_required')" v-model="form.address" :state="formState.address" @input="checkState('address')")
+                      mt-field(class="submitFormItem numberBtn" type="number" :label="$t('asset.asset_withdraw_number')" :placeholder="amountText" v-model="form.number" :state="formState.number" @input="checkState('number')")
                         .right(name="slot")
                           .currency {{currency.toUpperCase()}}
                           mt-button(class="withdrawAllBtn" @click.native.prevent="form.number = amount") {{$t('asset.asset_withdraw_all')}}
@@ -57,24 +57,23 @@
                     .text {{$t('asset.asset_withdraw_no_auth', {'0': currency.toUpperCase()})}}
                     mt-button(class="goBtn" @click.native.prevent="$router.push('/me/settings')") {{$t('asset.asset_go_set_auth')}}
       .footer(class="historyButton")
-        mt-button(@click="$router.push('/assetHistory')") {{$t('asset.asset_withdraw_and_recharge_history')}}
-    transition(name="slide-right" mode="out-in")
-      .popPage
-        .popup(class="popup-right" v-if="withdrawAddressFlag")
-          slot
-            SelectWithdrawAddress(@close="withdrawAddressFlag = false" @success="showWithdrawAddress" @add="addWithdrawAddress")
-        .popup(class="popup-right" v-if="withdrawConfirmFlag")
-          slot
-            WithdrawConfirm(:currency="currency" :form="form" :currencyFee="withdraw.withdraw_channels.fee" @close="withdrawConfirmFlag = false" @success="showAuth")
-        .popup(class="popup-right" v-if="withdrawAuthPhoneFlag")
-          slot
-            ValidPhone(:needAuth="false" @close="withdrawAuthPhoneFlag = false" @success="doWithdraw" @change="changeValidate(0)")
-        .popup(class="popup-right" v-if="withdrawAuthGoogleFlag")
-          slot
-            ValidGoogle(:needAuth="false" @close="withdrawAuthGoogleFlag = false" @success="doWithdraw" @change="changeValidate(1)")
-        .popup(class="popup-right" v-if="WithdrawEmailFlag")
-          slot
-            WithdrawEmail(@close="WithdrawEmailFlag = false" :withdraw_id="withdrawId" :currency="currency")
+        mt-button(@click="goHistory") {{$t('asset.asset_withdraw_and_recharge_history')}}
+    transition-group(tag="div" name="slide-right")
+      .popup(class="popup-right" v-if="withdrawAddressFlag" :key="1")
+        slot
+          SelectWithdrawAddress(@close="withdrawAddressFlag = false" @success="showWithdrawAddress" @add="addWithdrawAddress")
+      .popup(class="popup-right" v-if="withdrawConfirmFlag" :key="2")
+        slot
+          WithdrawConfirm(:currency="currency" :form="form" :currencyFee="withdraw.withdraw_channels.fee" @close="withdrawConfirmFlag = false" @success="showAuth")
+      .popup(class="popup-right" v-if="withdrawAuthPhoneFlag" :key="3")
+        slot
+          ValidPhone(:needAuth="false" @close="withdrawAuthPhoneFlag = false" @success="doWithdraw" @change="changeValidate(0)")
+      .popup(class="popup-right" v-if="withdrawAuthGoogleFlag" :key="4")
+        slot
+          ValidGoogle(:needAuth="false" @close="withdrawAuthGoogleFlag = false" @success="doWithdraw" @change="changeValidate(1)")
+      .popup(class="popup-right" v-if="WithdrawEmailFlag" :key="5")
+        slot
+          WithdrawEmail(@close="WithdrawEmailFlag = false" :withdraw_id="withdrawId" :currency="currency")
 </template>
 <script type="es6">
 import {Button, Cell, Field, Header, MessageBox, TabContainer, TabContainerItem} from 'mint-ui'
@@ -215,6 +214,14 @@ export default {
     }
   },
   methods: {
+    goHistory () {
+      this.$router.push({
+        path: '/assetHistory',
+        query: {
+          currency: this.currency
+        }
+      })
+    },
     checkAllState () {
       Object.keys(this.formState).forEach((item) => {
         this.checkState(item)
@@ -320,7 +327,7 @@ export default {
           this.getData()
         }
       }).catch(() => {
-        this.$message.error(this.$t('asset.asset_address_request_fail'))
+        // this.$message.error(this.$t('asset.asset_address_request_fail'))
       })
     },
     getData () {
@@ -403,7 +410,7 @@ export default {
           }
         }
       }).catch(() => {
-        this.$message.error(this.$t('asset.asset_withdraw_fail'))
+        // this.$message.error(this.$t('asset.asset_withdraw_fail'))
       })
     },
     init () {
@@ -429,6 +436,7 @@ export default {
   }
 
   .content {
+    @extend .scrollPage
     flex 1
     margin-top $mintHeaderHeight
     height 100 - $mintHeaderHeight - footerHeight
@@ -470,6 +478,7 @@ export default {
         }
         .amount {
           flex 1
+          max-width 50vw
           display flex
           align-items center
           justify-content center
@@ -483,6 +492,7 @@ export default {
           flex-direction column
           justify-content center
           .number {
+            max-width 50vw
             color #666666
             font-size 1rem
           }
@@ -582,10 +592,10 @@ export default {
           display flex
           flex-direction column
           align-items center
-          justify-content center
           height 55vh
           overflow-y scroll
           .addressForm {
+            padding 0 6vw
             .label {
               max-width 68vw
               word-break break-all
@@ -677,6 +687,9 @@ export default {
   }
 
   .footer {
+    position fixed
+    width 100vw
+    bottom 0
     height footerHeight
     display flex
     align-items center
@@ -690,7 +703,7 @@ export default {
     align-items center
     justify-content center
     .mint-button {
-      width 72vw
+      width 88vw
       color #333333
       background: #FFFFFF;
       border: 1px solid rgba(0, 0, 0, 0.10);
@@ -706,7 +719,6 @@ export default {
   }
 
   /deep/ .numberBtn.mint-cell {
-    width 100vw
     .mint-cell-title {
       width auto
     }

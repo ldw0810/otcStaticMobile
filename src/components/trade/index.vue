@@ -153,7 +153,7 @@ export default {
           resolve()
         }).catch(() => {
           resolve()
-          this.$message.error(this.$t('ad.ad_reference_price_request_fail'))
+          // this.$message.error(this.$t('ad.ad_reference_price_request_fail'))
         }).finally(() => {
           this.tradePriceTimer && clearTimeout(this.tradePriceTimer)
           this.tradePriceTimer = setTimeout(this.getTradePriceData, 1000 * 60 * 10)
@@ -176,7 +176,9 @@ export default {
       this.getTradePriceData().then(() => {
         this.getTradePrice()
       })
-      this.getNotice()
+      if (this.$store.state.userToken) {
+        this.getNotice()
+      }
     }
   },
   destroyed () {

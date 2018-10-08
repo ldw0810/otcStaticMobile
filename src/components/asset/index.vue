@@ -82,10 +82,10 @@ export default {
   }
 
   .content {
+    @extend .scrollPage
     flex 1
     margin-top $mintHeaderHeight
     height 100 - $mintHeaderHeight - $tabbarFooterHeight
-    overflow-y scroll
     .item {
       display flex
       flex-direction column
@@ -137,6 +137,7 @@ export default {
           flex-direction column
           justify-content center
           .number {
+            max-width 50vw
             color #666666
             font-size 1rem
           }
@@ -152,6 +153,7 @@ export default {
           flex-direction column
           justify-content center
           .number {
+            max-width 50vw
             color #666666
             font-size 1rem
           }

@@ -4,10 +4,10 @@
   .container-main(id="scrollLoader-container")
     .loading(v-if="topLoading")
       .loader 加载中...
-      div
-        slot
-    .loading(v-if="bottonLoading")
+    .loading(v-if="bottomLoading")
       .loader 加载中...
+    div
+      slot
 </template>
 
 <script type="es6">
@@ -30,9 +30,9 @@ export default {
   data () {
     return {
       topLoading: false,
-      bottonLoading: false,
+      bottomLoading: false,
       stopTopLoading: true, // 是否停止传播滚动到顶部事件
-      stopBottonLoading: true // 是否停止传播滚动到底部事件
+      stopBottomLoading: true // 是否停止传播滚动到底部事件
     }
   },
   mounted () {
@@ -47,10 +47,10 @@ export default {
           me.stopTopLoading = true
         }
       }
-      let bottonDone = (stopBottonLoading) => {
-        me.bottonLoading = false
-        if (stopBottonLoading) {
-          me.stopBottonLoading = true
+      let bottomDone = (stopBottomLoading) => {
+        me.bottomLoading = false
+        if (stopBottomLoading) {
+          me.stopBottomLoading = true
         }
       }
       setTimeout(function () {
@@ -63,14 +63,14 @@ export default {
             me.topLoading = true
             me.$emit('scroll-to-top', topDone)
           }
-          if ((scrollContainer.offsetHeight + scrollContainer.scrollTop + 1 >= scrollContainer.scrollHeight) && !me.stopBottonLoading) {
-            if (me.bottonLoading) {
+          if ((scrollContainer.offsetHeight + scrollContainer.scrollTop + 1 >= scrollContainer.scrollHeight) && !me.stopBottomLoading) {
+            if (me.bottomLoading) {
               return
             }
 
-            me.bottonLoading = true
+            me.bottomLoading = true
             scrollContainer.scrollTop += 40
-            me.$emit('scroll-to-botton', bottonDone)
+            me.$emit('scroll-to-bottom', bottomDone)
           }
         }
       }, 50)

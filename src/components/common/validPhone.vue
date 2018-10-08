@@ -93,7 +93,7 @@ export default {
         if (res.data && +res.data.error === 0) {
         }
       }).catch(() => {
-        this.$message.error(this.$t('user.auth_phone_code_send_fail'))
+        // this.$message.error(this.$t('user.auth_phone_code_send_fail'))
       })
     },
     submit () {
@@ -115,7 +115,7 @@ export default {
               this.$emit('success', 1)
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_phone_fail'))
+            // this.$message.error(this.$t('user.auth_phone_fail'))
           })
         }
       }

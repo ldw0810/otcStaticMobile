@@ -1,8 +1,8 @@
 <template lang="pug">
   .adShare(v-if="id")
     mt-header(:title="$t('ad.ad_share')" fixed class="headerDiv" :class="{'showHeader': headerFlag}")
-      router-link(to="/myAd" slot="left")
-        mt-button(icon="back")
+      span(slot="left")
+        mt-button(icon="back" @click="goBack")
     .wrapper(@click="headerFlag = !headerFlag")
       .content(id="adShareContent")
         qrcode-vue(ref="qrCode" class="qrCode" :value='qrCodeConfig.value' :size='qrCodeConfig.size')
@@ -26,6 +26,9 @@ export default {
   components: {
     QrcodeVue
   },
+  props: {
+    id: ''
+  },
   data () {
     return {
       headerFlag: true
@@ -37,9 +40,6 @@ export default {
     },
     shareImg () {
       return require(`../../assets/images/trade/adShare_${this.language}.png`)
-    },
-    id () {
-      return this.$route.query.id || ''
     },
     link () {
       return this.$t('public.invite_content') + '\n' + this.linkUrl
@@ -57,6 +57,9 @@ export default {
     }
   },
   methods: {
+    goBack () {
+      this.$emit('close', 1)
+    },
     success () {
       this.$emit('close', 1)
       this.$emit('success', 1)
@@ -106,7 +109,9 @@ export default {
     init () {
       this.$loading.close()
       this.createImage()
-      this.headerFlag = false
+      setTimeout(() => {
+        this.headerFlag = false
+      }, 1000)
     }
   },
   mounted () {

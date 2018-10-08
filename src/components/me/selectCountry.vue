@@ -46,7 +46,7 @@ export default {
             this.$store.commit('countryList_setter', res.data.country)
           }
         }).catch(() => {
-          this.$message.error(this.$t('user.country_response_none'))
+          // this.$message.error(this.$t('user.country_response_none'))
         })
       }
     },

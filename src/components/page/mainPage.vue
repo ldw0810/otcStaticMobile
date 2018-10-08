@@ -31,9 +31,6 @@ export default {
     },
     homeCarouselList () {
       return this.$store.state.homeCarouselList
-    },
-    userInfo () {
-      return this.$store.state.userInfo
     }
   },
   methods: {
@@ -56,7 +53,7 @@ export default {
       // if (this.isFirstLogin) {
       //   this.getBanner()
       // }
-      if (!this.userInfo.id) {
+      if (this.$store.state.userToken) {
         this.getMe()
       }
       if (this.$route.query.shareId) {

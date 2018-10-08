@@ -514,7 +514,10 @@
     "ad_buying": "buying",
     "ad_selling": "selling",
     "ad_local_trading_tip": "To fill in the remark with address information in a face to face transaction",
-    "ad_share": "Advertising sharing"
+    "ad_share": "Advertising sharing",
+    "ad_share_download": "Download",
+    "ad_share_title": "I posted a {0} ad at OTCMAKER",
+    "ad_share_desc": "Safe and fast digital asset trading platform"
   },
   "order": {
     "order_detail": "Order detail",
@@ -623,7 +626,7 @@
     "order_complete": "Order completed",
     "order_show_order": "Check order",
     "order_show_asset": "Check asset",
-    "order_complete_info": "You get {0} {1}<br>You can",
+    "order_complete_info": "You get {0} {1}",
     "order_cancel_order_title": "Are you sure to cancel？",
     "order_cancel_order_tip": "Multiple cancellation will lower your credit",
     "order_cancel_order_warn": "Please make sure that you have not yet transferred to the seller, please contact seller in chat box and reuqest a refund if you already transferred before cancel the order, otherwise you may lose your money.",

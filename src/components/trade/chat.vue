@@ -1,27 +1,26 @@
 <template lang="pug">
   .chat(:style="{backgroundColor: wrapBg}")
     .window(id="window-view-container" ref="scroll")
-      <!--ScrollLoader(class="container-main")-->
-      .message(ref="message")
-        ul
-          li(v-for="(chat, index) in msgList" :key="index" :class="{'an-move-right': +chat.type === 0, 'an-move-left': +chat.type === 1, 'an-move-center': +chat.type === 9}")
-            p(class="time system" v-if="+chat.type === 9")
-              span(v-html="$getDateStr(new Date(chat.time)) + '<br/>' + toEmotion(chat.data)")
-            div(:class="'main' + (+chat.type === 0 ? ' self': '')" v-else)
-              p(class="time" v-if="chat.timeFlag")
-                span(v-text="$getDateStr(new Date(chat.time))")
-              .avatar
-                Avatar(:size='5' :status="order.member.online" :statusType="2")
-              <!-- 状态 -->
-              span(class='chat-status' v-show='chat.status !== 1')
-                span(class='chat-loading' v-show='chat.status === 0')
-                span(:title='$t("order.order_chat_send_msg_fail")' class='chat-error' v-show='chat.status === -1')
-                  img(type="alert" src="")
-              <!-- 文本 -->
-              .text(v-html="toEmotion(chat.data)")
-              <!-- 图片 -->
-              .text(v-if="+chat.type === 3")
-                img(:src="chat.data" class="image" :alt="$t('order.order_chat_img')")
+      ScrollLoader(class="container-main")
+        .message(ref="message")
+          ul
+            li(v-for="(chat, index) in msgList" :key="index" :class="{'an-move-right': +chat.type === 0, 'an-move-left': +chat.type === 1, 'an-move-center': +chat.type === 9}")
+              p(class="time system" v-if="+chat.type === 9")
+                span(v-html="$getDateStr(new Date(chat.time)) + '<br/>' + toEmotion(chat.data)")
+              div(:class="'main' + (+chat.type === 0 ? ' self': '')" v-else)
+                p(class="time" v-if="chat.timeFlag")
+                  span(v-text="$getDateStr(new Date(chat.time))")
+                .avatar
+                  Avatar(:size='5' :status="order.member.online" :statusType="2")
+                <!-- 状态 -->
+                span(class='chat-status' v-show='chat.status !== 1')
+                  span(class='chat-loading' v-show='chat.status === 0')
+                  span(:title='$t("order.order_chat_send_msg_fail")' class='chat-error' v-show='chat.status === -1') !
+                <!-- 文本 -->
+                .text(v-html="toEmotion(chat.data)")
+                <!-- 图片 -->
+                .text(v-if="+chat.type === 3")
+                  img(:src="chat.data" class="image" :alt="$t('order.order_chat_img')")
     <div id="publish" class='publish'>
       <!--<div class="oper"></div>-->
       <!--<div class='publish-action'>-->
@@ -150,14 +149,16 @@ export default {
         this.$emit('sendSuccess', 1)
         let compareTime = this.msgList.length ? this.msgList[this.msgList.length - 1].compareTime : 0
         let timeFlag = tempTime.getTime() - compareTime > 3 * 60 * 1000
-        this.$set(this.msgList, this.msgList.length, {
+        let newMsg = {
           type: 0,
           data: inputInfo,
           time: $getDateStr(tempTime),
           compareTime: timeFlag ? tempTime.getTime() : compareTime,
           timeFlag: timeFlag,
           status: 0 // 0. 加载  1. 成功 -1 失败
-        })
+        }
+        let tempIndex = this.msgList.length
+        this.$set(this.msgList, tempIndex, newMsg)
         this.scrollToBottom()
         this.$store.dispatch('axios_send_msg', {
           order_id: this.order.id,
@@ -166,16 +167,16 @@ export default {
         }).then(res => {
           if (res.data && +res.data.error === 0) {
             this.$nextTick(() => {
-              this.msgList[this.msgList.length - 1].status = 1
+              this.msgList[tempIndex].status = 1
             })
           } else {
             this.$nextTick(() => {
-              this.msgList[this.msgList.length - 1].status = -1
+              this.msgList[tempIndex].status = -1
             })
           }
         }).catch(() => {
           this.$nextTick(() => {
-            this.msgList[this.msgList.length - 1].status = -1
+            this.msgList[tempIndex].status = -1
           })
         })
       } else {
@@ -186,7 +187,6 @@ export default {
       this.$store.dispatch('axios_chat', {
         order: this.order.id
       }).then(res => {
-        this.scrollToBottom()
         let tempTime = new Date().getTime()
         if (res.data && +res.data.error === 0) {
           let compareTime = this.msgList.length ? this.msgList[this.msgList.length - 1].compareTime : 0
@@ -323,6 +323,8 @@ export default {
     width: 18px;
     height: 18px;
     border-radius: 50%;
+    color: #fff;
+    font-size 0.85rem
     .ivu-icon-alert {
       color: #fff;
       transform-origin: center;
@@ -342,7 +344,7 @@ export default {
   }
 
   .publish {
-    margin-top: 20px;
+    /*margin-top: 20px;*/
     &-action {
       display: flex;
       width: 100%;
@@ -400,11 +402,10 @@ export default {
   .window {
     width: 100vw
     background: #fafafa;
-    border: 1px solid #eeeeee;
-    box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.1);
+    /*border: 1px solid #eeeeee;*/
+    /*box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.1);*/
     border-radius: 2px;
     margin: 0 auto;
-    overflow: auto;
     padding: 0;
     height: 100%;
     position: relative;

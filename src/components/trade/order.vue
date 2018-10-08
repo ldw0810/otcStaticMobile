@@ -6,34 +6,28 @@
       .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
     .wrapper(v-if="order.id")
       .content
-        .info(v-if="triggerInfoFlag")
+        .info(class="showInfo")
           .list
-            .labelList
+            .item
               .label {{$t('order.order_id')}}:
-              .label {{$t('order.order_money_amount')}}:
-              .label {{$t('order.order_order_price')}}:
-              .label {{orderType === 0 ? $t('order.order_buy_number_title') : $t('order.order_sell_number_title')}}:
-              .label {{$t('order.order_order_payment')}}:
-            .textList
               .text {{order.id}}
+            .item
+              .label {{$t('order.order_money_amount')}}:
               .text {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
+            .item(v-if="triggerInfoFlag")
+              .label {{$t('order.order_order_price')}}:
               .text {{order.price | $fixDecimalAuto(order.currency)}} {{order.target_currency.toUpperCase() + '/' + order.currency.toUpperCase()}}
+            .item(v-if="triggerInfoFlag")
+              .label {{orderType === 0 ? $t('order.order_buy_number_title') : $t('order.order_sell_number_title')}}:
               .text {{order.amount | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
+            .item(v-if="triggerInfoFlag")
+              .label {{$t('order.order_order_payment')}}:
               .text {{order.pay_kind ? $t('public.' + order.pay_kind) : ''}}
             .btn(@click="triggerInfo") {{$t('order.order_hide_detail')}}
-          .border
-          .remark
+          .border(v-if="triggerInfoFlag")
+          .remark(v-if="triggerInfoFlag")
             .label {{$t('ad.ad_remark')}}:
             .text {{order.remark}}
-        .info(v-else)
-          .list
-            .labelList
-              .label {{$t('order.order_id')}}:
-              .label {{$t('order.order_money_amount')}}:
-            .textList
-              .text {{order.id}}
-              .text {{order.amount | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
-            .btn(@click="triggerInfo") {{$t('order.order_show_detail')}}
         .oper
           .tip(v-if="stepTip" v-html="stepTip")
           .submit(class="mintSubmit" v-if="order.status === 'timeout'")
@@ -48,7 +42,9 @@
           .submit(class="orderSubmit" v-else-if="order.status === 'pay' && !orderType")
             mt-button(class="orderSubmitBtn" disabled) {{$t('order.order_pay_completed')}}
             mt-button(class="orderCancelBtn" disabled) {{$t('order.order_pay_cancel')}}
-          .submit(class="mintSubmit" v-else-if="['fresh', 'pay'].indexOf(order.status) > -1 && orderType")
+          .submit(class="mintSubmit" v-else-if="order.status === 'fresh' && orderType")
+            mt-button(@click="orderOper('release')" disabled) {{$t('order.order_pay_release')}}
+          .submit(class="mintSubmit" v-else-if="order.status === 'pay' && orderType")
             mt-button(@click="orderOper('release')") {{$t('order.order_pay_release')}}
           .submit(class="orderSubmit" v-else-if="order.status === 'release' || (order.status === 'sell_eval' && !orderType) || (order.status === 'buy_eval' && orderType)")
             .radioDiv
@@ -62,24 +58,30 @@
         .chat
           Chat(ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="inputValue = ''")
       .footer
-        mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue" @keyup.enter.native.capture="sendInfo")
-    transition(name="slide-right" mode="out-in")
-      .popPage
-        .popup(class="popup-right" v-if="confirmFlag.cancel")
-          slot
-            OrderCancelConfirm(@close="confirmFlag.cancel = false" @success="doOper('cancel')")
-        .popup(class="popup-right" v-if="confirmFlag.pay")
-          slot
-            OrderPayConfirm(@close="confirmFlag.pay = false" @success="doPay")
-        .popup(class="popup-right" v-if="confirmFlag.release")
-          slot
-            OrderReleaseConfirm(:order="order" @close="confirmFlag.release = false" @success="doRelease")
-        .popup(class="popup-right" v-if="confirmFlag.complete")
-          slot
-            OrderCompleteConfirm(:order="order" @close="confirmFlag.complete = false" @success="doOper('complete')")
-        .popup(class="popup-right" v-if="showRulesFlag")
-          slot
-            Rules(@close="showRulesFlag = false" @success="init()")
+        form(action="javascript:return true")
+          mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue" @keyup.native.capture="alertKeyup" @keyup.enter.native.capture="sendInfo")
+    transition-group(tag="div" name="slide-right")
+      .popup(class="popup-right" v-if="confirmFlag.cancel" :key="1")
+        slot
+          OrderCancelConfirm(@close="confirmFlag.cancel = false" @success="doOper('cancel')")
+      .popup(class="popup-right" v-if="confirmFlag.pay" :key="2")
+        slot
+          OrderPayConfirm(@close="confirmFlag.pay = false" @success="doPay")
+      .popup(class="popup-right" v-if="confirmFlag.release" :key="3")
+        slot
+          OrderReleaseConfirm(:order="order" @close="confirmFlag.release = false" @success="doRelease")
+      .popup(class="popup-right" v-if="confirmFlag.complete" :key="4")
+        slot
+          OrderCompleteConfirm(:order="order" @close="confirmFlag.complete = false" @success="doOper('complete')")
+      .popup(class="popup-right" v-if="showRulesFlag" :key="5")
+        slot
+          Rules(@close="showRulesFlag = false" @success="init")
+      .popup(class="popup-right" v-if="confirmFlag.authPhone" :key="6")
+        slot
+          ValidPhone(:needAuth="false" @close="confirmFlag.authPhone = false" @success="doAuthClose" @change="changeValidate(0)")
+      .popup(class="popup-right" v-if="confirmFlag.authGoogle" :key="7")
+        slot
+          ValidGoogle(:needAuth="false" @close="confirmFlag.authGoogle = false" @success="doAuthClose" @change="changeValidate(1)")
 </template>
 <script type="es6">
 import Policy from '../policy/policy'
@@ -93,6 +95,8 @@ import OrderReleaseConfirm from './orderReleaseConfrim'
 import OrderCancelConfirm from './orderCancelConfirm'
 import OrderCompleteConfirm from './orderCompleteConfrim'
 import Chat from './chat'
+import ValidPhone from '../common/validPhone'
+import ValidGoogle from '../common/validGoogle'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
@@ -109,7 +113,9 @@ export default {
     Avatar,
     EmptyList,
     Rules,
-    Chat
+    Chat,
+    ValidPhone,
+    ValidGoogle
   },
   data () {
     return {
@@ -121,12 +127,16 @@ export default {
         pay: false,
         release: false,
         cancel: false,
-        complete: false
+        complete: false,
+        authGoogle: false,
+        authPhone: false
       },
       triggerInfoFlag: true,
+      triggerInfoTimer: 0,
+      triggerInfoHeight: 0,
+      triggerInfoMinHeight: 10,
       showRulesFlag: false,
       evaluateIndex: -1,
-      authFlag: false,
       chatFlag: false,
       chatMessage: '',
       remainTime: 0,
@@ -142,6 +152,9 @@ export default {
     }
   },
   computed: {
+    userInfo () {
+      return this.$store.state.userInfo
+    },
     orderType () {
       return this.order.op_type === 'buy' ? 0 : 1
     },
@@ -171,6 +184,18 @@ export default {
     triggerInfo () {
       this.triggerInfoFlag = !this.triggerInfoFlag
     },
+    changeValidate (value) {
+      if (+value === 0) {
+        this.confirmFlag.authPhone = false
+        this.confirmFlag.authGoogle = true
+      } else {
+        this.confirmFlag.authGoogle = false
+        this.confirmFlag.authPhone = true
+      }
+    },
+    alertKeyup (event) {
+      // alert(event.keyCode)
+    },
     showTip () {
       this.timer && clearTimeout(this.timer)
       if (this.order.status === 'fresh') {
@@ -195,6 +220,16 @@ export default {
         this.stepTip = ''
       }
     },
+    showAuth () {
+      if (this.userInfo.mobile) {
+        this.confirmFlag.authPhone = true
+      } else if (this.userInfo.app_two_factor) {
+        this.confirmFlag.authGoogle = true
+      }
+    },
+    getMe () {
+      this.$store.dispatch('axios_me')
+    },
     getOrder () {
       this.$loading.open()
       this.$store.dispatch('axios_order_info', {
@@ -207,7 +242,7 @@ export default {
           this.showTip()
         }
       }).catch(() => {
-        this.$message.error(this.$t('order.order_info_request_fail'))
+        // this.$message.error(this.$t('order.order_info_request_fail'))
       })
     },
     orderOper (operStr) {
@@ -227,7 +262,7 @@ export default {
               this.getOrder()
             }
           }).catch(() => {
-            this.$message.error(this.$t('order.order_pay_evaluate_fail'))
+            // this.$message.error(this.$t('order.order_pay_evaluate_fail'))
           })
         } else {
           this.$message.error(this.$t('order.order_pay_evaluate_required'))
@@ -247,6 +282,9 @@ export default {
       this.password = value
       this.doOper('release')
     },
+    doAuthClose (value) {
+      this.doOper('release', value)
+    },
     doOper (operStr, authJson) {
       if (operStr === 'pay') {
         this.$loading.open()
@@ -262,7 +300,7 @@ export default {
             this.getOrder()
           }
         }).catch(() => {
-          this.$message.error(this.$t('order.order_pay_complete_fail'))
+          // this.$message.error(this.$t('order.order_pay_complete_fail'))
         })
       } else if (operStr === 'release') {
         let requestData = {
@@ -284,11 +322,11 @@ export default {
               this.$store.commit('loginInfo_setter', {
                 mobile: res.data.mobile
               })
-              this.authFlag = true
+              this.showAuth()
             }
           }
         }).catch(() => {
-          this.$message.error(this.$t('order.order_pay_release_fail'))
+          // this.$message.error(this.$t('order.order_pay_release_fail'))
         })
       } else if (operStr === 'complete') {
         this.confirmFlag = {
@@ -308,7 +346,7 @@ export default {
             this.getOrder()
           }
         }).catch(() => {
-          this.$message.error(this.$t('order.order_pay_cancel_fail'))
+          // this.$message.error(this.$t('order.order_pay_cancel_fail'))
         })
       }
     },
@@ -317,6 +355,7 @@ export default {
       this.$refs.chat.sendInfo(this.inputValue)
     },
     init () {
+      this.getMe()
       this.getOrder()
     }
   },
@@ -334,10 +373,13 @@ export default {
     display flex
     flex-direction column
     .content {
+      @extend .noScrollPage
+      display flex
+      overflow hidden
+      flex-direction column
       flex 1
       margin-top $mintHeaderHeight
       height 100 - $chatFooterHeight - $mintHeaderHeight
-      overflow-y scroll
       .info {
         display flex
         flex-direction column
@@ -348,24 +390,25 @@ export default {
         border-bottom 1px solid #EEEEEE
         .list {
           display flex
-          .labelList {
+          flex-direction column
+          .item {
+            display flex
             .label {
-              font-size 1rem
+              font-size 0.85rem
               font-weight normal
               color #333333
               margin 2.5vh 5vw 0 0
             }
-          }
-          .textList {
-            flex 1
             .text {
-              font-size 1rem
+              font-size 0.85rem
               font-weight normal
               color #333333
               margin-top 2.5vh
             }
           }
           .btn {
+            position absolute
+            right 6vw
             margin-top 2.5vh
             color #2EA2F8
             font-size 1rem
@@ -381,12 +424,12 @@ export default {
         .remark {
           padding-bottom 2.5vh
           .label {
-            font-size 1rem
+            font-size 0.85rem
             font-weight normal
             color #333333
           }
           .text {
-            font-size 1rem
+            font-size 0.85rem
             font-weight normal
             color #333333
           }
@@ -411,10 +454,14 @@ export default {
         }
       }
       .chat {
-
+        flex 1
+        overflow-y scroll
       }
     }
     .footer {
+      position fixed
+      bottom 0
+      width 100vw
       height $chatFooterHeight
       background #fafafa
       display flex
@@ -510,17 +557,25 @@ export default {
       }
       .radioText {
         margin-left 1vw
-        font-size 1rem
+        font-size 0.85rem
         font-weight normal
         color #333333
       }
     }
   }
+
+  .showInfo
+    width 100vw
+
+  .hideInfo
+    width 100vw
+
   /deep/ .footerInput {
     width 88vw
   }
+
   /deep/ .tipTime {
-    font-size 1rem
+    font-size 0.85rem
     font-weight normal
     color: #ED1C24;
     text-align center
@@ -533,7 +588,7 @@ export default {
     box-shadow: 0 5px 5px 0 rgba(102, 187, 191, 0.14);
     border-radius: 2px;
     .mint-button-text {
-      font-size 1rem
+      font-size 0.85rem
     }
   }
 
@@ -545,8 +600,12 @@ export default {
     box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.03);
     border-radius: 2px;
     .mint-button-text {
-      font-size 1rem
+      font-size 0.85rem
     }
+  }
+
+  /deep/ .orderSubmitBtn[disabled], .orderCancelBtn[disabled] {
+    color #656b79
   }
 
   /deep/ .mint-button.is-disabled {

@@ -59,7 +59,7 @@ export default {
           }
           resolve()
         }).catch(() => {
-          this.$message.error(this.$t('user.auth_email_send_fail'))
+          // this.$message.error(this.$t('user.auth_email_send_fail'))
           resolve()
         })
       })
@@ -100,7 +100,7 @@ export default {
       justify-content center
       div {
         margin-bottom 2.5vh
-        font-size 1rem
+        font-size 0.85rem
       }
       .icon {
         width 8vh

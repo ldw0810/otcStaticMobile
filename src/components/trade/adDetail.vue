@@ -33,23 +33,22 @@
         .border
         .adForm
           .label {{adType === 0 ? $t('order.order_buy_title', {'0': currency.toUpperCase()}): $t('order.order_sell_title', {'0': currency.toUpperCase()})}}
-          mt-field(type="number" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input.native.prevent="changeAmount")
+          mt-field(class="submitFormItem" type="number" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input.native.prevent="changeAmount")
             .currency {{targetCurrency.toUpperCase()}}
-          mt-field(type="number" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input.native.prevent="changeNumber")
+          mt-field(class="submitFormItem" type="number" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input.native.prevent="changeNumber")
             .currency {{currency.toUpperCase()}}
       .footer(class="mintSubmit")
         mt-button(class="submitButton" type='primary' @click="submit" :disabled="!formStateAll || isSelfOrder") {{isSelfOrder ? $t('order.order_join_own_otc_ad') : (adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm'))}}
-    transition(name="slide-right" mode="out-in")
-      .popPage
-        .popup(class="popup-right" v-if="showConfirmFlag")
-          slot
-            OrderCreateConfirm(:ad="ad" :form="form" @close="showConfirmFlag = false" @success="createOrder")
-        .popup(class="popup-right" v-if="showCompleteFlag")
-          slot
-            AdCompleteConfirm(:ad="ad" :form="form" @close="showCompleteFlag = false" @success="init()")
-        .popup(class="popup-right" v-if="showRulesFlag")
-          slot
-            Rules(@close="showRulesFlag = false" @success="init()")
+    transition-group(tag="div" name="slide-right")
+      .popup(class="popup-right" v-if="showConfirmFlag" :key="1")
+        slot
+          OrderCreateConfirm(:ad="ad" :form="form" @close="showConfirmFlag = false" @success="createOrder")
+      .popup(class="popup-right" v-if="showCompleteFlag" :key="2")
+        slot
+          AdCompleteConfirm(:ad="ad" :form="form" @close="showCompleteFlag = false" @success="init")
+      .popup(class="popup-right" v-if="showRulesFlag" :key="3")
+        slot
+          Rules(@close="showRulesFlag = false" @success="init")
 </template>
 <script type="es6">
 import Policy from '../policy/policy'
@@ -273,7 +272,7 @@ export default {
           this.$router.push(this.backLink)
         }
       }).catch(() => {
-        this.$message.error(this.$t('public.url_request_fail'))
+        // this.$message.error(this.$t('public.url_request_fail'))
       })
     },
     submit () {
@@ -306,7 +305,7 @@ export default {
           this.$router.push(this.backLink)
         }
       }).catch(() => {
-        this.$message.error(this.$t('order.order_deal_request_fail'))
+        // this.$message.error(this.$t('order.order_deal_request_fail'))
       })
     },
     init () {
@@ -328,12 +327,9 @@ export default {
     flex-direction column
     .content {
       flex 1
-      position absolute
-      left 0
+      @extend .scrollPage
       top $mintHeaderHeight
-      width 100vw
       height 100 - @top - $footerHeight
-      overflow-y scroll
       -webkit-overflow-scrolling touch
       .user {
         display flex
@@ -344,6 +340,7 @@ export default {
         margin 1vh 0
         padding 0 6vw
         border-top 1px solid #EEEEEE
+        border-bottom 1px solid #EEEEEE
         .image {
           margin-top 1vh
           flex 1
@@ -393,7 +390,7 @@ export default {
         border-top 1px solid #EEEEEE
         .labelList {
           .label {
-            font-size 1rem
+            font-size 0.85rem
             font-weight normal
             color #333333
             margin 2.5vh 5vw 0 0
@@ -402,13 +399,13 @@ export default {
         .textList {
           flex 1
           .text {
-            font-size 1rem
+            font-size 0.85rem
             font-weight normal
             color #333333
             margin-top 2.5vh
           }
           .textArea {
-            font-size 1rem
+            font-size 0.85rem
             font-weight normal
             color #333333
             margin-top 2.5vh
@@ -426,22 +423,20 @@ export default {
         flex-direction column
         background #FFFFFF
         width 100vw
-        padding 2.5vh 0 5vh
-        border-top 1px solid #EEEEEE
+        padding 2.5vh 6vw 5vh
         border-bottom 1px solid #EEEEEE
         .label {
-          font-size 1rem
+          font-size 0.85rem
           font-weight normal
           color #333333
-          padding 0 3vw 2.5vh 3vw
+          padding 0 3vw
         }
       }
     }
   }
   .footer {
     position fixed
-    left 0
-    right 0
+    width 100vw
     bottom 0
     height $footerHeight
     display flex
@@ -450,7 +445,6 @@ export default {
     font-size 0.8rem
     color #999999
     background #fafafa
-    border-top 1px solid #EEEEEE
   }
   /deep/ .currency {
     font-weight normal

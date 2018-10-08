@@ -514,7 +514,10 @@
     "ad_buying": "買",
     "ad_selling": "賣",
     "ad_local_trading_tip": "當面交易需填寫含有地址信息的備註",
-    "ad_share": "廣告分享"
+    "ad_share": "廣告分享",
+    "ad_share_download": "下載",
+    "ad_share_title": "我在OTCMAKER發布了壹個{0}廣告",
+    "ad_share_desc": "安全、快捷的數字資產交易平臺"
   },
   "order": {
     "order_detail": "訂單詳情",
@@ -623,7 +626,7 @@
     "order_complete": "交易完成",
     "order_show_order": "查看訂單",
     "order_show_asset": "查看資產",
-    "order_complete_info": "您獲得了 {0} {1} <br>您可以",
+    "order_complete_info": "您獲得了 {0} {1}",
     "order_cancel_order_title": "確認取消訂單嗎？",
     "order_cancel_order_tip": "多次取消訂單會影響您的交易信譽",
     "order_cancel_order_warn": "請確認您還沒有轉賬給賣家，如果您已經轉賬請在聊天窗口聯系賣家退款後再取消訂單，否則您有資金損失的風險",

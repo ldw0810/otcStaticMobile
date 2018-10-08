@@ -2,7 +2,7 @@
   .order(v-if="+orders.error === 0" :style="{'-webkit-overflow-scrolling': scrollMode}")
     mt-loadmore(:autoFill="false" :top-method="loadTop" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
       .itemList(v-if="orders.list.length")
-        .item(v-for="(order, index) in orders.list" :key="index")
+        .item(v-for="(order, index) in orders.list" :key="index" @click="goOrder(order)")
           .notice(:class="{'noticeShow': order.notice_order !== 0}")
           .wrapper
             .content
@@ -15,7 +15,7 @@
                     .infoItem
                       .text {{$t("order.order_id")}}:
                       .value {{order.id}}
-                  mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary' @click="goOrder(order)") {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
+                  mt-button(class="operation" :class="{'buyBtn': order.op_type === 'buy', 'sellBtn': order.op_type === 'sell'}" type='primary') {{$t('public.' + order.op_type) + order.currency.toUpperCase()}}
                 .infoItem
                   .text {{$t("order.order_time")}}:
                   .value {{+order.created_at * 1000 | $getDateStr()}}
@@ -107,7 +107,7 @@ export default {
           resolve()
         }).catch(() => {
           this.ordersLoading = false
-          this.$message.error(this.$t('order.order_data_request_fail'))
+          // this.$message.error(this.$t('order.order_data_request_fail'))
           resolve()
         })
       })
@@ -134,10 +134,8 @@ export default {
   itemContentHeight = 18vh
   noticeWidth = 1vw
   .order {
-    width 100vw
+    @extend .scrollPage
     height 100 - $currencyHeaderHeight - $navbarHeaderHeight - $tabbarFooterHeight
-    background-color: #fafafa;
-    overflow-y scroll
     .itemList {
       margin-bottom 1vh
       .item {
@@ -172,7 +170,7 @@ export default {
             }
             .info {
               flex 1
-              height itemContentHeight
+              height itemContentHeight - 2vh
               display flex
               flex-direction column
               font-size 0.85rem
@@ -192,6 +190,8 @@ export default {
                 color #333333
               }
               .operation {
+                position absolute
+                right 0
                 font-size 0.8rem
                 margin-right 5vw
                 height 5vh

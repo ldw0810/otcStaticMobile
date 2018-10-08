@@ -53,11 +53,8 @@ export default {
     background #fafafa
     overflow hidden
     .content {
-      position absolute
-      left 0
-      top $mintHeaderHeight + 1
       width 100vw
-      height 100 - @top
+      margin-top $mintHeaderHeight + 1
       overflow-y scroll
       -webkit-overflow-scrolling touch
       background #FFFFFF

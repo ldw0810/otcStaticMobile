@@ -19,7 +19,7 @@ const entry = {
   modifyPassword: r => require.ensure([], () => r(require('../components/entry/modifyPassword')))
 }
 const page = {
-  loginPage: r => require.ensure([], () => r(require('../components/page/loginPage'))),
+  mainPage: r => require.ensure([], () => r(require('../components/page/mainPage'))),
   home: r => require.ensure([], () => r(require('../components/page/home'))),
   error: r => require.ensure([], () => r(require('../components/page/error'))),
   notFound: r => require.ensure([], () => r(require('../components/page/notFound')))
@@ -28,7 +28,7 @@ const trade = {
   index: r => require.ensure([], () => r(require('../components/trade/index'))),
   adList: r => require.ensure([], () => r(require('../components/trade/adList'))),
   adDetail: r => require.ensure([], () => r(require('../components/trade/adDetail'))),
-  adShare: r => require.ensure([], () => r(require('../components/trade/adShare'))),
+  // adShare: r => require.ensure([], () => r(require('../components/trade/adShare'))),
   orderList: r => require.ensure([], () => r(require('../components/trade/orderList'))),
   order: r => require.ensure([], () => r(require('../components/trade/order'))),
   myAd: r => require.ensure([], () => r(require('../components/trade/myAd')))
@@ -51,17 +51,14 @@ const me = {
   modifyPassword: r => require.ensure([], () => r(require('../components/me/modifyPassword'))),
   authPhone: r => require.ensure([], () => r(require('../components/me/authPhone'))),
   addGoogle: r => require.ensure([], () => r(require('../components/me/addGoogle'))),
-  authGoogle: r => require.ensure([], () => r(require('../components/me/authGoogle'))),
-  invite: r => require.ensure([], () => r(require('../components/me/invite')))
+  authGoogle: r => require.ensure([], () => r(require('../components/me/authGoogle')))
+  // invite: r => require.ensure([], () => r(require('../components/me/invite')))
 }
 const routers = [
   {
     path: '/',
     redirect: '/buy',
-    component: page.loginPage,
-    meta: {
-      needLogin: true
-    },
+    component: page.mainPage,
     children: [
       {
         path: '/home',
@@ -80,7 +77,8 @@ const routers = [
                 alias: ['/buy'],
                 component: trade.adList,
                 meta: {
-                  navbarIndex: 0
+                  navbarIndex: 0,
+                  needLogin: false
                 }
               },
               {
@@ -88,7 +86,8 @@ const routers = [
                 alias: ['/sell'],
                 component: trade.adList,
                 meta: {
-                  navbarIndex: 1
+                  navbarIndex: 1,
+                  needLogin: false
                 }
               },
               {
@@ -96,7 +95,8 @@ const routers = [
                 alias: ['/myAd', '/myAds'],
                 component: trade.myAd,
                 meta: {
-                  navbarIndex: 2
+                  navbarIndex: 2,
+                  needLogin: true
                 }
               },
               {
@@ -104,7 +104,8 @@ const routers = [
                 alias: ['/orderList'],
                 component: trade.orderList,
                 meta: {
-                  navbarIndex: 3
+                  navbarIndex: 3,
+                  needLogin: true
                 }
               }
             ]
@@ -113,7 +114,8 @@ const routers = [
             path: 'asset',
             alias: ['/asset'],
             meta: {
-              tabbarIndex: 1
+              tabbarIndex: 1,
+              needLogin: true
             },
             component: asset.index
           },
@@ -121,7 +123,8 @@ const routers = [
             path: 'me',
             alias: ['/me'],
             meta: {
-              tabbarIndex: 2
+              tabbarIndex: 2,
+              needLogin: true
             },
             component: me.userCenter
           }
@@ -130,78 +133,132 @@ const routers = [
       {
         path: '/adDetail',
         alias: ['/ad'],
+        meta: {
+          needLogin: true
+        },
         component: trade.adDetail
       },
-      {
-        path: '/adShare',
-        component: trade.adShare
-      },
+      // {
+      //   path: '/adShare',
+      //   meta: {
+      //     needLogin: true
+      //   },
+      //   component: trade.adShare
+      // },
       {
         path: '/assetDetail',
+        meta: {
+          needLogin: true
+        },
         component: asset.assetDetail
       },
       {
         path: '/assetHistory',
+        meta: {
+          needLogin: true
+        },
         component: asset.assetHistory
       },
       {
         path: '/order',
+        meta: {
+          needLogin: true
+        },
         alias: ['/orderDetail'],
         component: trade.order
       },
       {
         path: '/me/authEmail',
+        meta: {
+          needLogin: true
+        },
         component: me.authEmail
       },
       {
         path: '/me/about',
+        meta: {
+          needLogin: true
+        },
         component: me.about
       },
       {
         path: '/me/changeLanguage',
+        meta: {
+          needLogin: true
+        },
         component: me.changeLanguage
       },
       {
         path: '/me/settings',
+        meta: {
+          needLogin: true
+        },
         component: me.settings
       },
       {
         path: '/me/addCollection',
+        meta: {
+          needLogin: true
+        },
         component: me.addCollection
       },
       {
         path: '/me/addCollection/addAlipay',
+        meta: {
+          needLogin: true
+        },
         component: me.addAlipay
       },
       {
         path: '/me/addCollection/addBankcard',
+        meta: {
+          needLogin: true
+        },
         component: me.addBankcard
       },
       {
         path: '/me/collectionList',
+        meta: {
+          needLogin: true
+        },
         component: me.collectionList
       },
       {
         path: '/me/modifyPassword',
+        meta: {
+          needLogin: true
+        },
         component: me.modifyPassword
       },
       {
         path: '/me/authPhone',
+        meta: {
+          needLogin: true
+        },
         component: me.authPhone
       },
       {
         path: '/me/addGoogle',
+        meta: {
+          needLogin: true
+        },
         component: me.addGoogle
       },
       {
         path: '/me/authGoogle',
+        meta: {
+          needLogin: true
+        },
         component: me.authGoogle
-      },
-      {
-        path: '/me/invite',
-        alias: '/invite',
-        component: me.invite
       }
+      // {
+      //   path: '/me/invite',
+      //   alias: '/invite',
+      //   meta: {
+      //     needLogin: true
+      //   },
+      //   component: me.invite
+      // }
     ]
   },
   {

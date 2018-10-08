@@ -10,8 +10,7 @@
         .text {{$t('user.authentication_email_beenSend')}}
         .email {{userInfo.email}}
         .info {{$t('asset.asset_withdraw_email')}}
-      .submit
-        mt-button(class="formButton" @click="goBack") {{$t('public.confirm')}}
+      .footer
         SendCode(ref="sendCode" class="submitButton" :text="$t('user.authentication_email_reSend_link')" :reText="$t('user.authentication_email_reSend_link')" :time="remainTime" :maxTime="maxTime" :once="!+remainTime" @sendCode="sendEmail")
 </template>
 <script type="es6">
@@ -62,8 +61,10 @@ export default {
             this.$message.success(this.$t('asset.asset_withdraw_email_success'))
             this.remainTime = +res.data.remain || 120
           }
+          resolve()
         }).catch(() => {
-          this.$message.error(this.$t('asset.asset_withdraw_email_fail'))
+          // this.$message.error(this.$t('asset.asset_withdraw_email_fail'))
+          resolve()
         })
       })
     },
@@ -75,6 +76,7 @@ export default {
       }
     },
     init () {
+      debugger
       this.sendEmail().then(() => {
         this.$refs.sendCode.init()
       })
@@ -87,7 +89,6 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-  buttonHeight = 15vh
   .withdrawEmail {
     width 100vw
     height 100vh
@@ -95,12 +96,13 @@ export default {
     overflow hidden
     .content {
       width 100vw
-      height 100 - $mintHeaderHeight - buttonHeight
+      height 100 - $mintHeaderHeight - $buttonFooterHeight
       margin-top $mintHeaderHeight
       display flex
       flex-direction column
       align-items center
       justify-content center
+      padding 0 6vw
       div {
         margin-bottom 2.5vh
         font-size 1rem
@@ -116,18 +118,26 @@ export default {
         }
       }
       .email {
+        word-break break-all
         font-weight normal
       }
     }
-    .submit {
+    .footer {
+      position fixed
+      width 100vw
+      height $buttonFooterHeight
+      bottom 0
       display flex
-      align-items flex-start
       justify-content center
-      height buttonHeight
+      font-size 0.8rem
+      color #999999
+      align-items flex-start
       .formButton {
+        margin 0
         margin-bottom 2.5vh
       }
       .submitButton {
+        margin 0
         height 5vh
         background-image: linear-gradient(-134deg, #0BBFD5 0%, #6DD7B2 100%);
         box-shadow: 0 5px 5px 0 rgba(102, 187, 191, 0.14);

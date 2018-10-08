@@ -132,7 +132,7 @@ export default {
             this.$router.push('/me/collectionList')
           }
         }).catch(() => {
-          this.$message.error(this.$t('user.receivables_add_fail'))
+          // this.$message.error(this.$t('user.receivables_add_fail'))
         })
       }
     },

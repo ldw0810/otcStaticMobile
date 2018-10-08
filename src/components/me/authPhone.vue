@@ -12,14 +12,13 @@
         .number {{userInfo.phone_number}}
       .submit(class="mintSubmit")
         mt-button(@click="submit" :disabled="!formStateAll") {{$t('user.auth_phone_code_send')}}
-    transition(name="slide-right" mode="out-in")
-      .popPage
-        .popup(class="popup-right" v-if="countryFlag")
-          slot
-            SelectCountry(@close="countryFlag = false" @success="changeCountry")
-        .popup(class="popup-right" v-if="authPhoneCodeFlag")
-          slot
-            AuthPhoneCode(@close="authPhoneCodeFlag = false" :userInfo="userInfo" :country="country[1]" :phoneNumber="form.phoneNumber")
+    transition-group(tag="div" name="slide-right")
+      .popup(class="popup-right" v-if="countryFlag" :key="1")
+        slot
+          SelectCountry(@close="countryFlag = false" @success="changeCountry")
+      .popup(class="popup-right" v-if="authPhoneCodeFlag" :key="2")
+        slot
+          AuthPhoneCode(@close="authPhoneCodeFlag = false" :userInfo="userInfo" :country="country[1]" :phoneNumber="form.phoneNumber")
 </template>
 <script type="es6">
 import {Button, Cell, Field, Header} from 'mint-ui'
@@ -135,7 +134,7 @@ export default {
               this.authPhoneCodeFlag = true
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_phone_code_send_fail'))
+            // this.$message.error(this.$t('user.auth_phone_code_send_fail'))
           })
         } else {
           this.$store.dispatch('axios_refresh', {
@@ -145,7 +144,7 @@ export default {
               this.authPhoneCodeFlag = true
             }
           }).catch(() => {
-            this.$message.error(this.$t('user.auth_phone_code_send_fail'))
+            // this.$message.error(this.$t('user.auth_phone_code_send_fail'))
           })
         }
       }
@@ -182,12 +181,12 @@ export default {
     width 100vw
     .label {
       margin-left 2.5vw
-      font-size 1rem
+      font-size 0.85rem
       font-weight normal
     }
     .number {
       flex 1
-      font-size 1rem
+      font-size 0.85rem
       display flex
       align-items center
       justify-content center

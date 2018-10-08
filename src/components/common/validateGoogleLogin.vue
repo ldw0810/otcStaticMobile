@@ -86,7 +86,7 @@ export default {
               this.$emit('close', 1)
             }
           }).catch(() => {
-            this.$message.error(this.$t('public.url_request_fail'))
+            // this.$message.error(this.$t('public.url_request_fail'))
           })
         } else {
           for (let i = 0; i < Object.keys(this.form).length; i++) {
