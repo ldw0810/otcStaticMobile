@@ -1,0 +1,13 @@
+version: "2"
+services:
+  otc-mobile:
+    container_name: 'otc-mobile'
+    build: .
+    ports:
+      - '8997:80'
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    external: true
