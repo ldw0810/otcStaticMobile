@@ -86,7 +86,7 @@ import {VALI_ADDRESS_LABEL, VALI_NUMBER} from '../../utils/validator'
 import ValidPhone from '../common/validPhone'
 import ValidGoogle from '../common/validGoogle'
 import WithdrawEmail from './withdrawEmail'
-
+import formMixin from '../../mixins/formMixin'
 const configure = require('../../../configure')
 
 Vue.component(Header.name, Header)
@@ -98,6 +98,7 @@ Vue.component(TabContainer.name, TabContainer)
 Vue.component(TabContainerItem.name, TabContainerItem)
 
 export default {
+  mixins: [formMixin],
   name: 'assetDetail',
   components: {WithdrawEmail, ValidPhone, ValidGoogle, WithdrawConfirm, SelectWithdrawAddress},
   data () {
@@ -193,24 +194,6 @@ export default {
     },
     amountText () {
       return this.$t('asset.asset_add_balance') + ': ' + $fixDecimalsAsset(this.amount)
-    },
-    formStateAll () {
-      const tempStateList = Object.keys(this.formState)
-      for (let i = 0; i < tempStateList.length; i++) {
-        if (this.formState[tempStateList[i]] === '') {
-          return false
-        }
-      }
-      return true
-    },
-    formMessageAll () {
-      const tempMessageList = Object.keys(this.formMessage)
-      for (let i = 0; i < tempMessageList.length; i++) {
-        if (this.formMessage[tempMessageList[i]] !== '') {
-          return this.formMessage[tempMessageList[i]]
-        }
-      }
-      return ''
     }
   },
   methods: {
@@ -220,11 +203,6 @@ export default {
         query: {
           currency: this.currency
         }
-      })
-    },
-    checkAllState () {
-      Object.keys(this.formState).forEach((item) => {
-        this.checkState(item)
       })
     },
     checkState (value) {

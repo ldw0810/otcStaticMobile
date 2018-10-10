@@ -18,12 +18,14 @@
 <script type="es6">
 import {Button, Field, Header} from 'mint-ui'
 import Vue from 'vue'
+import formMixin from '../../mixins/formMixin'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
 
 export default {
+  mixins: [formMixin],
   name: 'validGoogle',
   props: {
     needAuth: {
@@ -45,24 +47,6 @@ export default {
     }
   },
   computed: {
-    formStateAll () {
-      const tempStateList = Object.keys(this.formState)
-      for (let i = 0; i < tempStateList.length; i++) {
-        if (this.formState[tempStateList[i]] === '') {
-          return false
-        }
-      }
-      return true
-    },
-    formMessageAll () {
-      const tempMessageList = Object.keys(this.formMessage)
-      for (let i = 0; i < tempMessageList.length; i++) {
-        if (this.formMessage[tempMessageList[i]] !== '') {
-          return this.formMessage[tempMessageList[i]]
-        }
-      }
-      return ''
-    },
     userInfo () {
       return this.$store.state.userInfo
     }
@@ -70,11 +54,6 @@ export default {
   methods: {
     goBack () {
       this.$emit('close', 1)
-    },
-    checkAllState () {
-      Object.keys(this.formState).forEach((item) => {
-        this.checkState(item)
-      })
     },
     checkState (value) {
       if (value === 'pinCode') {

@@ -13,14 +13,15 @@
 <script type="es6">
 import {Button, Cell, Field, Header} from 'mint-ui'
 import Vue from 'vue'
+import formMixin from '../../mixins/formMixin'
 
 Vue.component(Header.name, Header)
 Vue.component(Cell.name, Cell)
-
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
 
 export default {
+  mixins: [formMixin],
   name: 'authGoogle',
   data () {
     return {
@@ -41,32 +42,9 @@ export default {
   computed: {
     userInfo () {
       return this.$store.state.userInfo
-    },
-    formStateAll () {
-      const tempStateList = Object.keys(this.formState)
-      for (let i = 0; i < tempStateList.length; i++) {
-        if (this.formState[tempStateList[i]] === '') {
-          return false
-        }
-      }
-      return true
-    },
-    formMessageAll () {
-      const tempMessageList = Object.keys(this.formMessage)
-      for (let i = 0; i < tempMessageList.length; i++) {
-        if (this.formMessage[tempMessageList[i]] !== '') {
-          return this.formMessage[tempMessageList[i]]
-        }
-      }
-      return ''
     }
   },
   methods: {
-    checkAllState () {
-      Object.keys(this.formState).forEach((item) => {
-        this.checkState(item)
-      })
-    },
     checkState (value) {
       if (value === 'password') {
         this.formState.password = this.form.password ? 'success' : ''
