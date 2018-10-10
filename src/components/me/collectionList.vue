@@ -35,6 +35,15 @@ export default {
       defaultCollectionIndex: -1
     }
   },
+  watch: {
+    collectionList (val) {
+      if (val.length === 0) {
+        this.$router.push({
+          path: '/me/addCollection'
+        })
+      }
+    }
+  },
   computed: {
     collectionList () {
       return this.$store.state.collectionList || []
