@@ -25,6 +25,29 @@ export const $getDateStr = function (value) {
   const tempDate = new Date(value)
   return getNumStr(tempDate.getFullYear()) + '/' + getNumStr(tempDate.getMonth() + 1) + '/' + getNumStr(tempDate.getDate()) + ' ' + getNumStr(tempDate.getHours()) + ':' + getNumStr(tempDate.getMinutes()) + ':' + getNumStr(tempDate.getSeconds())
 }
+
+export const $getBrowser = function () {
+  let browser = {}
+  if (navigator.userAgent.indexOf('MSIE') > 0) {
+    browser.name = 'MSIE'
+    browser.ie = true
+  } else if (navigator.userAgent.indexOf('Firefox') > 0) {
+    browser.name = 'Firefox'
+    browser.firefox = true
+  } else if (navigator.userAgent.indexOf('Chrome') > 0) {
+    browser.name = 'Chrome'
+    browser.chrome = true
+  } else if (navigator.userAgent.indexOf('Safari') > 0) {
+    browser.name = 'Safari'
+    browser.safari = true
+  } else if (navigator.userAgent.indexOf('Opera') >= 0) {
+    browser.name = 'Opera'
+    browser.opera = true
+  } else {
+    browser.name = 'unknow'
+  }
+  return browser
+}
 /**
  *获取当前语言，从localStorage或配置中读取
  *
@@ -226,10 +249,39 @@ export const $dividedBy = function (...args) {
  */
 export function $setCursorPosition (el) {
   el.focus()
-  const range = document.createRange()
+  let range = document.createRange()
   range.selectNodeContents(el)
   range.collapse(false)
-  const sel = window.getSelection()
+  let sel = window.getSelection()
   sel.removeAllRanges()
   sel.addRange(range)
+}
+
+export function $insertHtmlAtCaret ($el, insertHtml, isBr) { // insertHtml 插入的内容, isBr 是否插入的是换行符
+  let start = -1
+  let end = -1
+  if (window.getSelection && document.createRange) {
+    let range = window.getSelection().getRangeAt(0)
+    let preSelectionRange = range.cloneRange()
+    preSelectionRange.selectNodeContents($el)
+    preSelectionRange.setEnd(range.startContainer, range.startOffset)
+    start = preSelectionRange.toString().length
+    end = start + range.toString().length
+  } else if (document.selection && document.body.createTextRange) {
+    let selectedTextRange = document.selection.createRange()
+    let preSelectionTextRange = document.body.createTextRange()
+    preSelectionTextRange.moveToElementText($el)
+    preSelectionTextRange.setEndPoint('EndToStart', selectedTextRange)
+    start = preSelectionTextRange.text.length
+    end = start + selectedTextRange.text.length
+  }
+  let content = $el.innerHTML
+  if (content && start > -1 && end > -1) {
+    let leftContent = content.substring(0, start + 1)
+    let rightContent = content.substring(end + 1)
+    if (isBr) {
+      insertHtml = leftContent.endsWith('<br>') ? '<br>' : '<br><br>'
+    }
+    $el.innerHTML = leftContent + insertHtml + rightContent
+  }
 }

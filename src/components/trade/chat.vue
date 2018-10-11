@@ -1,56 +1,27 @@
 <template lang="pug">
-  .chat(:style="{backgroundColor: wrapBg}")
-    .window(id="window-view-container" ref="scroll")
-      ScrollLoader(class="container-main")
-        .message(ref="message")
-          ul
-            li(v-for="(chat, index) in msgList" :key="index" :class="{'an-move-right': +chat.type === 0, 'an-move-left': +chat.type === 1, 'an-move-center': +chat.type === 9}")
-              p(class="time system" v-if="+chat.type === 9")
-                span(v-html="$getDateStr(new Date(chat.time)) + '<br/>' + toEmotion(chat.data)")
-              div(:class="'main' + (+chat.type === 0 ? ' self': '')" v-else)
-                p(class="time" v-if="chat.timeFlag")
-                  span(v-text="$getDateStr(new Date(chat.time))")
-                .avatar
-                  Avatar(:size='5' :status="order.member.online" :statusType="2")
-                <!-- 状态 -->
-                span(class='chat-status' v-show='chat.status !== 1')
-                  span(class='chat-loading' v-show='chat.status === 0')
-                  span(:title='$t("order.order_chat_send_msg_fail")' class='chat-error' v-show='chat.status === -1') !
-                <!-- 文本 -->
-                .text(v-html="toEmotion(chat.data)")
-                <!-- 图片 -->
-                .text(v-if="+chat.type === 3")
-                  img(:src="chat.data" class="image" :alt="$t('order.order_chat_img')")
-    <div id="publish" class='publish'>
-      <!--<div class="oper"></div>-->
-      <!--<div class='publish-action'>-->
-        <!--<div ref="input" :contenteditable="readOnly" class='g-shadow publish-action-input' v-html="toEmotion(inputText)"-->
-             <!--@keydown="inputKey" @onclick="getRange" @keyup="getRange"-->
-             <!--@focus="inputFocusFlag = true" @blur="inputFocusFlag = false"-->
-             <!--@input='checkLengh'-->
-        <!--&gt;</div>-->
-        <!--<div class="publish-action-button">-->
-          <!--<mt-button type="primary" @click="sendInfo" :disabled="chatFlag">{{$t('public.send')}}-->
-          <!--</mt-button>-->
-        <!--</div>-->
-      <!--</div>-->
-      <!--&lt;!&ndash; 和发送&ndash;&gt;-->
-      <!--<div class="face_container">-->
-      <!--&lt;!&ndash; Icon，点击触发事件，动态生成并显示 &ndash;&gt;-->
-      <!--<span @click=make_face() class="make_face"><i class="icon-emoji"></i></span>-->
-      <!--<span class="make_img" @click="add_img()"><i class="icon-Pictuer"></i></span>-->
-      <!--<span class="send" @click=send()>发送</span>-->
-      <!--<span class="send"><input type="checkbox" name="top" id="top" value="top">本条置顶</span>-->
-      <!--&lt;!&ndash; 容器 ，包裹生成的，绑定点击事件&ndash;&gt;-->
-      <!--<div id="face" @click=choice_face($event)></div>-->
-      <!--</div>-->
-    </div>
-  </div>
+  .chat(ref="chat")
+    ul
+      li(v-for="(chat, index) in msgList" :key="index" :class="{'an-move-right': +chat.type === 0, 'an-move-left': +chat.type === 1, 'an-move-center': +chat.type === 9}")
+        p(class="time system" v-if="+chat.type === 9")
+          span(v-html="$getDateStr(new Date(chat.time)) + '<br/>' + toEmotion(chat.data)")
+        div(:class="'main' + (+chat.type === 0 ? ' self': '')" v-else)
+          p(class="time" v-if="chat.timeFlag")
+            span(v-text="$getDateStr(new Date(chat.time))")
+          .avatar
+            Avatar(:size='5' :status="order.member.online" :statusType="2")
+          <!-- 状态 -->
+          span(class='chat-status' v-show='chat.status !== 1')
+            span(class='chat-loading' v-show='chat.status === 0')
+            span(:title='$t("order.order_chat_send_msg_fail")' class='chat-error' v-show='chat.status === -1') !
+          <!-- 文本 -->
+          .text(v-html="toEmotion(chat.data)")
+          <!-- 图片 -->
+          .text(v-if="+chat.type === 3")
+            img(:src="chat.data" class="image" :alt="$t('order.order_chat_img')")
 </template>
 <script type="es6">
 import {VALI_CHAT} from '../../utils/validator'
 import {$getDateStr, $setCursorPosition} from '../../utils'
-import ScrollLoader from '../common/scrollLoader'
 import Avatar from '../common/avatar'
 import {Button} from 'mint-ui'
 import Vue from 'vue'
@@ -59,7 +30,6 @@ Vue.component(Button.name, Button)
 
 export default {
   components: {
-    ScrollLoader,
     Avatar
   },
   props: {
@@ -137,8 +107,8 @@ export default {
     },
     scrollToBottom () {
       this.$nextTick(() => {
-        if (this.$refs.scroll) {
-          this.$refs.scroll.scrollTop = this.$refs.scroll.scrollHeight
+        if (this.$refs.chat) {
+          this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight
         }
       })
     },
@@ -468,29 +438,29 @@ export default {
     text-decoration: underline;
   }
 
-  .message {
+  .chat {
     padding: 1vh 1.5vw;
   }
 
-  .message li {
+  .chat li {
     margin-bottom: 1.5vh;
     left: 0;
     position: relative;
     display: block;
   }
 
-  .message .time {
+  .chat .time {
     margin: 1vh 0;
     text-align: center;
   }
 
-  .message .avatar {
+  .chat .avatar {
     float: left;
     margin: 0 2vw 0 0;
     border-radius: 3px;
   }
 
-  .message .time > span {
+  .chat .time > span {
     display: inline-block;
     font-size: 0.9rem;
     font-weight normal
@@ -499,7 +469,7 @@ export default {
     margin-bottom: 1.5vh;
   }
 
-  .message .system > span {
+  .chat .system > span {
     background: #eeeeee;
     border-radius: 2vw;
     font-size: 0.85rem;
@@ -514,7 +484,7 @@ export default {
     text-align: center;
   }
 
-  .message .text:before {
+  .chat .text:before {
     content: " ";
     position: absolute;
     width: 5px;
@@ -525,7 +495,7 @@ export default {
     box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.1);
   }
 
-  .message .text {
+  .chat .text {
     background-color: #fff;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
     display: inline-block;
@@ -539,27 +509,27 @@ export default {
     border-radius: 2vw;
   }
 
-  .message .self {
+  .chat .self {
     text-align: right;
   }
 
-  .message .self .avatar {
+  .chat .self .avatar {
     float: right;
     margin: 0 0 0 1.5vw;
   }
 
-  .message .self .text {
+  .chat .self .text {
     background: #f6ffff;
   }
 
-  .message .self .text:before {
+  .chat .self .text:before {
     left: auto;
     right: -2px;
     box-shadow: -2px -2px 5px 0 rgba(0, 0, 0, 0.1);
     background-color: #f6ffff;
   }
 
-  .message .image {
+  .chat .image {
     max-width: 15vw;
   }
 

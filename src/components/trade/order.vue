@@ -4,62 +4,59 @@
       router-link(to="/orderList" slot="left")
         mt-button(icon="back")
       .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
-    .wrapper(v-if="order.id")
-      .content
-        .info(class="showInfo")
-          .list
-            .item
-              .label {{$t('order.order_id')}}:
-              .text {{order.id}}
-            .item
-              .label {{$t('order.order_money_amount')}}:
-              .text {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
-            .item(v-if="triggerInfoFlag")
-              .label {{$t('order.order_order_price')}}:
-              .text {{order.price | $fixDecimalAuto(order.currency)}} {{order.target_currency.toUpperCase() + '/' + order.currency.toUpperCase()}}
-            .item(v-if="triggerInfoFlag")
-              .label {{orderType === 0 ? $t('order.order_buy_number_title') : $t('order.order_sell_number_title')}}:
-              .text {{order.amount | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
-            .item(v-if="triggerInfoFlag")
-              .label {{$t('order.order_order_payment')}}:
-              .text {{order.pay_kind ? $t('public.' + order.pay_kind) : ''}}
-            .btn(@click="triggerInfo") {{$t('order.order_hide_detail')}}
-          .border(v-if="triggerInfoFlag")
-          .remark(v-if="triggerInfoFlag")
-            .label {{$t('ad.ad_remark')}}:
-            .text {{order.remark}}
-        .oper
-          .tip(v-if="stepTip" v-html="stepTip")
-          .submit(class="mintSubmit" v-if="order.status === 'timeout'")
-            mt-button(disabled) {{$t('order.order_deal_timeout')}}
-          .submit(class="mintSubmit" v-else-if="['cancel', 'judge_seller'].indexOf(order.status) > -1")
-            mt-button(disabled) {{$t('order.order_deal_cancel')}}
-          .submit(class="mintSubmit" v-else-if="order.status === 'over'")
-            mt-button(disabled) {{$t('order.order_deal_complete')}}
-          .submit(class="orderSubmit" v-else-if="order.status === 'fresh' && !orderType")
-            mt-button(class="orderSubmitBtn" @click="orderOper('pay')") {{$t('order.order_pay_complete')}}
-            mt-button(class="orderCancelBtn" @click="orderOper('cancel')") {{$t('order.order_pay_cancel')}}
-          .submit(class="orderSubmit" v-else-if="order.status === 'pay' && !orderType")
-            mt-button(class="orderSubmitBtn" disabled) {{$t('order.order_pay_completed')}}
-            mt-button(class="orderCancelBtn" disabled) {{$t('order.order_pay_cancel')}}
-          .submit(class="mintSubmit" v-else-if="order.status === 'fresh' && orderType")
-            mt-button(@click="orderOper('release')" disabled) {{$t('order.order_pay_release')}}
-          .submit(class="mintSubmit" v-else-if="order.status === 'pay' && orderType")
-            mt-button(@click="orderOper('release')") {{$t('order.order_pay_release')}}
-          .submit(class="orderSubmit" v-else-if="order.status === 'release' || (order.status === 'sell_eval' && !orderType) || (order.status === 'buy_eval' && orderType)")
-            .radioDiv
-              .radio(:class="{'radioChecked': evaluateIndex === 0}" @click="evaluateIndex = 0")
-              .radioText {{$t('order.order_pay_evaluate_good')}}
-              .radio(class="rightRadio" :class="{'radioChecked': evaluateIndex === 1}" @click="evaluateIndex = 1")
-              .radioText  {{$t('order.order_pay_evaluate_bad')}}
-            mt-button(class="orderSubmitBtn" @click="orderOper('evaluate')") {{$t('order.order_eval')}}
-          .submit(class="mintSubmit" v-else)
-            mt-button(disabled) {{$t('order.order_status_over')}}
-        .chat
-          Chat(ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="inputValue = ''")
-      .footer
-        form(action="javascript:return true")
-          mt-field(class="footerInput" type="textarea" :placeholder="$t('order.order_chat_placeholder')" v-model="inputValue" @keyup.native.capture="alertKeyup" @keyup.enter.native.capture="sendInfo")
+    .content(v-if="order.id")
+      .info(class="showInfo")
+        .list
+          .item
+            .label {{$t('order.order_id')}}:
+            .text {{order.id}}
+          .item
+            .label {{$t('order.order_money_amount')}}:
+            .text {{order.price_sum | $fixDecimalAuto(order.target_currency)}} {{order.target_currency.toUpperCase()}}
+          .item(v-if="triggerInfoFlag")
+            .label {{$t('order.order_order_price')}}:
+            .text {{order.price | $fixDecimalAuto(order.currency)}} {{order.target_currency.toUpperCase() + '/' + order.currency.toUpperCase()}}
+          .item(v-if="triggerInfoFlag")
+            .label {{orderType === 0 ? $t('order.order_buy_number_title') : $t('order.order_sell_number_title')}}:
+            .text {{order.amount | $fixDecimalAuto(order.currency)}} {{order.currency.toUpperCase()}}
+          .item(v-if="triggerInfoFlag")
+            .label {{$t('order.order_order_payment')}}:
+            .text {{order.pay_kind ? $t('public.' + order.pay_kind) : ''}}
+          .btn(@click="triggerInfo") {{$t('order.order_hide_detail')}}
+        .border(v-if="triggerInfoFlag")
+        .remark(v-if="triggerInfoFlag")
+          .label {{$t('ad.ad_remark')}}:
+          .text {{order.remark}}
+      .oper
+        .tip(v-if="stepTip" v-html="stepTip")
+        .submit(class="mintSubmit" v-if="order.status === 'timeout'")
+          mt-button(disabled) {{$t('order.order_deal_timeout')}}
+        .submit(class="mintSubmit" v-else-if="['cancel', 'judge_seller'].indexOf(order.status) > -1")
+          mt-button(disabled) {{$t('order.order_deal_cancel')}}
+        .submit(class="mintSubmit" v-else-if="order.status === 'over'")
+          mt-button(disabled) {{$t('order.order_deal_complete')}}
+        .submit(class="orderSubmit" v-else-if="order.status === 'fresh' && !orderType")
+          mt-button(class="orderSubmitBtn" @click="orderOper('pay')") {{$t('order.order_pay_complete')}}
+          mt-button(class="orderCancelBtn" @click="orderOper('cancel')") {{$t('order.order_pay_cancel')}}
+        .submit(class="orderSubmit" v-else-if="order.status === 'pay' && !orderType")
+          mt-button(class="orderSubmitBtn" disabled) {{$t('order.order_pay_completed')}}
+          mt-button(class="orderCancelBtn" disabled) {{$t('order.order_pay_cancel')}}
+        .submit(class="mintSubmit" v-else-if="order.status === 'fresh' && orderType")
+          mt-button(@click="orderOper('release')" disabled) {{$t('order.order_pay_release')}}
+        .submit(class="mintSubmit" v-else-if="order.status === 'pay' && orderType")
+          mt-button(@click="orderOper('release')") {{$t('order.order_pay_release')}}
+        .submit(class="orderSubmit" v-else-if="order.status === 'release' || (order.status === 'sell_eval' && !orderType) || (order.status === 'buy_eval' && orderType)")
+          .radioDiv
+            .radio(:class="{'radioChecked': evaluateIndex === 0}" @click="evaluateIndex = 0")
+            .radioText {{$t('order.order_pay_evaluate_good')}}
+            .radio(class="rightRadio" :class="{'radioChecked': evaluateIndex === 1}" @click="evaluateIndex = 1")
+            .radioText  {{$t('order.order_pay_evaluate_bad')}}
+          mt-button(class="orderSubmitBtn" @click="orderOper('evaluate')") {{$t('order.order_eval')}}
+        .submit(class="mintSubmit" v-else)
+          mt-button(disabled) {{$t('order.order_status_over')}}
+      Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="inputValue = ''")
+    .footer
+      #footerInput(v-model="inputValue" contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" @keydown.enter="doInputKeyEnter")
     transition-group(tag="div" name="slide-right")
       .popup(class="popup-right" v-if="confirmFlag.cancel" :key="1")
         slot
@@ -84,12 +81,12 @@
           ValidGoogle(:needAuth="false" @close="confirmFlag.authGoogle = false" @success="doAuthClose" @change="changeValidate(1)")
 </template>
 <script type="es6">
+import Vue from 'vue'
 import Policy from '../policy/policy'
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
 import Rules from '../policy/rules'
 import {Button, Field, Header} from 'mint-ui'
-import Vue from 'vue'
 import OrderPayConfirm from './orderPayConfirm'
 import OrderReleaseConfirm from './orderReleaseConfrim'
 import OrderCancelConfirm from './orderCancelConfirm'
@@ -97,6 +94,7 @@ import OrderCompleteConfirm from './orderCompleteConfrim'
 import Chat from './chat'
 import ValidPhone from '../common/validPhone'
 import ValidGoogle from '../common/validGoogle'
+import {$insertHtmlAtCaret, $setCursorPosition} from '../../utils'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
@@ -193,8 +191,16 @@ export default {
         this.confirmFlag.authPhone = true
       }
     },
-    alertKeyup (event) {
-      // alert(event.keyCode)
+    doInputKeyEnter (event) {
+      let key = event.keyCode || event.charCode
+      if (+key === 13) {
+        if (event.preventDefault) {
+          event.preventDefault()
+        } else {
+          event.returnValue = false
+        }
+        $insertHtmlAtCaret('<br><br>')
+      }
     },
     showTip () {
       this.timer && clearTimeout(this.timer)
@@ -373,7 +379,6 @@ export default {
     display flex
     flex-direction column
     .content {
-      @extend .noScrollPage
       display flex
       overflow hidden
       flex-direction column
@@ -449,64 +454,42 @@ export default {
           color #333333
           padding 0 6vw 1.5vh
         }
-        .input {
-
-        }
       }
-      .chat {
+      .chatWrapper {
         flex 1
         overflow-y scroll
       }
     }
     .footer {
-      position fixed
-      bottom 0
       width 100vw
-      height $chatFooterHeight
       background #fafafa
       display flex
       align-items center
-      justify-content center
       border-top 1px solid #EEEEEE
-      .footerInput {
-        border 1px solid #EEEEEE
-        height $chatFooterHeight - 3
-        width 88vw
+      #footerInput {
+        margin 0.5vh 2vw
+        padding 0 1vw
+        border 1px solid #eee
+        min-height 3.5vh
+        max-height 10vh
+        width: 66vw
         font-size 0.85rem
         font-weight normal
-        color #999999
-        text-indent 2vw
+        color #000
+        word-break break-all
+        overflow-y scroll
         &:active, &:focus, &:hover {
           outline none
+          content none
         }
-      }
-
-      .footerInput::-webkit-input-placeholder {
-        /* WebKit browsers */
-        color: #CCCCCC;
-        opacity 0.7
-        text-indent 2vw
-      }
-
-      .footerInput:-moz-placeholder {
-        /* WebKit browsers */
-        color: #CCCCCC;
-        opacity 0.7
-        text-indent 2vw
-      }
-
-      .footerInput::-moz-placeholder {
-        /* WebKit browsers */
-        color: #CCCCCC;
-        opacity 0.7
-        text-indent 2vw
-      }
-
-      .footerInput::-ms-input-placeholder {
-        /* WebKit browsers */
-        color: #CCCCCC;
-        opacity 0.7
-        text-indent 2vw
+        &:empty:before {
+          content attr(placeholder)
+          font-size 0.85rem
+          color #ccc
+          opacity 0.7
+          margin-left 2vw
+          line-height 3.5vh
+        }
       }
     }
   }
