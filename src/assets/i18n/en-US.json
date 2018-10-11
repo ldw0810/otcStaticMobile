@@ -220,7 +220,7 @@
     "auth_phone_add": "Enable phone verification",
     "auth_phone_del": "Disable phone verification",
     "auth_phone_info": "Will be used for withdraw, login, reset password",
-    "auth_phone_number": "Phone number",
+    "auth_phone_number": "Phone Number",
     "auth_phone_number_required": "Please enter your phone number",
     "auth_phone_code": "Pincode",
     "auth_phone_code_required": "Enter pincode",
@@ -341,8 +341,8 @@
     "password_middle": "middle",
     "password_strong": "strong",
     "user_settings": "User Settings",
-    "user_change_language": "Change language",
-    "user_invite_friends": "Invite friends"
+    "user_change_language": "Change Language",
+    "user_invite_friends": "Invite Friends"
   },
   "asset": {
     "asset_resend_email": "Resend",
