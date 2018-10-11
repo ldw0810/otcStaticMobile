@@ -26,7 +26,7 @@ export default {
   name: 'about',
   data () {
     return {
-      domain: `${configure.ZENDESK_DOMAIN_URL}/hc/${$getAxiosLanguage()}`
+      domain: `${configure.ZENDESK_DOMAIN_URL}/hc/${$getAxiosLanguage().toLowerCase()}`
     }
   },
   computed: {
