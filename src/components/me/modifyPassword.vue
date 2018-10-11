@@ -47,6 +47,18 @@ export default {
       if (value === 'oldPassword') {
         this.formState.oldPassword = this.form.oldPassword ? 'success' : ''
       } else if (value === 'newPassword') {
+        if (this.form.newPassword) {
+          if (this.form.newPassword.length > VALI_PASSWORD_NUMBER.max || this.form.newPassword.length < VALI_PASSWORD_NUMBER.min || !/[^\d].*[\d]|[\d].*[^\d]/.test(this.form.newPassword)) {
+            this.formState.newPassword = 'error'
+            this.formMessage.newPassword = VALI_PASSWORD_NUMBER.message
+          } else {
+            this.formState.newPassword = 'success'
+            this.formMessage.newPassword = ''
+          }
+        } else {
+          this.formState.newPassword = ''
+          this.formMessage.newPassword = ''
+        }
         if (this.form.rePassword) {
           if (this.form.rePassword === this.form.newPassword) {
             this.formState.rePassword = 'success'
@@ -54,19 +66,6 @@ export default {
           } else {
             this.formState.rePassword = 'error'
             this.formMessage.rePassword = this.$t('user.password_different')
-          }
-        } else {
-          if (this.form.newPassword) {
-            if (this.form.newPassword.length > VALI_PASSWORD_NUMBER.max || this.form.newPassword.length < VALI_PASSWORD_NUMBER.min || !/[^\d].*[\d]|[\d].*[^\d]/.test(this.form.newPassword)) {
-              this.formState.newPassword = 'error'
-              this.formMessage.newPassword = VALI_PASSWORD_NUMBER.message
-            } else {
-              this.formState.newPassword = 'success'
-              this.formMessage.newPassword = ''
-            }
-          } else {
-            this.formState.newPassword = ''
-            this.formMessage.newPassword = ''
           }
         }
       } else if (value === 'rePassword') {

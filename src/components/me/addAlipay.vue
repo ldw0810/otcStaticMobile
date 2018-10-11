@@ -58,6 +58,18 @@ export default {
           this.formMessage.username = ''
         }
       } else if (value === 'account') {
+        if (this.form.account) {
+          if (this.form.account.length > VALI_ALIPAY_ACCOUNT.max || this.form.account.length < VALI_ALIPAY_ACCOUNT.min) {
+            this.formState.account = 'error'
+            this.formMessage.account = VALI_ALIPAY_ACCOUNT.message
+          } else {
+            this.formState.account = 'success'
+            this.formMessage.account = ''
+          }
+        } else {
+          this.formState.account = ''
+          this.formMessage.account = ''
+        }
         if (this.form.reAccount) {
           if (this.form.reAccount === this.form.account) {
             this.formState.reAccount = 'success'
@@ -65,19 +77,6 @@ export default {
           } else {
             this.formState.reAccount = 'error'
             this.formMessage.reAccount = this.$t('user.alipay_account_different')
-          }
-        } else {
-          if (this.form.account) {
-            if (this.form.account.length > VALI_ALIPAY_ACCOUNT.max || this.form.account.length < VALI_ALIPAY_ACCOUNT.min) {
-              this.formState.account = 'error'
-              this.formMessage.account = VALI_ALIPAY_ACCOUNT.message
-            } else {
-              this.formState.account = 'success'
-              this.formMessage.account = ''
-            }
-          } else {
-            this.formState.account = ''
-            this.formMessage.account = ''
           }
         }
       } else if (value === 'reAccount') {

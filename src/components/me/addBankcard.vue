@@ -84,6 +84,18 @@ export default {
       } else if (value === 'bank') {
         this.formState.bank = this.form.bank.code ? 'success' : ''
       } else if (value === 'account') {
+        if (this.form.account) {
+          if (this.form.account.length > VALI_CARD_NUMBER.max || this.form.account.length < VALI_CARD_NUMBER.min) {
+            this.formState.account = 'error'
+            this.formMessage.account = VALI_CARD_NUMBER.message
+          } else {
+            this.formState.account = 'success'
+            this.formMessage.account = ''
+          }
+        } else {
+          this.formState.account = ''
+          this.formMessage.account = ''
+        }
         if (this.form.reAccount) {
           if (this.form.reAccount === this.form.account) {
             this.formState.reAccount = 'success'
@@ -91,19 +103,6 @@ export default {
           } else {
             this.formState.reAccount = 'error'
             this.formMessage.reAccount = this.$t('user.bankCard_number_different')
-          }
-        } else {
-          if (this.form.account) {
-            if (this.form.account.length > VALI_CARD_NUMBER.max || this.form.account.length < VALI_CARD_NUMBER.min) {
-              this.formState.account = 'error'
-              this.formMessage.account = VALI_CARD_NUMBER.message
-            } else {
-              this.formState.account = 'success'
-              this.formMessage.account = ''
-            }
-          } else {
-            this.formState.account = ''
-            this.formMessage.account = ''
           }
         }
       } else if (value === 'reAccount') {
