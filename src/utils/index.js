@@ -244,44 +244,45 @@ export const $dividedBy = function (...args) {
 }
 
 /**
- * @description 光标设置到节点的末尾
- * @param {element} 节点
- */
-export function $setCursorPosition (el) {
-  el.focus()
-  let range = document.createRange()
-  range.selectNodeContents(el)
-  range.collapse(false)
-  let sel = window.getSelection()
-  sel.removeAllRanges()
-  sel.addRange(range)
-}
-
-export function $insertHtmlAtCaret ($el, insertHtml, isBr) { // insertHtml 插入的内容, isBr 是否插入的是换行符
-  let start = -1
-  let end = -1
-  if (window.getSelection && document.createRange) {
-    let range = window.getSelection().getRangeAt(0)
-    let preSelectionRange = range.cloneRange()
-    preSelectionRange.selectNodeContents($el)
-    preSelectionRange.setEnd(range.startContainer, range.startOffset)
-    start = preSelectionRange.toString().length
-    end = start + range.toString().length
-  } else if (document.selection && document.body.createTextRange) {
-    let selectedTextRange = document.selection.createRange()
-    let preSelectionTextRange = document.body.createTextRange()
-    preSelectionTextRange.moveToElementText($el)
-    preSelectionTextRange.setEndPoint('EndToStart', selectedTextRange)
-    start = preSelectionTextRange.text.length
-    end = start + selectedTextRange.text.length
-  }
-  let content = $el.innerHTML
-  if (content && start > -1 && end > -1) {
-    let leftContent = content.substring(0, start + 1)
-    let rightContent = content.substring(end + 1)
-    if (isBr) {
-      insertHtml = leftContent.endsWith('<br>') ? '<br>' : '<br><br>'
+ *  光标后追加内容
+ * */
+export function $insertHtmlAtCaret (insertHtml) {
+  let sel
+  let range
+  if (window.getSelection) {
+    // IE9 and non-IE
+    sel = window.getSelection()
+    if (sel.getRangeAt && sel.rangeCount) {
+      range = sel.getRangeAt(0)
+      range.deleteContents()
+      // Range.createContextualFragment() would be useful here but is
+      // non-standard and not supported in all browsers (IE9, for one)
+      let el = document.createElement('div')
+      let rangeHtml = range.endContainer.innerHTML
+      if (insertHtml === '<br>' && !(rangeHtml && rangeHtml.endsWith('<br>')) && range.endContainer.wholeText.length === +range.endOffset) {
+        el.innerHTML = insertHtml + insertHtml
+      } else {
+        el.innerHTML = insertHtml
+      }
+      let frag = document.createDocumentFragment()
+      let node
+      let lastNode
+      while ((node = el.firstChild)) {
+        lastNode = frag.appendChild(node)
+      }
+      range.insertNode(frag)
+      // 如果是最后的字符并且回车换行，则需要2个<br>才能换行
+      // Preserve the selection
+      if (lastNode) {
+        range = range.cloneRange()
+        range.setStartAfter(lastNode)
+        range.collapse(true)
+        sel.removeAllRanges()
+        sel.addRange(range)
+      }
     }
-    $el.innerHTML = leftContent + insertHtml + rightContent
+  } else if (document.selection && document.selection.type !== 'Control') {
+    // IE < 9
+    document.selection.createRange().pasteHTML(insertHtml)
   }
 }

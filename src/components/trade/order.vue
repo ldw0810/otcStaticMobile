@@ -94,7 +94,7 @@ import OrderCompleteConfirm from './orderCompleteConfrim'
 import Chat from './chat'
 import ValidPhone from '../common/validPhone'
 import ValidGoogle from '../common/validGoogle'
-import {$insertHtmlAtCaret, $setCursorPosition} from '../../utils'
+import {$insertHtmlAtCaret} from '../../utils'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
@@ -199,7 +199,7 @@ export default {
         } else {
           event.returnValue = false
         }
-        $insertHtmlAtCaret('<br><br>')
+        $insertHtmlAtCaret('<br>')
       }
     },
     showTip () {
