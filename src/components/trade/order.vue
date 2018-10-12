@@ -1,5 +1,5 @@
 <template lang="pug">
-  .order
+  .order(@click="orderClick")
     mt-header(:title="$t('order.order_detail')" fixed)
       router-link(to="/orderList" slot="left")
         mt-button(icon="back")
@@ -54,9 +54,18 @@
           mt-button(class="orderSubmitBtn" @click="orderOper('evaluate')") {{$t('order.order_eval')}}
         .submit(class="mintSubmit" v-else)
           mt-button(disabled) {{$t('order.order_status_over')}}
-      Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="inputValue = ''")
+      Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="sendSuccess")
     .footer
-      #footerInput(v-model="inputValue" contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" @keydown.enter="doInputKeyEnter")
+      .oper
+        #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" @input="changeInputValue" @keydown.enter="doInputKeyEnter")
+        .browImage(@click.prevent.stop="triggerBrow")
+          img(:src="browImage")
+        mt-button(class="sendBtn orderSubmitBtn" @click="sendInfo") {{$t('public.send')}}
+      transition-group(tag="div" name="fade")
+        .browList(v-if="browFlag" :key="11" @click.prevent.stop="browFlag = true")
+          .line(v-for="line in browLine" :key="line")
+            .row(v-for="row in browRow" :key="row")
+              .brow(:style="getBrowImage(line, row)" @click="sendBrow(line, row)")
     transition-group(tag="div" name="slide-right")
       .popup(class="popup-right" v-if="confirmFlag.cancel" :key="1")
         slot
@@ -141,7 +150,12 @@ export default {
       timer: 0,
       remark: '',
       password: '',
-      inputValue: ''
+      inputValue: '',
+      browFlag: false,
+      browList: ['微笑', '撇嘴', '色', '发呆', '得意', '流泪', '害羞', '闭嘴', '睡', '大哭', '尴尬', '发怒', '调皮', '呲牙', '惊讶', '难过', '酷', '冷汗', '抓狂', '吐', '偷笑', '愉快', '白眼', '傲慢', '饥饿', '困', '惊恐', '流汗', '憨笑', '大兵', '奋斗', '咒骂', '疑问', '嘘', '晕', '折磨', '衰', '骷髅', '敲打', '再见', '擦汗', '抠鼻', '鼓掌', '糗大了', '坏笑', '左哼哼', '右哼哼', '哈欠', '鄙视', '委屈', '快哭了', '阴险', '亲亲', '吓', '可怜', '菜刀', '西瓜', '啤酒', '篮球', '乒乓', '咖啡', '饭', '猪头', '玫瑰', '凋谢', '示爱', '爱心', '心碎', '蛋糕', '闪电', '炸弹', '刀', '足球', '瓢虫', '便便', '月亮', '太阳', '礼物', '拥抱', '强', '弱', '握手', '胜利', '抱拳', '勾引', '拳头', '差劲', '爱你', 'NO', 'OK', '爱情', '飞吻', '跳跳', '发抖', '怄火', '转圈', '磕头', '回头', '跳绳', '挥手', '激动', '街舞', '献吻', '左太极', '右太极', '嘿哈', '捂脸', '奸笑', '机智', '皱眉', '耶', '红包', '鸡'],
+      browPage: 1,
+      browLine: 3,
+      browRow: 9
     }
   },
   watch: {
@@ -176,11 +190,20 @@ export default {
         }
       }
       return tempList
+    },
+    browImage () {
+      return this.browFlag ? require('../../assets/images/trade/ShapeFocus.png') : require('../../assets/images/trade/Shape.png')
     }
   },
   methods: {
     triggerInfo () {
       this.triggerInfoFlag = !this.triggerInfoFlag
+    },
+    triggerBrow () {
+      this.browFlag = !this.browFlag
+    },
+    getBrowImage (line, row) {
+      return `background: url(https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/default218877.gif)${((this.browPage - 1) * 27 + (line - 1) * 9 + (row - 1)) * -24}px 0;`
     },
     changeValidate (value) {
       if (+value === 0) {
@@ -200,7 +223,16 @@ export default {
           event.returnValue = false
         }
         $insertHtmlAtCaret('<br>')
+        this.inputValue = document.getElementById('footerInput').innerHTML
       }
+    },
+    changeInputValue (event) {
+      this.inputValue = event.target.innerHTML
+    },
+    insertBrow (browDom) {
+    },
+    orderClick () {
+      this.browFlag = false
     },
     showTip () {
       this.timer && clearTimeout(this.timer)
@@ -360,6 +392,33 @@ export default {
       event && event.preventDefault()
       this.$refs.chat.sendInfo(this.inputValue)
     },
+    getBrow (text) {
+      if (!text) {
+        return text
+      }
+      text = text.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, function (word) {
+        let newWord = word.replace(/\[|\]/gi, '')
+        let index = this.browList.indexOf(newWord)
+        let backgroundPositionX = -index * 24
+        let imgHTML = ''
+        if (index < 0) {
+          return word
+        }
+        if (index > 104) {
+          return word
+        }
+        imgHTML = `<i class="browIcon" style="background: url(https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/default218877.gif) ${backgroundPositionX}px 0;"></i>`
+        return imgHTML
+      })
+      return text
+    },
+    sendBrow (line, row) {
+      // let tempIndex = (this.browPage * this.browLine * this.browRow) + (line - 1) * this.browRow + row - 1
+    },
+    sendSuccess () {
+      this.inputValue = ''
+      document.getElementById('footerInput').innerHTML = this.inputValue
+    },
     init () {
       this.getMe()
       this.getOrder()
@@ -462,33 +521,88 @@ export default {
     }
     .footer {
       width 100vw
-      background #fafafa
+      background #fff
       display flex
       align-items center
       border-top 1px solid #EEEEEE
-      #footerInput {
-        margin 0.5vh 2vw
-        padding 0 1vw
-        border 1px solid #eee
-        min-height 3.5vh
-        max-height 10vh
-        width: 66vw
-        font-size 0.85rem
-        font-weight normal
-        color #000
-        word-break break-all
-        overflow-y scroll
-        &:active, &:focus, &:hover {
-          outline none
-          content none
-        }
-        &:empty:before {
-          content attr(placeholder)
+      flex-direction column
+      transition: .2s ease-out;
+      .oper {
+        display flex
+        align-items center
+        #footerInput {
+          margin 0.5vh 2vw
+          padding 0.5vh 1.5vw
+          border 1px solid #eee
+          min-height 5vh
+          max-height 10vh
+          width: 66vw
           font-size 0.85rem
-          color #ccc
-          opacity 0.7
+          font-weight normal
+          color #000
+          word-break break-all
+          overflow-y scroll
+          &:active, &:focus, &:hover {
+            outline none
+            content none
+          }
+          &:empty:before {
+            content attr(placeholder)
+            font-size 0.85rem
+            color #ccc
+            opacity 0.7
+            margin-left 2vw
+            line-height 4vh
+          }
+        }
+        .browImage {
+          width 4vh
+          height 4vh
+          img {
+            width 100%
+            height 100%
+            object-fit cover
+            object-position 0 0
+          }
+        }
+        .sendBtn {
+          width 20vw
           margin-left 2vw
-          line-height 3.5vh
+          height 5.5vh
+        }
+      }
+      .browList {
+        width: 100vw;
+        min-height: 10vh;
+        background: #fff;
+        border: 1px solid #ebeef5;
+        padding: 1vh 2vw;
+        z-index: 2000;
+        color: #606266;
+        line-height: 1.4;
+        text-align: justify;
+        font-size: 14px;
+        -webkit-box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+        transition: .2s ease-out;
+        display flex
+        flex-direction column
+        .line {
+          display flex
+          justify-content space-evenly
+          margin-top 1vh
+          .row {
+            @extend .flex-center
+            .brow {
+              width 24px
+              height 24px
+              border-radius 24px
+              transition: .2s ease-out;
+              &:active, &:focus, &:hover {
+                transform scale(1.2)
+              }
+            }
+          }
         }
       }
     }

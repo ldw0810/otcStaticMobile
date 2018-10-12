@@ -112,14 +112,60 @@ button
   background-color #DDDDDD
   border-color #DDDDDD
 }
+
 /*
 indicator
 */
 .mint-indicator {
-  .mint-indicator-wrapper{
+  .mint-indicator-wrapper {
     z-index $zIndexMax !important
   }
-  .mint-indicator-mask{
+  .mint-indicator-mask {
     z-index ($zIndexMax - 1) !important
   }
+}
+
+/*
+popover
+*/
+/deep/ .el-popper {
+  position: absolute;
+  background: #fff;
+  min-width: 150px;
+  border-radius: 4px;
+  border: 1px solid #ebeef5;
+  padding: 12px;
+  z-index: 2000;
+  color: #606266;
+  line-height: 1.4;
+  text-align: justify;
+  font-size: 14px;
+  -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+}
+.el-popper[x-placement^=top] .popper__arrow {
+  bottom: -6px;
+  left: 50%;
+  margin-right: 3px;
+  border-top-color: #ebeef5;
+  border-bottom-width: 0;
+}
+.el-popper[x-placement^=top] .popper__arrow::after {
+  bottom: 1px;
+  margin-left: -6px;
+  border-top-color: #fff;
+  border-bottom-width: 0;
+}
+
+.el-popper .popper__arrow::after {
+  content: " ";
+  border-width: 6px;
+}
+.el-popper .popper__arrow, .el-popper .popper__arrow::after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
 }
