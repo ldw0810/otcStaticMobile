@@ -61,11 +61,16 @@
         .browImage(@click.prevent.stop="triggerBrow")
           img(:src="browImage")
         mt-button(class="sendBtn orderSubmitBtn" @click="sendInfo") {{$t('public.send')}}
-      transition-group(tag="div" name="fade")
-        .browList(v-if="browFlag" :key="11" @click.prevent.stop="browFlag = true")
-          .line(v-for="line in browLine" :key="line")
-            .row(v-for="row in browRow" :key="row")
-              .brow(:style="getBrowImage(line, row)" @click="sendBrow(line, row)")
+      transition(name="bottom" mode="out-in")
+        .brow(v-if="browFlag" @click.prevent.stop="browFlag = true")
+          mt-tab-container(v-model="browCurrentPage" swipeable)
+            mt-tab-container-item(:id="browPage" v-for="browPage in browPageTotal" :key="browPage")
+              .browList
+                .line(v-for="line in browLine" :key="line")
+                  .row(v-for="row in browRow" :key="row")
+                    .brow(:style="getBrowImage(browPage, line, row)" @click="sendBrow(browPage, line, row)")
+          .browPageArrowList
+            .browPageArrow(v-for="browPage in browPageTotal" @click="browCurrentPage = browPage" :class="{'browPageArrowActive': browPage === +browCurrentPage}")
     transition-group(tag="div" name="slide-right")
       .popup(class="popup-right" v-if="confirmFlag.cancel" :key="1")
         slot
@@ -95,7 +100,7 @@ import Policy from '../policy/policy'
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
 import Rules from '../policy/rules'
-import {Button, Field, Header} from 'mint-ui'
+import {Button, Field, Header, TabContainer, TabContainerItem} from 'mint-ui'
 import OrderPayConfirm from './orderPayConfirm'
 import OrderReleaseConfirm from './orderReleaseConfrim'
 import OrderCancelConfirm from './orderCancelConfirm'
@@ -105,6 +110,8 @@ import ValidPhone from '../common/validPhone'
 import ValidGoogle from '../common/validGoogle'
 import {$insertHtmlAtCaret} from '../../utils'
 
+Vue.component(TabContainer.name, TabContainer)
+Vue.component(TabContainerItem.name, TabContainerItem)
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
@@ -153,7 +160,7 @@ export default {
       inputValue: '',
       browFlag: false,
       browList: ['微笑', '撇嘴', '色', '发呆', '得意', '流泪', '害羞', '闭嘴', '睡', '大哭', '尴尬', '发怒', '调皮', '呲牙', '惊讶', '难过', '酷', '冷汗', '抓狂', '吐', '偷笑', '愉快', '白眼', '傲慢', '饥饿', '困', '惊恐', '流汗', '憨笑', '大兵', '奋斗', '咒骂', '疑问', '嘘', '晕', '折磨', '衰', '骷髅', '敲打', '再见', '擦汗', '抠鼻', '鼓掌', '糗大了', '坏笑', '左哼哼', '右哼哼', '哈欠', '鄙视', '委屈', '快哭了', '阴险', '亲亲', '吓', '可怜', '菜刀', '西瓜', '啤酒', '篮球', '乒乓', '咖啡', '饭', '猪头', '玫瑰', '凋谢', '示爱', '爱心', '心碎', '蛋糕', '闪电', '炸弹', '刀', '足球', '瓢虫', '便便', '月亮', '太阳', '礼物', '拥抱', '强', '弱', '握手', '胜利', '抱拳', '勾引', '拳头', '差劲', '爱你', 'NO', 'OK', '爱情', '飞吻', '跳跳', '发抖', '怄火', '转圈', '磕头', '回头', '跳绳', '挥手', '激动', '街舞', '献吻', '左太极', '右太极', '嘿哈', '捂脸', '奸笑', '机智', '皱眉', '耶', '红包', '鸡'],
-      browPage: 1,
+      browCurrentPage: 1,
       browLine: 3,
       browRow: 9
     }
@@ -193,6 +200,9 @@ export default {
     },
     browImage () {
       return this.browFlag ? require('../../assets/images/trade/ShapeFocus.png') : require('../../assets/images/trade/Shape.png')
+    },
+    browPageTotal () {
+      return Math.ceil(this.browList.length / (this.browLine * this.browRow))
     }
   },
   methods: {
@@ -202,8 +212,8 @@ export default {
     triggerBrow () {
       this.browFlag = !this.browFlag
     },
-    getBrowImage (line, row) {
-      return `background: url(https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/default218877.gif)${((this.browPage - 1) * 27 + (line - 1) * 9 + (row - 1)) * -24}px 0;`
+    getBrowImage (page, line, row) {
+      return `background: url(https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/default218877.gif)${((page - 1) * 27 + (line - 1) * 9 + (row - 1)) * (-24)}px 0;`
     },
     changeValidate (value) {
       if (+value === 0) {
@@ -412,8 +422,8 @@ export default {
       })
       return text
     },
-    sendBrow (line, row) {
-      // let tempIndex = (this.browPage * this.browLine * this.browRow) + (line - 1) * this.browRow + row - 1
+    sendBrow (page, line, row) {
+      // let tempIndex = (this.browCurrentPage * this.browLine * this.browRow) + (line - 1) * this.browRow + row - 1
     },
     sendSuccess () {
       this.inputValue = ''
@@ -584,7 +594,7 @@ export default {
         font-size: 14px;
         -webkit-box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
         box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
-        transition: .2s ease-out;
+        transition: .2s ease-in-out;
         display flex
         flex-direction column
         .line {
@@ -603,6 +613,24 @@ export default {
               }
             }
           }
+        }
+      }
+      .browPageArrowList {
+        @extend .flex-center
+        width 100vw
+        transition .2s ease-out
+        margin 0.5vh 0
+        .browPageArrow {
+          width 2vw
+          height 2vw
+          border-radius 2vw
+          background #eee
+          margin 0 2vw
+        }
+        .browPageArrowActive {
+          width 3vw
+          height 3vw
+          border-radius 3vw
         }
       }
     }

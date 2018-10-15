@@ -21,7 +21,7 @@
 </template>
 <script type="es6">
 import {VALI_CHAT} from '../../utils/validator'
-import {$getDateStr, $setCursorPosition} from '../../utils'
+import {$getDateStr} from '../../utils'
 import Avatar from '../common/avatar'
 import {Button} from 'mint-ui'
 import Vue from 'vue'
@@ -102,7 +102,6 @@ export default {
       const $el = $event.target
       if ($el.innerHTML.length > VALI_CHAT.max) {
         $el.innerHTML = this.setMaxLength($el.innerHTML)
-        $setCursorPosition($el)
       }
     },
     scrollToBottom () {
