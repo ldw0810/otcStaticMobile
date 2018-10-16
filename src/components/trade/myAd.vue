@@ -55,8 +55,7 @@ import unionBy from 'lodash/unionBy'
 import mShare from '../../utils/mshare'
 import adShareImage from './adShare'
 import QrcodeVue from 'qrcode.vue'
-
-const configure = require('../../../configure')
+import configure from '../../../configure'
 
 Vue.component(Loadmore.name, Loadmore)
 Vue.component(Button.name, Button)

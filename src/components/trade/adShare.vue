@@ -14,12 +14,11 @@ import {Button, Field, Header} from 'mint-ui'
 import Vue from 'vue'
 import QrcodeVue from 'qrcode.vue'
 import {$getAxiosLanguage} from '../../utils'
+import configure from '../../../configure'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
-
-const configure = require('../../../configure')
 
 export default {
   name: 'adShare',

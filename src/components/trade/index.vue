@@ -2,8 +2,8 @@
   .trade
     .header
       .currency(@click="currencyListFlag = !currencyListFlag")
-        .logo(v-if="currencyDefaultData[currency]")
-          img(v-lazy="currencyDefaultData[currency]['img']" :key="currencyDefaultData[currency]['img']")
+        .logo(v-if="currencyImageList[currency]")
+          img(v-lazy="currencyImageList[currency]" :key="currencyImageList[currency]")
         .text {{currency.toUpperCase()}}
         .icon(:class="{'show': currencyListFlag}")
           img(src="../../assets/images/icon/PullDown-999999.svg")
@@ -22,16 +22,15 @@
       .popupDiv(v-if="currencyListFlag")
         .content
           .item(v-for="(item, index) in currencyList" :value="item" :key="index" @click="changeCurrency(item)")
-            .logo(v-if="currencyDefaultData[item]")
-              img(v-lazy="currencyDefaultData[item]['img']")
+            .logo(v-if="currencyImageList[item]")
+              img(v-lazy="currencyImageList[item]")
             .text(@click="currencyListFlag = true") {{item.toUpperCase()}}
 </template>
 <script type="es6">
 import Vue from 'vue'
 import {Navbar, Badge} from 'mint-ui'
 import LinkBarItem from '../common/linkBarItem'
-
-const configure = require('../../../configure')
+import configure from '../../../configure'
 
 Vue.component(Navbar.name, Navbar)
 Vue.component(Badge.name, Badge)
@@ -61,20 +60,7 @@ export default {
           path: '/orderList'
         }
       ],
-      currencyDefaultData: {
-        'dai': {
-          img: require('../../assets/images/trade/CoinLogo-DAI.png')
-        },
-        'eth': {
-          img: require('../../assets/images/trade/CoinLogo-ETH.png')
-        },
-        'omt': {
-          img: require('../../assets/images/trade/CoinLogo-OMT.svg')
-        },
-        'ck': {
-          img: require('../../assets/images/trade/CoinLogo-CAT.png')
-        }
-      },
+      currencyImageList: configure.CONF_CURRENCY_IMAGE_LIST,
       navbarIndex: this.$route.meta.navbarIndex || 0,
       tradePrice: 0,
       tradePriceTimer: 0,

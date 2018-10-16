@@ -2,8 +2,7 @@ import axios from '../utils/axios'
 import qs from 'qs' // post请求转码
 import store from './index'
 import {Indicator} from 'mint-ui'
-
-const configure = require('../../configure')
+import configure from '../../configure'
 
 const http = {
   get: function (url, requestJson, config) {

@@ -8,8 +8,8 @@
         .asset
           .banner
             .currency
-              .logo(v-if="currencyDefaultData[currency]")
-                img(v-lazy="currencyDefaultData[currency]['img']" :key="currencyDefaultData[currency]['img']")
+              .logo(v-if="currencyImageList[currency]")
+                img(v-lazy="currencyImageList[currency]" :key="currencyImageList[currency]")
               .text {{currency.toUpperCase()}}
             .amount {{userInfo.valid_account[currencyIndex].amount | $fixDecimalsAsset()}}
           .border
@@ -28,7 +28,7 @@
               .text(:class="{'focus': assetOperIndex === 1}") {{$t('public.withdraw')}}
           .border
           .operContent
-            mt-tab-container(v-model="assetOperIndex")
+            mt-tab-container(v-model="assetOperIndex" swipeable)
               mt-tab-container-item(:id="0")
                 .wrapper(v-if="deposit.account.length")
                   .depositPage(v-if="deposit.account[0].deposit_address")
@@ -39,7 +39,7 @@
                     .tip {{$t('asset.asset_recharge_address_get_tip')}}
                     mt-button(class="goBtn" @click.native.prevent="getAddress") {{$t('asset.asset_recharge_address_get')}}
               mt-tab-container-item(:id="1")
-                .wrapper(v-if="withdraw.withdraw_channels.id")
+                .wrapper(v-if="withdraw.withdraw_channels && withdraw.withdraw_channels.id")
                   .withdrawPage(v-if="userInfo.mobile || userInfo.app_two_factor")
                     .addressForm
                       mt-cell(class="submitFormItem" v-if="withdraw.fund_sources.length" :title="$t('asset.asset_withdraw_address')" @click.native.prevent="withdrawAddressFlag = true" is-link)
@@ -56,6 +56,8 @@
                   .noAuthPage(v-else)
                     .text {{$t('asset.asset_withdraw_no_auth', {'0': currency.toUpperCase()})}}
                     mt-button(class="goBtn" @click.native.prevent="$router.push('/me/settings')") {{$t('asset.asset_go_set_auth')}}
+                .noAuthPage
+                  .text {{$t('asset.asset_withdraw_no_withdraw')}}
       .footer(class="historyButton")
         mt-button(@click="goHistory") {{$t('asset.asset_withdraw_and_recharge_history')}}
     transition-group(tag="div" name="slide-right")
@@ -87,7 +89,7 @@ import ValidPhone from '../common/validPhone'
 import ValidGoogle from '../common/validGoogle'
 import WithdrawEmail from './withdrawEmail'
 import formMixin from '../../mixins/formMixin'
-const configure = require('../../../configure')
+import configure from '../../../configure'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
@@ -105,20 +107,7 @@ export default {
     return {
       assetOperIndex: this.$route.query.oper === 'deposit' ? 0 : 1,
       defaultCollectionIndex: -1,
-      currencyDefaultData: {
-        'dai': {
-          img: require('../../assets/images/trade/CoinLogo-DAI.png')
-        },
-        'eth': {
-          img: require('../../assets/images/trade/CoinLogo-ETH.png')
-        },
-        'omt': {
-          img: require('../../assets/images/trade/CoinLogo-OMT.svg')
-        },
-        'ck': {
-          img: require('../../assets/images/trade/CoinLogo-CAT.png')
-        }
-      },
+      currencyImageList: configure.CONF_CURRENCY_IMAGE_LIST,
       form: {
         selectAddress: {},
         label: '',

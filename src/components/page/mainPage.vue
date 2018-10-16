@@ -12,8 +12,7 @@
 <script type="es6">
 import Vue from 'vue'
 import {Swipe, SwipeItem} from 'mint-ui'
-
-const configure = require('../../../configure')
+import configure from '../../../configure'
 
 Vue.component(Swipe.name, Swipe)
 Vue.component(SwipeItem.name, SwipeItem)

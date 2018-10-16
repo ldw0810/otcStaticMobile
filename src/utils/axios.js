@@ -4,8 +4,7 @@ import router from '../router'
 import languageDataList from '../locale'
 import {$getLanguageIndex} from '../utils'
 import {Toast} from 'mint-ui'
-
-const configure = require('../../configure')
+import configure from '../../configure'
 
 /**
  * Responsible for all HTTP requests.

@@ -389,6 +389,7 @@
     "asset_withdraw_status_failed": "提现出错",
     "asset_withdraw_no_auth": "您尚未设置二次验证，无法提取{0}",
     "asset_withdraw_request_fail": "提现数据获取失败",
+    "asset_withdraw_no_withdraw": "暂时无法提现",
     "asset_go_set_auth": "前往设置",
     "asset_withdraw_address": "提现地址",
     "asset_withdraw_address_add": "新增提现地址",

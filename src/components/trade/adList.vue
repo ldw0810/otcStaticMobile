@@ -36,8 +36,7 @@ import {Loadmore} from 'mint-ui'
 import {Button} from 'element-ui'
 import Vue from 'vue'
 import unionBy from 'lodash/unionBy'
-
-const configure = require('../../../configure')
+import configure from '../../../configure'
 
 Vue.component(Loadmore.name, Loadmore)
 Vue.component(Button.name, Button)

@@ -6,9 +6,9 @@
         .item(v-for="(item, index) in userInfo.valid_account" :key="index" @click="goAsset(index)")
           .banner
             .currency
-              .logo(v-if="currencyDefaultData[userInfo.valid_account[index].currency]")
-                img(v-lazy="currencyDefaultData[userInfo.valid_account[index].currency]['img']" :key="currencyDefaultData[userInfo.valid_account[index].currency]['img']")
-              .text {{userInfo.valid_account[index].currency.toUpperCase()}}
+              .logo(v-if="currencyImageList[userInfo.valid_account[index].currency]")
+                img(v-lazy="currencyImageList[userInfo.valid_account[index].currency]" :key="currencyImageList[userInfo.valid_account[index].currency]")
+              .text {{(userInfo.valid_account[index].currency || '').toUpperCase()}}
             .amount {{item.amount | $fixDecimalsAsset()}}
           .border
           .banner
@@ -22,6 +22,7 @@
 <script type="es6">
 import {Header} from 'mint-ui'
 import Vue from 'vue'
+import configure from '../../../configure'
 
 Vue.component(Header.name, Header)
 
@@ -29,20 +30,7 @@ export default {
   name: 'asset',
   data () {
     return {
-      currencyDefaultData: {
-        'dai': {
-          img: require('../../assets/images/trade/CoinLogo-DAI.png')
-        },
-        'eth': {
-          img: require('../../assets/images/trade/CoinLogo-ETH.png')
-        },
-        'omt': {
-          img: require('../../assets/images/trade/CoinLogo-OMT.svg')
-        },
-        'ck': {
-          img: require('../../assets/images/trade/CoinLogo-CAT.png')
-        }
-      }
+      currencyImageList: configure.CONF_CURRENCY_IMAGE_LIST
     }
   },
   computed: {

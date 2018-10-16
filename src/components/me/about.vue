@@ -15,8 +15,7 @@
 import {Header, Button, Cell} from 'mint-ui'
 import Vue from 'vue'
 import {$getAxiosLanguage} from '../../utils'
-
-const configure = require('../../../configure')
+import configure from '../../../configure'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)

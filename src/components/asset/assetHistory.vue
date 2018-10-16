@@ -12,7 +12,7 @@
             .text(:class="{'focus': assetHistoryIndex === 1}") {{$t('asset.asset_withdraw_history')}}
         .border
         .operContent
-          mt-tab-container(v-model="assetHistoryIndex")
+          mt-tab-container(v-model="assetHistoryIndex" swipeable)
             mt-tab-container-item(:id="0")
               .wrapper(v-if="deposit.deposit_channels.id" :style="{'-webkit-overflow-scrolling': scrollMode}")
                 mt-loadmore(:autoFill="false" :top-method="loadTop" :top-all-loaded="allLoaded" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
@@ -31,7 +31,6 @@
                         .txid(@click="goBlockUrl(item)") {{item.txid}}
                   .noDataPage(v-else)
                     EmptyList(class="emptyDiv" :text="$t('public.no_asset_recharge')")
-          mt-tab-container(v-model="assetHistoryIndex")
             mt-tab-container-item(:id="1")
               .wrapper(v-if="withdraw.withdraw_channels.id" :style="{'-webkit-overflow-scrolling': scrollMode}")
                 mt-loadmore(:autoFill="false" :top-method="loadTop" :top-all-loaded="allLoaded" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
@@ -67,8 +66,7 @@ import Vue from 'vue'
 import EmptyList from '../common/emptyList'
 import WithdrawEmail from './withdrawEmail'
 import unionBy from 'lodash/unionBy'
-
-const configure = require('../../../configure')
+import configure from '../../../configure'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)

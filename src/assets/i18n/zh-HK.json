@@ -388,6 +388,7 @@
     "asset_withdraw_status_canceled": "已取消",
     "asset_withdraw_status_failed": "提現出錯",
     "asset_withdraw_no_auth": "您尚未設置二次驗證，無法提取{0}",
+    "asset_withdraw_no_withdraw": "暫時無法提現",
     "asset_withdraw_request_fail": "提現數據獲取失敗",
     "asset_go_set_auth": "前往設置",
     "asset_withdraw_address": "提現地址",

@@ -11,10 +11,9 @@ import Vue from 'vue'
 import {Actionsheet} from 'mint-ui'
 import languageDataList from '../../locale'
 import {$getLanguageIndex} from '../../utils'
+import configure from '../../../configure'
 
 Vue.component(Actionsheet.name, Actionsheet)
-
-const configure = require('../../../configure')
 
 const domain = `${configure.ZENDESK_DOMAIN_URL}/hc/${(window.localStorage.getItem('language') || 'zh-TW').replace('HK', 'TW').toLowerCase()}`
 export default {

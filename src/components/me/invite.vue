@@ -36,11 +36,11 @@ import {$getAxiosLanguage, $getLanguage} from '../../utils'
 import QrCode from 'qrcode.vue'
 import {Button, Header} from 'mint-ui'
 import Vue from 'vue'
+import configure from '../../../configure'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 
-const configure = require('../../../configure')
 const language = $getLanguage()
 const axiosLanguage = $getAxiosLanguage()
 const domain = `${configure.ZENDESK_DOMAIN_URL}/hc/${(language.replace('HK', 'TW').toLowerCase())}`

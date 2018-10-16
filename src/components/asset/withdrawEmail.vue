@@ -76,7 +76,6 @@ export default {
       }
     },
     init () {
-      debugger
       this.sendEmail().then(() => {
         this.$refs.sendCode.init()
       })

@@ -2,8 +2,7 @@ import languageDataList from '../locale'
 import {hexSha1} from './sha1'
 import store from '../store'
 import {BigNumber} from 'bignumber.js'
-
-const configure = require('../../configure')
+import configure from '../../configure'
 
 /**
  *修改页面标题
