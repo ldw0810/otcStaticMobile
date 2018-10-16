@@ -57,20 +57,18 @@
       Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="sendSuccess")
     .footer
       .oper
-        #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" @input="changeInputValue" @keydown.enter="doInputKeyEnter")
+        #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" @input="changeInputValue" @paste="pasteInputValue" @keydown.enter="doInputKeyEnter")
         .browImage(@click.prevent.stop="triggerBrow")
           img(:src="browImage")
         mt-button(class="sendBtn orderSubmitBtn" @click="sendInfo") {{$t('public.send')}}
       transition(name="bottom" mode="out-in")
-        .brow(v-if="browFlag" @click.prevent.stop="browFlag = true")
-          mt-tab-container(v-model="browCurrentPage" swipeable)
-            mt-tab-container-item(:id="browPage" v-for="browPage in browPageTotal" :key="browPage")
-              .browList
-                .line(v-for="line in browLine" :key="line")
-                  .row(v-for="row in browRow" :key="row")
-                    .brow(:style="getBrowImage(browPage, line, row)" @click="sendBrow(browPage, line, row)")
-          .browPageArrowList
-            .browPageArrow(v-for="browPage in browPageTotal" @click="browCurrentPage = browPage" :class="{'browPageArrowActive': browPage === +browCurrentPage}")
+        mt-swipe(class="browPage" :auto="0" :continuous="false" v-if="browFlag" @click.native.stop="browPageClick")
+          mt-swipe-item(v-for="browPage in browPageTotal" :key="browPage")
+            .browList
+              .line(v-for="line in browLine" :key="line")
+                .row(v-for="row in browRow" :key="row")
+                  .brow(@click="insertBrow(browPage, line, row)")
+                    img(class="static-emotion-gif" style="vertical-align: middle" :src="getBrowImageSrc(browPage, line, row)")
     transition-group(tag="div" name="slide-right")
       .popup(class="popup-right" v-if="confirmFlag.cancel" :key="1")
         slot
@@ -100,7 +98,7 @@ import Policy from '../policy/policy'
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
 import Rules from '../policy/rules'
-import {Button, Field, Header, TabContainer, TabContainerItem} from 'mint-ui'
+import {Button, Field, Header, Swipe, SwipeItem} from 'mint-ui'
 import OrderPayConfirm from './orderPayConfirm'
 import OrderReleaseConfirm from './orderReleaseConfrim'
 import OrderCancelConfirm from './orderCancelConfirm'
@@ -108,13 +106,13 @@ import OrderCompleteConfirm from './orderCompleteConfrim'
 import Chat from './chat'
 import ValidPhone from '../common/validPhone'
 import ValidGoogle from '../common/validGoogle'
-import {$insertHtmlAtCaret} from '../../utils'
+import {$insertHtmlAtCaret, $restoreSelection, $saveSelection} from '../../utils'
 
-Vue.component(TabContainer.name, TabContainer)
-Vue.component(TabContainerItem.name, TabContainerItem)
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
+Vue.component(Swipe.name, Swipe)
+Vue.component(SwipeItem.name, SwipeItem)
 
 export default {
   name: 'order',
@@ -158,8 +156,9 @@ export default {
       remark: '',
       password: '',
       inputValue: '',
+      inputSelection: {},
       browFlag: false,
-      browList: ['微笑', '撇嘴', '色', '发呆', '得意', '流泪', '害羞', '闭嘴', '睡', '大哭', '尴尬', '发怒', '调皮', '呲牙', '惊讶', '难过', '酷', '冷汗', '抓狂', '吐', '偷笑', '愉快', '白眼', '傲慢', '饥饿', '困', '惊恐', '流汗', '憨笑', '大兵', '奋斗', '咒骂', '疑问', '嘘', '晕', '折磨', '衰', '骷髅', '敲打', '再见', '擦汗', '抠鼻', '鼓掌', '糗大了', '坏笑', '左哼哼', '右哼哼', '哈欠', '鄙视', '委屈', '快哭了', '阴险', '亲亲', '吓', '可怜', '菜刀', '西瓜', '啤酒', '篮球', '乒乓', '咖啡', '饭', '猪头', '玫瑰', '凋谢', '示爱', '爱心', '心碎', '蛋糕', '闪电', '炸弹', '刀', '足球', '瓢虫', '便便', '月亮', '太阳', '礼物', '拥抱', '强', '弱', '握手', '胜利', '抱拳', '勾引', '拳头', '差劲', '爱你', 'NO', 'OK', '爱情', '飞吻', '跳跳', '发抖', '怄火', '转圈', '磕头', '回头', '跳绳', '挥手', '激动', '街舞', '献吻', '左太极', '右太极', '嘿哈', '捂脸', '奸笑', '机智', '皱眉', '耶', '红包', '鸡'],
+      browList: ['微笑', '撇嘴', '色', '发呆', '得意', '流泪', '害羞', '闭嘴', '睡', '大哭', '尴尬', '发怒', '调皮', '呲牙', '惊讶', '难过', '酷', '冷汗', '抓狂', '吐', '偷笑', '愉快', '白眼', '傲慢', '饥饿', '困', '惊恐', '流汗', '憨笑', '大兵', '奋斗', '咒骂', '疑问', '嘘', '晕', '折磨', '衰', '骷髅', '敲打', '再见', '擦汗', '抠鼻', '鼓掌', '糗大了', '坏笑', '左哼哼', '右哼哼', '哈欠', '鄙视', '委屈', '快哭了', '阴险', '亲亲', '吓', '可怜', '菜刀', '西瓜', '啤酒', '篮球', '乒乓', '咖啡', '饭', '猪头', '玫瑰', '凋谢', '示爱', '爱心', '心碎', '蛋糕', '闪电', '炸弹', '刀', '足球', '瓢虫', '便便', '月亮', '太阳', '礼物', '拥抱', '强', '弱', '握手', '胜利', '抱拳', '勾引', '拳头', '差劲', '爱你', 'NO', 'OK', '爱情', '飞吻', '跳跳', '发抖', '怄火', '转圈', '磕头', '回头', '跳绳', '挥手', '激动', '街舞', '献吻', '左太极', '右太极'],
       browCurrentPage: 1,
       browLine: 3,
       browRow: 9
@@ -212,8 +211,17 @@ export default {
     triggerBrow () {
       this.browFlag = !this.browFlag
     },
-    getBrowImage (page, line, row) {
-      return `background: url(https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/default218877.gif)${((page - 1) * 27 + (line - 1) * 9 + (row - 1)) * (-24)}px 0;`
+    getBrowImageSrc (page, line, row) {
+      let index = (page - 1) * 27 + (line - 1) * 9 + (row - 1)
+      let path = index > 104 ? '/img' : 'https://res.wx.qq.com/mpres/htmledition/images/icon'
+      return `${path}/emotion/${index}.gif`
+    },
+    saveSelection () {
+      this.inputSelection = $saveSelection(document.getElementById('footerInput'))
+    },
+    restoreSelection (section) {
+      section = section || this.inputSelection
+      return $restoreSelection(document.getElementById('footerInput'), section)
     },
     changeValidate (value) {
       if (+value === 0) {
@@ -237,9 +245,41 @@ export default {
       }
     },
     changeInputValue (event) {
+      this.saveSelection()
       this.inputValue = event.target.innerHTML
+      this.restoreSelection()
     },
-    insertBrow (browDom) {
+    pasteInputValue (event) {
+      event.preventDefault()
+      if (!(event.clipboardData && event.clipboardData.items)) {
+        return
+      }
+      let isImage = false
+      let clipData = ''
+      for (let i = 0, len = event.clipboardData.items.length; i < len; i++) {
+        let item = event.clipboardData.items[i]
+        if (item.kind === 'string' && item.type === 'text/plain') { // 文字
+          clipData = event.clipboardData.getData('text/plain')
+        } else if (item.kind === 'file') { // 图片
+          isImage = true
+          let clipDataList = event.clipboardData.getData('text/html').match(/<img.*?>/g)
+          if (clipDataList.length) {
+            clipData = clipDataList[0]
+          } else {
+            clipData = ''
+          }
+        }
+      }
+      if (clipData !== '') {
+        if (!isImage) {
+          document.execCommand('insertText', false, clipData)
+        } else {
+          document.execCommand('insertText', false, clipData)
+        }
+      }
+    },
+    browPageClick () {
+      this.browFlag = true
     },
     orderClick () {
       this.browFlag = false
@@ -402,7 +442,10 @@ export default {
       event && event.preventDefault()
       this.$refs.chat.sendInfo(this.inputValue)
     },
-    getBrow (text) {
+    parseText (text) {
+      return this.parseImage(this.parseBrow(text))
+    },
+    parseBrow (text, isNoGif) {
       if (!text) {
         return text
       }
@@ -414,16 +457,49 @@ export default {
         if (index < 0) {
           return word
         }
-        if (index > 104) {
-          return word
+        if (isNoGif) {
+          if (index > 104) {
+            return word
+          }
+          imgHTML = `<i class="static-emotion" style="background:url(https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/default218877.gif) ${backgroundPositionX}px 0;"></i>`
+        } else {
+          let path = index > 104 ? '/img' : 'https://res.wx.qq.com/mpres/htmledition/images/icon'
+          imgHTML = `<img class="static-emotion-gif" style="vertical-align: middle" src="${path}/emotion/${index}.gif">`
         }
-        imgHTML = `<i class="browIcon" style="background: url(https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/default218877.gif) ${backgroundPositionX}px 0;"></i>`
         return imgHTML
       })
       return text
     },
-    sendBrow (page, line, row) {
-      // let tempIndex = (this.browCurrentPage * this.browLine * this.browRow) + (line - 1) * this.browRow + row - 1
+    parseImage (text, isNoGif) {
+      if (!text) {
+        return text
+      }
+      text = text.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, function (word) {
+        let newWord = word.replace(/\[|\]/gi, '')
+        let index = this.browList.indexOf(newWord)
+        let backgroundPositionX = -index * 24
+        let imgHTML = ''
+        if (index < 0) {
+          return word
+        }
+        if (isNoGif) {
+          if (index > 104) {
+            return word
+          }
+          imgHTML = `<i class="static-emotion" style="background:url(https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/default218877.gif) ${backgroundPositionX}px 0;"></i>`
+        } else {
+          let path = index > 104 ? '/img' : 'https://res.wx.qq.com/mpres/htmledition/images/icon'
+          imgHTML = `<img class="static-emotion-gif" style="vertical-align: middle" src="${path}/emotion/${index}.gif">`
+        }
+        return imgHTML
+      })
+      return text
+    },
+    insertBrow (page, line, row) {
+      this.restoreSelection()
+      // let browHTML = `<i class="browIcon" style="${this.getBrowImage(page, line, row)}"></i>`
+      let tempIndex = ((page - 1) * this.browLine * this.browRow) + (line - 1) * this.browRow + row - 1
+      document.execCommand('insertText', false, '[' + this.browList[tempIndex] + ']')
     },
     sendSuccess () {
       this.inputValue = ''
@@ -527,6 +603,7 @@ export default {
       .chatWrapper {
         flex 1
         overflow-y scroll
+        overflow-x hidden
       }
     }
     .footer {
@@ -581,9 +658,14 @@ export default {
           height 5.5vh
         }
       }
+      .browPage {
+        width: 100vw;
+        height: 24vh;
+        transition: .2s ease-in-out;
+      }
       .browList {
         width: 100vw;
-        min-height: 10vh;
+        height: 20vh;
         background: #fff;
         border: 1px solid #ebeef5;
         padding: 1vh 2vw;
@@ -597,19 +679,24 @@ export default {
         transition: .2s ease-in-out;
         display flex
         flex-direction column
+        justify-content space-around
         .line {
           display flex
           justify-content space-evenly
-          margin-top 1vh
           .row {
             @extend .flex-center
             .brow {
-              width 24px
-              height 24px
-              border-radius 24px
+              width 8vw
+              height 8vw
               transition: .2s ease-out;
               &:active, &:focus, &:hover {
                 transform scale(1.2)
+              }
+              img {
+                object-position 0 0
+                object-fit cover
+                width 100%
+                height 100%
               }
             }
           }
@@ -744,5 +831,19 @@ export default {
 
   /deep/ .mint-field-core {
     font-weight normal
+  }
+
+  /deep/ .mint-swipe-indicators {
+    bottom 2.5%
+  }
+
+  /deep/ .mint-swipe-indicator {
+    opacity 1
+    background rgba(0, 0, 0, 0.2)
+  }
+
+  /deep/ .mint-swipe-indicator.is-active {
+    opacity 1
+    background rgba(0, 0, 0, 1)
   }
 </style>

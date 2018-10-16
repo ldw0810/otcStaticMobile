@@ -3,7 +3,7 @@
     ul
       li(v-for="(chat, index) in msgList" :key="index" :class="{'an-move-right': +chat.type === 0, 'an-move-left': +chat.type === 1, 'an-move-center': +chat.type === 9}")
         p(class="time system" v-if="+chat.type === 9")
-          span(v-html="$getDateStr(new Date(chat.time)) + '<br/>' + toEmotion(chat.data)")
+          span(v-html="$getDateStr(new Date(chat.time)) + '<br/>' + parseBrow(chat.data)")
         div(:class="'main' + (+chat.type === 0 ? ' self': '')" v-else)
           p(class="time" v-if="chat.timeFlag")
             span(v-text="$getDateStr(new Date(chat.time))")
@@ -14,7 +14,7 @@
             span(class='chat-loading' v-show='chat.status === 0')
             span(:title='$t("order.order_chat_send_msg_fail")' class='chat-error' v-show='chat.status === -1') !
           <!-- 文本 -->
-          .text(v-html="toEmotion(chat.data)")
+          .text(v-html="parseBrow(chat.data)")
           <!-- 图片 -->
           .text(v-if="+chat.type === 3")
             img(:src="chat.data" class="image" :alt="$t('order.order_chat_img')")
@@ -113,7 +113,8 @@ export default {
     },
     sendInfo (value) {
       if (value.trim()) {
-        const inputInfo = this.htmlEncode(value.trim())
+        // const inputInfo = this.htmlEncode(value.trim())
+        const inputInfo = value.trim()
         const tempTime = new Date()
         this.$emit('sendSuccess', 1)
         let compareTime = this.msgList.length ? this.msgList[this.msgList.length - 1].compareTime : 0
@@ -226,7 +227,7 @@ export default {
       this.msg && (this.msgList[this.msgList.length] = this.msg)
       this.getMsg()
     },
-    toEmotion (text, isNoGif) {
+    parseBrow (text, isNoGif) {
       const list = ['微笑', '撇嘴', '色', '发呆', '得意', '流泪', '害羞', '闭嘴', '睡', '大哭', '尴尬', '发怒', '调皮', '呲牙', '惊讶', '难过', '酷', '冷汗', '抓狂', '吐', '偷笑', '愉快', '白眼', '傲慢', '饥饿', '困', '惊恐', '流汗', '憨笑', '大兵', '奋斗', '咒骂', '疑问', '嘘', '晕', '折磨', '衰', '骷髅', '敲打', '再见', '擦汗', '抠鼻', '鼓掌', '糗大了', '坏笑', '左哼哼', '右哼哼', '哈欠', '鄙视', '委屈', '快哭了', '阴险', '亲亲', '吓', '可怜', '菜刀', '西瓜', '啤酒', '篮球', '乒乓', '咖啡', '饭', '猪头', '玫瑰', '凋谢', '示爱', '爱心', '心碎', '蛋糕', '闪电', '炸弹', '刀', '足球', '瓢虫', '便便', '月亮', '太阳', '礼物', '拥抱', '强', '弱', '握手', '胜利', '抱拳', '勾引', '拳头', '差劲', '爱你', 'NO', 'OK', '爱情', '飞吻', '跳跳', '发抖', '怄火', '转圈', '磕头', '回头', '跳绳', '挥手', '激动', '街舞', '献吻', '左太极', '右太极', '嘿哈', '捂脸', '奸笑', '机智', '皱眉', '耶', '红包', '鸡']
       if (!text) {
         return text
@@ -541,16 +542,19 @@ export default {
     left: 0;
     animation: moveLeft 0.7s ease;
     -webkit-animation: moveLeft 0.7s ease;
+    overflow auto
   }
 
   .an-move-right {
     left: 0;
     animation: moveRight 0.7s ease;
+    overflow auto
   }
 
   .an-move-center {
     left: 0;
     animation: moveCenter 0.5s ease;
+    overflow auto
   }
 
   .bgnone {

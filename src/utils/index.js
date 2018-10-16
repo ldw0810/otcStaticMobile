@@ -286,3 +286,75 @@ export function $insertHtmlAtCaret (insertHtml) {
     document.selection.createRange().pasteHTML(insertHtml)
   }
 }
+
+/**
+ * 记录光标位置
+ * */
+export function $saveSelection ($el) {
+  if (window.getSelection && document.createRange) {
+    let range = window.getSelection().getRangeAt(0)
+    let preSelectionRange = range.cloneRange()
+    preSelectionRange.selectNodeContents($el)
+    preSelectionRange.setEnd(range.startContainer, range.startOffset)
+    let start = preSelectionRange.toString().length
+    return {
+      start: start,
+      end: start + range.toString().length
+    }
+  } else if (document.selection && document.body.createTextRange) {
+    let selectedTextRange = document.selection.createRange()
+    let preSelectionTextRange = document.body.createTextRange()
+    preSelectionTextRange.moveToElementText($el)
+    preSelectionTextRange.setEndPoint('EndToStart', selectedTextRange)
+    let start = preSelectionTextRange.text.length
+    return {
+      start: start,
+      end: start + selectedTextRange.text.length
+    }
+  }
+}
+
+/**
+ * 返回光标位置
+ * */
+export function $restoreSelection ($el, savedSel) {
+  if (window.getSelection && document.createRange) {
+    let charIndex = 0
+    let range = document.createRange()
+    range.setStart($el, 0)
+    range.collapse(true)
+    let nodeStack = [$el]
+    let node
+    let foundStart = false
+    let stop = false
+    while (!stop && (node = nodeStack.pop())) {
+      if (+node.nodeType === 3) {
+        let nextCharIndex = charIndex + node.length
+        if (!foundStart && savedSel.start >= charIndex && savedSel.start <= nextCharIndex) {
+          range.setStart(node, savedSel.start - charIndex)
+          foundStart = true
+        }
+        if (foundStart && savedSel.end >= charIndex && savedSel.end <= nextCharIndex) {
+          range.setEnd(node, savedSel.end - charIndex)
+          stop = true
+        }
+        charIndex = nextCharIndex
+      } else {
+        let i = node.childNodes.length
+        while (i--) {
+          nodeStack.push(node.childNodes[i])
+        }
+      }
+    }
+    let sel = window.getSelection()
+    sel.removeAllRanges()
+    sel.addRange(range)
+  } else if (document.selection && document.body.createTextRange) {
+    let textRange = document.body.createTextRange()
+    textRange.moveToElementText($el)
+    textRange.collapse(true)
+    textRange.moveEnd('character', savedSel.end)
+    textRange.moveStart('character', savedSel.start)
+    textRange.select()
+  }
+}
