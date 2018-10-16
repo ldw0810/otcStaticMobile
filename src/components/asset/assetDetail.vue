@@ -56,7 +56,7 @@
                   .noAuthPage(v-else)
                     .text {{$t('asset.asset_withdraw_no_auth', {'0': currency.toUpperCase()})}}
                     mt-button(class="goBtn" @click.native.prevent="$router.push('/me/settings')") {{$t('asset.asset_go_set_auth')}}
-                .noAuthPage
+                .noAuthPage(v-else)
                   .text {{$t('asset.asset_withdraw_no_withdraw')}}
       .footer(class="historyButton")
         mt-button(@click="goHistory") {{$t('asset.asset_withdraw_and_recharge_history')}}

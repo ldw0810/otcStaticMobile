@@ -512,6 +512,12 @@ export default {
   },
   mounted () {
     this.init()
+    // window.addEventListener('resize', (event) => {
+    //   window.setTimeout(() => {
+    //     document.body.scrollTop = document.body.scrollHeight
+    //     alert(event)
+    //   }, 300)
+    // })
   }
 }
 </script>
