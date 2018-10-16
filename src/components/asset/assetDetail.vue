@@ -58,8 +58,8 @@
                     mt-button(class="goBtn" @click.native.prevent="$router.push('/me/settings')") {{$t('asset.asset_go_set_auth')}}
                 .noAuthPage(v-else)
                   .text {{$t('asset.asset_withdraw_no_withdraw')}}
-      .footer(class="historyButton")
-        mt-button(@click="goHistory") {{$t('asset.asset_withdraw_and_recharge_history')}}
+        .footer(class="historyButton")
+          mt-button(@click="goHistory") {{$t('asset.asset_withdraw_and_recharge_history')}}
     transition-group(tag="div" name="slide-right")
       .popup(class="popup-right" v-if="withdrawAddressFlag" :key="1")
         slot
@@ -406,7 +406,7 @@ export default {
     @extend .scrollPage
     flex 1
     margin-top $mintHeaderHeight
-    height 100 - $mintHeaderHeight - footerHeight
+    height 100 - $mintHeaderHeight
     .asset {
       display flex
       flex-direction column
@@ -559,7 +559,6 @@ export default {
           display flex
           flex-direction column
           align-items center
-          height 55vh
           overflow-y scroll
           .addressForm {
             padding 0 6vw
@@ -625,8 +624,7 @@ export default {
           align-items center
           flex-direction column
           width 100vw
-          margin 15vh 0
-          overflow-y scroll
+          padding 5vh 0
           .tip {
             color #333333
             font-weight normal
@@ -654,15 +652,17 @@ export default {
   }
 
   .footer {
-    position fixed
+    margin-top 1vh
     width 100vw
-    bottom 0
     height footerHeight
     display flex
     align-items center
     justify-content center
     font-size 0.8rem
     color #999999
+    background #fff
+    border-top 1px solid #EEEEEE
+    border-bottom 1px solid #EEEEEE
   }
 
   /deep/ .historyButton {
