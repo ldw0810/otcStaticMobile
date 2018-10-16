@@ -68,7 +68,7 @@
               .line(v-for="line in browLine" :key="line")
                 .row(v-for="row in browRow" :key="row")
                   .brow(@click="insertBrow(browPage, line, row)")
-                    img(class="static-emotion-gif" style="vertical-align: middle" :src="getBrowImageSrc(browPage, line, row)")
+                    img(class="static-emotion-gif" style="vertical-align: middle" :src="getBrowImageSrc(browPage, line, row)" v-if="((browPage - 1) * browLine * browRow + (line - 1) * browRow + (row - 1)) < browList.length")
     transition-group(tag="div" name="slide-right")
       .popup(class="popup-right" v-if="confirmFlag.cancel" :key="1")
         slot
@@ -212,7 +212,7 @@ export default {
       this.browFlag = !this.browFlag
     },
     getBrowImageSrc (page, line, row) {
-      let index = (page - 1) * 27 + (line - 1) * 9 + (row - 1)
+      let index = (page - 1) * this.browLine * this.browRow + (line - 1) * this.browRow + (row - 1)
       let path = index > 104 ? '/img' : 'https://res.wx.qq.com/mpres/htmledition/images/icon'
       return `${path}/emotion/${index}.gif`
     },
