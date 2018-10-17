@@ -243,6 +243,21 @@ export const $dividedBy = function (...args) {
 }
 
 /**
+ * 去除收尾字符串
+ */
+export function $trim (str, char, type) {
+  if (char) {
+    if (type === 'left') {
+      return str.replace(new RegExp('^\\' + char + '+', 'g'), '')
+    } else if (type === 'right') {
+      return str.replace(new RegExp('\\' + char + '+$', 'g'), '')
+    }
+    return str.replace(new RegExp('^\\' + char + '+|\\' + char + '+$', 'g'), '')
+  }
+  return str.replace(/^\s+|\s+$/g, '')
+};
+
+/**
  *  光标后追加内容
  * */
 export function $insertHtmlAtCaret (insertHtml) {
@@ -258,7 +273,7 @@ export function $insertHtmlAtCaret (insertHtml) {
       // non-standard and not supported in all browsers (IE9, for one)
       let el = document.createElement('div')
       let rangeHtml = range.endContainer.innerHTML
-      if (insertHtml === '<br>' && !(rangeHtml && rangeHtml.endsWith('<br>')) && range.endContainer.wholeText.length === +range.endOffset) {
+      if (insertHtml === '<br>' && !(rangeHtml && rangeHtml.endsWith('<br>')) && (range.endContainer.wholeText || '').length === +range.endOffset) {
         el.innerHTML = insertHtml + insertHtml
       } else {
         el.innerHTML = insertHtml

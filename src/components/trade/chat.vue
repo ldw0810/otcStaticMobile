@@ -21,7 +21,7 @@
 </template>
 <script type="es6">
 import {VALI_CHAT} from '../../utils/validator'
-import {$getDateStr} from '../../utils'
+import {$getDateStr, $trim} from '../../utils'
 import Avatar from '../common/avatar'
 import {Button} from 'mint-ui'
 import Vue from 'vue'
@@ -112,16 +112,16 @@ export default {
       })
     },
     sendInfo (value) {
-      if (value.trim()) {
+      value = value ? $trim(('' + value).trim(), '<br>').trim() : ''
+      if (value) {
         // const inputInfo = this.htmlEncode(value.trim())
-        const inputInfo = value.trim()
         const tempTime = new Date()
         this.$emit('sendSuccess', 1)
         let compareTime = this.msgList.length ? this.msgList[this.msgList.length - 1].compareTime : 0
         let timeFlag = tempTime.getTime() - compareTime > 3 * 60 * 1000
         let newMsg = {
           type: 0,
-          data: inputInfo,
+          data: value,
           time: $getDateStr(tempTime),
           compareTime: timeFlag ? tempTime.getTime() : compareTime,
           timeFlag: timeFlag,
@@ -133,7 +133,7 @@ export default {
         this.$store.dispatch('axios_send_msg', {
           order_id: this.order.id,
           to: this.contact.id,
-          msg: inputInfo
+          msg: value
         }).then(res => {
           if (res.data && +res.data.error === 0) {
             this.$nextTick(() => {

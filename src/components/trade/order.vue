@@ -206,7 +206,11 @@ export default {
   },
   methods: {
     triggerInfo () {
+      // let chatScrollTop = this.$refs.chat.$el.scrollTop
       this.triggerInfoFlag = !this.triggerInfoFlag
+      // this.$nextTick(() => {
+      //   this.$refs.chat.$el.scrollTop = chatScrollTop
+      // })
     },
     triggerBrow () {
       this.browFlag = !this.browFlag
@@ -530,12 +534,15 @@ export default {
     display flex
     flex-direction column
     .content {
+      position fixed
       display flex
       overflow hidden
       flex-direction column
       flex 1
-      margin-top $mintHeaderHeight
+      top $mintHeaderHeight
+      left 0
       height 100 - $chatFooterHeight - $mintHeaderHeight
+      width 100vw
       .info {
         display flex
         flex-direction column
@@ -613,6 +620,9 @@ export default {
       }
     }
     .footer {
+      position fixed
+      left 0
+      bottom 0
       width 100vw
       background #fff
       display flex
