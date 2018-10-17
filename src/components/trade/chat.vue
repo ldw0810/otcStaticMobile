@@ -112,7 +112,7 @@ export default {
       })
     },
     sendInfo (value) {
-      value = value ? $trim(('' + value).trim(), '<br>').trim() : ''
+      value = value ? $trim($trim(('' + value).trim(), '<br>'), '&nbsp;', 'left').trim() : ''
       if (value) {
         // const inputInfo = this.htmlEncode(value.trim())
         const tempTime = new Date()

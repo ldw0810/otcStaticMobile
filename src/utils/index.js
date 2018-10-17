@@ -247,15 +247,27 @@ export const $dividedBy = function (...args) {
  */
 export function $trim (str, char, type) {
   if (char) {
+    let reg = ''
     if (type === 'left') {
-      return str.replace(new RegExp('^\\' + char + '+', 'g'), '')
+      reg = new RegExp('^\\' + char + '+', 'g')
+      while (reg.test(str)) {
+        str = str.replace(reg, '').trim()
+      }
     } else if (type === 'right') {
-      return str.replace(new RegExp('\\' + char + '+$', 'g'), '')
+      reg = new RegExp('\\' + char + '+$', 'g')
+      while (reg.test(str)) {
+        str = str.replace(reg, '').trim()
+      }
+    } else {
+      reg = new RegExp('^\\' + char + '+|\\' + char + '+$', 'g')
+      while (reg.test(str)) {
+        str = str.replace(reg, '').trim()
+      }
     }
-    return str.replace(new RegExp('^\\' + char + '+|\\' + char + '+$', 'g'), '')
+    return str
   }
   return str.replace(/^\s+|\s+$/g, '')
-};
+}
 
 /**
  *  光标后追加内容
