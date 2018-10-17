@@ -492,6 +492,7 @@ export default {
     transform: rotate(135deg);
     background-color: #fff;
     left: -2px;
+    top: 12px;
     box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.1);
   }
 
