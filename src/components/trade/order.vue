@@ -244,8 +244,11 @@ export default {
         } else {
           event.returnValue = false
         }
+        let footerInput = document.getElementById('footerInput')
+        let tempTop = footerInput.scrollTop
         $insertHtmlAtCaret('<br>')
-        this.inputValue = document.getElementById('footerInput').innerHTML
+        footerInput.scrollTop = tempTop + 26
+        this.inputValue = footerInput.innerHTML
       }
     },
     changeInputValue (event) {
