@@ -162,7 +162,7 @@ export default {
         this.$store.commit('showAuthEmail_setter', 1)
       } else {
         this.$router.push({
-          path: '/ad',
+          path: '/adDetail',
           query: {
             id: id
           }

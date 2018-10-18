@@ -44,7 +44,7 @@ export default {
       return this.$t('public.invite_content') + '\n' + this.linkUrl
     },
     linkUrl () {
-      return window.location.href.replace('adShare', 'ad')
+      return window.location.href.replace('adShare', 'adDetail')
     },
     qrCodeConfig () {
       return {

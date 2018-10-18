@@ -132,7 +132,6 @@ const routers = [
       },
       {
         path: '/adDetail',
-        alias: ['/ad'],
         meta: {
           needLogin: true
         },
