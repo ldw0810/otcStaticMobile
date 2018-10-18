@@ -655,7 +655,7 @@
     "100012": "Google authentication fail",
     "100013": "Google authentication required",
     "100014": "Phone binding required",
-    "100015": "Invalid phone number",
+    "100015": "Invalid authentication code",
     "100016": "Phone binding fail",
     "100017": "Two-factor authentication required",
     "100018": "Nick name needed",
