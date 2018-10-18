@@ -4,7 +4,7 @@
       router-view
 </template>
 
-<script>
+<script type="es6">
 export default {
   name: 'App',
   watch: {

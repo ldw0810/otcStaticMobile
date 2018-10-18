@@ -26,7 +26,6 @@ if (localStorage.getItem('userToken') && !store.state.userToken) {
 for (let i = 0; i < languageDataList.length; i++) {
   Vue.i18n.add(languageDataList[i].language, languageDataList[i].data)
 }
-// 自动设置语言
 Vue.i18n.set($getLanguage())
 // filters
 Object.keys(filters).forEach((item) => {
