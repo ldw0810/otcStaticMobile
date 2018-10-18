@@ -62,7 +62,7 @@ export default {
       return this.$store.state.userInfo.mobile
     },
     validateGoogle () {
-      return this.$store.state.userInfo_app_two_factor_setter
+      return this.$store.state.userInfo.app_two_factor
     },
     tipText () {
       return this.$t('user.auth_phone_code_will_send', {
