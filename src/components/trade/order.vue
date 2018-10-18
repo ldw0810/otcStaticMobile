@@ -461,59 +461,6 @@ export default {
       event && event.preventDefault()
       this.$refs.chat.sendInfo(this.inputValue)
     },
-    parseText (text) {
-      return this.parseImage(this.parseBrow(text))
-    },
-    parseBrow (text, isNoGif) {
-      if (!text) {
-        return text
-      }
-      text = text.replace(/\[[\u4E00-\u9FA5a-zA-Z]{1,3}\]/gi, function (word) {
-        let newWord = word.replace(/\[|\]/gi, '')
-        let index = this.browList.indexOf(newWord)
-        let backgroundPositionX = -index * 24
-        let imgHTML = ''
-        if (index < 0) {
-          return word
-        }
-        if (isNoGif) {
-          if (index > 104) {
-            return word
-          }
-          imgHTML = `<i class="static-emotion" style="background:url(https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/default218877.gif) ${backgroundPositionX}px 0;"></i>`
-        } else {
-          let path = index > 104 ? '/img' : 'https://res.wx.qq.com/mpres/htmledition/images/icon'
-          imgHTML = `<img class="static-emotion-gif" style="vertical-align: middle" src="${path}/emotion/${index}.gif">`
-        }
-        return imgHTML
-      })
-      return text
-    },
-    parseImage (text, isNoGif) {
-      if (!text) {
-        return text
-      }
-      text = text.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, function (word) {
-        let newWord = word.replace(/\[|\]/gi, '')
-        let index = this.browList.indexOf(newWord)
-        let backgroundPositionX = -index * 24
-        let imgHTML = ''
-        if (index < 0) {
-          return word
-        }
-        if (isNoGif) {
-          if (index > 104) {
-            return word
-          }
-          imgHTML = `<i class="static-emotion" style="background:url(https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/default218877.gif) ${backgroundPositionX}px 0;"></i>`
-        } else {
-          let path = index > 104 ? '/img' : 'https://res.wx.qq.com/mpres/htmledition/images/icon'
-          imgHTML = `<img class="static-emotion-gif" style="vertical-align: middle" src="${path}/emotion/${index}.gif">`
-        }
-        return imgHTML
-      })
-      return text
-    },
     insertBrow (page, line, row) {
       this.restoreSelection()
       // let browHTML = `<i class="browIcon" style="${this.getBrowImage(page, line, row)}"></i>`

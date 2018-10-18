@@ -254,6 +254,7 @@ export default {
       if (!text) {
         return text
       }
+      text = text.replace(/(&lt;img)(.*?)(\/&gt;)/gi, '<img$2/>')
       return text
     },
     parseBrow (text, isNoGif) {
@@ -659,6 +660,17 @@ export default {
   @media (max-width: 367px) {
     .fzDInfo {
       width: 82%;
+    }
+  }
+
+  /deep/ .message {
+    .text {
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 0 0;
+      }
     }
   }
 </style>
