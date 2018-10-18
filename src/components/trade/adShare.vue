@@ -48,7 +48,7 @@ export default {
     },
     qrCodeConfig () {
       return {
-        value: location.protocol + '//' + location.host + '/ad?id=' + this.id + '&shareId=' + this.id,
+        value: location.protocol + '//' + location.host + '/adDetail?id=' + this.id + '&shareId=' + this.id,
         imagePath: require('../../assets/images/trade/QC-Code-BG.png'),
         filter: 'canvas',
         size: configure.qrCode_adShare.size * document.body.clientHeight / 667
