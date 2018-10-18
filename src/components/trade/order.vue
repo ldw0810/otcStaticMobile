@@ -468,7 +468,7 @@ export default {
       if (!text) {
         return text
       }
-      text = text.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, function (word) {
+      text = text.replace(/\[[\u4E00-\u9FA5a-zA-Z]{1,3}\]/gi, function (word) {
         let newWord = word.replace(/\[|\]/gi, '')
         let index = this.browList.indexOf(newWord)
         let backgroundPositionX = -index * 24
