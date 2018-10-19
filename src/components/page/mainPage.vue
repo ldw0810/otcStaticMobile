@@ -50,7 +50,7 @@ export default {
         device_type: 'mobile'
       }).then(res => {
         if (res.data && +res.data.error === 0) {
-          this.$store.commit('homeCarouselList_setter', ['http://imgsrc.baidu.com/imgad/pic/item/42a98226cffc1e17444290174090f603738de913.jpg', 'https://file.iviewui.com/asd/asd-vaptcha2.jpg'])
+          this.$store.commit('homeCarouselList_setter', res.data.list)
         }
       }).catch(() => {
       })
