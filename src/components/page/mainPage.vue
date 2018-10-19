@@ -9,7 +9,7 @@
           mt-swipe-item(v-for="(item, index) in homeCarouselList" :key="index")
             .img
               img(:src="item")
-        .button(@click="isFirstLogin = 0") {{$t('public.confirm')}}
+        .button(@click="hideBanner") {{$t('public.confirm')}}
 </template>
 <script type="es6">
 import Vue from 'vue'
@@ -40,6 +40,9 @@ export default {
     }
   },
   methods: {
+    hideBanner () {
+      this.isFirstLogin = 0
+    },
     getBanner () {
       this.$loading.open()
       this.$store.dispatch('axios_banner', {
@@ -109,6 +112,9 @@ export default {
       box-shadow: 0 5px 5px 0 rgba(0,0,0,0.03);
       border-radius: 2px;
       @extend .flex-center
+      &:active, &:focus, &:hover {
+        transition .2s button
+      }
     }
   }
 </style>
