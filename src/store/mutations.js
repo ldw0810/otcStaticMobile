@@ -98,5 +98,6 @@ export default {
   },
   isFirstLogin_setter (state, value) {
     state.isFirstLogin = value
+    localStorage.setItem('isFirstLogin', value)
   }
 }
