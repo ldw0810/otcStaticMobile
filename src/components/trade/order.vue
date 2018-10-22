@@ -5,6 +5,7 @@
         mt-button(icon="back")
       .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
     .content(v-if="order.id")
+      .border
       .info(class="showInfo")
         .list
           .item
@@ -27,6 +28,7 @@
         .remark(v-if="triggerInfoFlag")
           .label {{$t('ad.ad_remark')}}:
           .text {{order.remark}}
+      .border
       .oper
         .tip(v-if="stepTip" v-html="stepTip")
         .submit(class="mintSubmit" v-if="order.status === 'timeout'")
@@ -223,6 +225,9 @@ export default {
     doInputFocusEvent (event) {
       if (event.type === 'focus') {
         this.restoreSelection()
+        setTimeout(() => {
+          document.body.scrollTop = document.body.scrollHeight
+        }, 300)
       } else if (event.type === 'blur') {
         this.saveSelection()
       }
@@ -491,7 +496,6 @@ export default {
   .order {
     width 100vw
     height 100vh
-    background #fafafa
     overflow hidden
     display flex
     flex-direction column
@@ -505,10 +509,14 @@ export default {
       left 0
       height 100 - $chatFooterHeight - $mintHeaderHeight
       width 100vw
+      .border {
+        width: 100vw;
+        height: 1vh;
+        background: #fafafa;
+      }
       .info {
         display flex
         flex-direction column
-        margin-top 1vh
         padding 0 6vw 2.5vh
         background #FFFFFF
         border-top 1px solid #EEEEEE
@@ -563,7 +571,6 @@ export default {
       .oper {
         display flex
         flex-direction column
-        margin-top 1vh
         padding 2.5vh 0
         background #FFFFFF
         border-top 1px solid #EEEEEE
