@@ -33,9 +33,9 @@
         .border
         .adForm
           .label {{adType === 0 ? $t('order.order_buy_title', {'0': currency.toUpperCase()}): $t('order.order_sell_title', {'0': currency.toUpperCase()})}}
-          mt-field(ref="amount" class="submitFormItem" type="number" :tabIndex="1" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @blur.native.capture="inputBlur('amount')" @keyup.native.capture="(event) => {doInputNumberKey(event, 'amount')}")
+          mt-field(ref="amount" class="submitFormItem" type="number" :tabIndex="1" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @blur.native.capture="inputBlur('amount')" @keydown.native.capture="(event) => {doInputNumberKeyDown(event, 'amount')}" @keyup.native.capture="(event) => {doInputNumberKeyUp(event, 'amount')}")
             .currency {{targetCurrency.toUpperCase()}}
-          mt-field(ref="number" class="submitFormItem" type="number" :tabIndex="2" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @blur.native.capture="inputBlur('number')" @keyup.native.capture="(event) => {doInputNumberKey(event, 'number')}")
+          mt-field(ref="number" class="submitFormItem" type="number" :tabIndex="2" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @blur.native.capture="inputBlur('number')" @keydown.native.capture="(event) => {doInputNumberKeyDown(event, 'number')}" @keyup.native.capture="(event) => {doInputNumberKeyUp(event, 'number')}")
             .currency {{currency.toUpperCase()}}
       .footer(class="mintSubmit")
         mt-button(class="submitButton" type='primary' @click="submit" :disabled="!formStateAll || isSelfOrder") {{isSelfOrder ? $t('order.order_join_own_otc_ad') : (adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm'))}}
@@ -234,14 +234,18 @@ export default {
       }
       this.checkAllState()
     },
-    doInputNumberKey (event, type) { // 仅支持：1234567890.上下左右删除
+    doInputNumberKeyUp (event, type) {
+      if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', '.'].indexOf(event.key) > -1) {
+        this.changeInput(type)
+      }
+    },
+    doInputNumberKeyDown (event, type) { // 仅支持：1234567890.上下左右删除
       const keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
       const key = event.key
       const defaultKeyCodeList = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 8, 37, 38, 39, 40]
       const defaultKeyList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown']
       for (let i = 0; i < defaultKeyCodeList.length; i++) {
         if (+keyCode === defaultKeyCodeList[i] && key === defaultKeyList[i]) {
-          this.changeInput(type)
           return true
         }
       }
