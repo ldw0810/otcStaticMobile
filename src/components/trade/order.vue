@@ -463,8 +463,8 @@ export default {
       this.inputValue = this.inputValue.substring(0, +this.inputSelection.end) + insertText + this.inputValue.substring(+this.inputSelection.end)
       document.getElementById('footerInput').innerHTML = this.inputValue
       this.inputSelection = {
-        start: this.inputSelection.start + insertText.length,
-        end: this.inputSelection.end + insertText.length
+        start:+this.inputSelection.start + insertText.length,
+        end: +this.inputSelection.end + insertText.length
       }
     },
     sendSuccess () {
