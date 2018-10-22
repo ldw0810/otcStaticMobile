@@ -457,10 +457,15 @@ export default {
       this.$refs.chat.sendInfo(this.inputValue)
     },
     insertBrow (page, line, row) {
-      this.restoreSelection()
       // let browHTML = `<i class="browIcon" style="${this.getBrowImage(page, line, row)}"></i>`
       let tempIndex = ((page - 1) * this.browLine * this.browRow) + (line - 1) * this.browRow + row - 1
-      document.execCommand('insertText', false, '[' + this.browList[tempIndex] + ']')
+      let insertText = '[' + this.browList[tempIndex] + ']'
+      this.inputValue = this.inputValue.substring(0, +this.inputSelection.end) + insertText + this.inputValue.substring(+this.inputSelection.end)
+      document.getElementById('footerInput').innerHTML = this.inputValue
+      this.inputSelection = {
+        start: this.inputSelection.start + insertText.length,
+        end: this.inputSelection.end + insertText.length
+      }
     },
     sendSuccess () {
       this.inputValue = ''
