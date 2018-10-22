@@ -57,7 +57,7 @@
       Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="sendSuccess")
     .footer
       .oper
-        #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" :tabIndex="2" @input="changeInputValue" @paste="pasteInputValue" @keydown.enter="doInputKeyEnter" @click.stop="doInputClick" @focus="doInputFocusEvent" @blur="doInputFocusEvent")
+        #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" :tabIndex="2" @input="changeInputValue" @paste="pasteInputValue" @keydown.enter="doInputKeyEnter" @focus="doInputFocusEvent" @blur="doInputFocusEvent")
         .browImage(@click.prevent.stop="triggerBrow")
           img(:src="browImage")
         mt-button(class="sendBtn orderSubmitBtn" @click="sendInfo") {{$t('public.send')}}
@@ -219,11 +219,6 @@ export default {
       let index = (page - 1) * this.browLine * this.browRow + (line - 1) * this.browRow + (row - 1)
       let path = index > 104 ? '/img' : 'https://res.wx.qq.com/mpres/htmledition/images/icon'
       return `${path}/emotion/${index}.gif`
-    },
-    doInputClick (event) {
-      if (this.browFlag) {
-        this.browFlag = true
-      }
     },
     doInputFocusEvent (event) {
       if (event.type === 'focus') {
