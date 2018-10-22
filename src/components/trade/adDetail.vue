@@ -33,9 +33,9 @@
         .border
         .adForm
           .label {{adType === 0 ? $t('order.order_buy_title', {'0': currency.toUpperCase()}): $t('order.order_sell_title', {'0': currency.toUpperCase()})}}
-          mt-field(class="submitFormItem" type="number" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input.native.prevent="changeAmount")
+          mt-field(ref="amount" class="submitFormItem" type="number" :tabIndex="1" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @blur.native.capture="inputBlur('amount')" @keyup.native.capture="(event) => {doInputNumberKey(event, 'amount')}")
             .currency {{targetCurrency.toUpperCase()}}
-          mt-field(class="submitFormItem" type="number" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input.native.prevent="changeNumber")
+          mt-field(ref="number" class="submitFormItem" type="number" :tabIndex="2" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @blur.native.capture="inputBlur('number')" @keyup.native.capture="(event) => {doInputNumberKey(event, 'number')}")
             .currency {{currency.toUpperCase()}}
       .footer(class="mintSubmit")
         mt-button(class="submitButton" type='primary' @click="submit" :disabled="!formStateAll || isSelfOrder") {{isSelfOrder ? $t('order.order_join_own_otc_ad') : (adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm'))}}
@@ -59,7 +59,7 @@ import AdCompleteConfirm from './adCompleteConfirm'
 import Rules from '../policy/rules'
 import {Button, Field, Header} from 'mint-ui'
 import Vue from 'vue'
-import {$dividedBy, $fixDecimalAuto, $multipliedBy} from '../../utils'
+import {$dividedBy, $fixDecimalAuto, $fixDecimalMax, $multipliedBy} from '../../utils'
 import formMixin from '../../mixins/formMixin'
 
 Vue.component(Header.name, Header)
@@ -87,6 +87,10 @@ export default {
       form: {
         amount: '',
         number: ''
+      },
+      formCommit: {
+        amount: 0,
+        number: 0
       },
       formState: {
         amount: '',
@@ -143,6 +147,9 @@ export default {
         obj[this.userInfo.valid_account[i].currency] = +this.userInfo.valid_account[i].balance
       }
       return obj
+    },
+    orderLimitNumber () {
+      return $fixDecimalAuto($dividedBy(+this.ad.order_limit, +this.ad.current_price), this.currency)
     }
   },
   methods: {
@@ -205,20 +212,69 @@ export default {
         }
       }
     },
-    changeAmount () {
-      const value = +event.target.value
-      if (value >= 0) {
-        if (value > +this.ad.order_limit) {
-          this.form.amount = this.ad.order_limit
-        } else {
-          this.form.amount = value
+    changeInput (type) {
+      if (type === 'amount') {
+        if (+this.form.amount > +this.ad.order_limit) {
+          this.form.amount = $fixDecimalAuto(this.ad.order_limit, this.targetCurrency)
+        } else if (+this.form.amount <= 0) {
+          this.form.amount = 0
         }
-        const tempNumber = $dividedBy(value, +this.ad.current_price)
-        this.form.number = $fixDecimalAuto(tempNumber, this.currency)
+        this.formCommit.amount = +this.form.amount
+        this.formCommit.number = $fixDecimalMax($dividedBy(+this.form.amount, +this.ad.current_price))
+        this.form.number = $fixDecimalAuto(this.formCommit.number, this.currency)
+      } else if (type === 'number') {
+        if (+this.form.number > +this.orderLimitNumber) {
+          this.form.number = this.orderLimitNumber
+        } else if (+this.form.number <= 0) {
+          this.form.number = 0
+        }
+        this.formCommit.number = +this.form.number
+        this.formCommit.amount = $fixDecimalMax($multipliedBy(+this.form.number, +this.ad.current_price))
+        this.form.amount = $fixDecimalAuto(this.formCommit.amount, this.targetCurrency)
       }
       this.checkAllState()
     },
-    changeNumber () {
+    doInputNumberKey (event, type) { // 仅支持：1234567890.上下左右删除
+      const keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
+      const key = event.key
+      const defaultKeyCodeList = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 8, 37, 38, 39, 40]
+      const defaultKeyList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown']
+      for (let i = 0; i < defaultKeyCodeList.length; i++) {
+        if (+keyCode === defaultKeyCodeList[i] && key === defaultKeyList[i]) {
+          this.changeInput(type)
+          return true
+        }
+      }
+      if (+keyCode === 13) {
+        if (type === 'amount') {
+          return true
+        } else if (type === 'number') {
+          this.submit()
+        }
+      } else if (+keyCode === 190 && key === '.') {
+        let bindValue = this.form[type]
+        if (('' + bindValue).indexOf('.') > -1) {
+          event.preventDefault()
+        } else {
+          return true
+        }
+      } else {
+        event.preventDefault()
+      }
+    },
+    doInputNumberPaste (event) {
+      return true
+    },
+    inputBlur (type) {
+      let value = type === 'amount' ? this.form.amount : (type === 'number' ? this.form.number : '')
+      value = ('' + value).replace(/^[.]+(.*?)/, '0.$1').replace(/(.*?)[.]+$/, '$1')
+      if (type === 'amount') {
+        this.form.amount = +value
+      } else if (type === 'number') {
+        this.form.number = +value
+      }
+    },
+    doNumberKey (event) {
       const value = +event.target.value
       if (value >= 0) {
         let tempAmount = $multipliedBy(value, +this.ad.current_price)

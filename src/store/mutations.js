@@ -73,12 +73,6 @@ export default {
   code_setter (state, value) {
     state.code = value
   },
-  showAuthEmail_setter (state, value) {
-    if (value) {
-      state.showAuthEmail = !value
-    }
-    state.showAuthEmail = value
-  },
   axiosCancel_setter (state, item) {
     for (let key in item) {
       Vue.set(state.axiosCancel, key, item[key])

@@ -177,6 +177,9 @@ export const $fixDecimalsLegal = function (value) {
 /**
  * 设置bigNumber的全局参数
  */
+export const $fixDecimalMax = function (value) {
+  return $fixDecimal(value, configure.CONF_DECIMAL_MAX)
+}
 // BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_FLOOR });
 export const $fixDecimal = function (value, limit) {
   let tempLimit = +limit

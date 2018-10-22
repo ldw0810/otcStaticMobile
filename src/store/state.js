@@ -60,7 +60,6 @@ export default {
   homeCarouselList: [], // 首页carousel
   inviteBannerList: [], // 邀请页面的banner
   userToken: null, // 登录后header必携带
-  showAuthEmail: false,
   axiosCancel: {}, // axios的CancelToken
   timeout: {}, // 定时器
   device: 0, // 设备 0--PC端 1--手机端,

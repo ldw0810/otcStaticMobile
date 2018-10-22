@@ -159,7 +159,7 @@ export default {
           }
         })
       } else if (!this.$store.state.userInfo.activated) {
-        this.$store.commit('showAuthEmail_setter', 1)
+        this.$message.error(this.$t('user.email_not_activated'))
       } else {
         this.$router.push({
           path: '/adDetail',

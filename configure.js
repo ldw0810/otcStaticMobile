@@ -7,6 +7,7 @@ export default {
   CONF_DECIMAL_ASSET: 8,
   CONF_DECIMAL_BASE: 4,
   CONF_DECIMAL_LEGAL: 2,
+  CONF_DECIMAL_MAX: 16,
   CONF_CURRENCY_IMAGE_LIST: {
     dai: require('./src/assets/images/trade/CoinLogo-DAI.png'),
     eth: require('./src/assets/images/trade/CoinLogo-ETH.png'),
