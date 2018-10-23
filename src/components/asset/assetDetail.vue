@@ -44,8 +44,8 @@
                     .addressForm
                       mt-cell(class="submitFormItem" v-if="withdraw.fund_sources.length" :title="$t('asset.asset_withdraw_address')" @click.native.prevent="withdrawAddressFlag = true" is-link)
                         .label {{form.selectAddress.label}}
-                      mt-field(class="submitFormItem" v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('public.label')" :placeholder="$t('asset.asset_withdraw_label_required')" v-model="form.label" :state="formState.label" @input="checkState('label')")
-                      mt-field(class="submitFormItem" v-if="!withdraw.fund_sources.length || withdrawAddressAddFlag" type="text" :label="$t('asset.asset_withdraw_address')" :placeholder="$t('asset.asset_withdraw_address_required')" v-model="form.address" :state="formState.address" @input="checkState('address')")
+                      mt-field(class="submitFormItem" v-if="withdrawAddressAddFlag" type="text" :label="$t('public.label')" :placeholder="$t('asset.asset_withdraw_label_required')" v-model="form.label" :state="formState.label" @input="checkState('label')")
+                      mt-field(class="submitFormItem" v-if="withdrawAddressAddFlag" type="text" :label="$t('asset.asset_withdraw_address')" :placeholder="$t('asset.asset_withdraw_address_required')" v-model="form.address" :state="formState.address" @input="checkState('address')")
                       mt-field(class="submitFormItem numberBtn" type="number" :label="$t('asset.asset_withdraw_number')" :placeholder="amountText" v-model="form.number" :state="formState.number" @input="checkState('number')")
                         .right(name="slot")
                           .currency {{currency.toUpperCase()}}
@@ -73,9 +73,9 @@
       .popup(class="popup-right" v-if="withdrawAuthGoogleFlag" :key="4")
         slot
           ValidGoogle(:needAuth="false" @close="withdrawAuthGoogleFlag = false" @success="doWithdraw" @change="changeValidate(1)")
-      .popup(class="popup-right" v-if="WithdrawEmailFlag" :key="5")
+      .popup(class="popup-right" v-if="withdrawEmailFlag" :key="5")
         slot
-          WithdrawEmail(@close="WithdrawEmailFlag = false" :withdraw_id="withdrawId" :currency="currency")
+          WithdrawEmail(@close="withdrawEmailFlag = false" :withdraw_id="withdrawId" :currency="currency")
 </template>
 <script type="es6">
 import {Button, Cell, Field, Header, MessageBox, TabContainer, TabContainerItem} from 'mint-ui'
@@ -131,7 +131,7 @@ export default {
       withdrawConfirmFlag: false,
       withdrawAuthPhoneFlag: false,
       withdrawAuthGoogleFlag: false,
-      WithdrawEmailFlag: false,
+      withdrawEmailFlag: false,
       withdrawId: ''
     }
   },
@@ -316,6 +316,9 @@ export default {
           page: this.withdraw.page
         }).then(res => {
           if (res.data && +res.data.error === 0) {
+            if (!res.data.fund_sources || !res.data.fund_sources.length) {
+              this.withdrawAddressAddFlag = true
+            }
             this.$store.commit('withdraw_setter', res.data)
             this.checkAllState()
           }
@@ -367,8 +370,9 @@ export default {
       this.$store.dispatch('axios_withdraw', requestData).then(res => {
         if (res.data && (res.data.uid || res.data.error === 0)) {
           this.withdrawId = res.data.id
-          this.init()
           this.withdrawEmailFlag = true
+          this.init()
+          this.form.number = ''
         } else if (res.data && +res.data.error === 100017) {
           if (this.userInfo.mobile) {
             this.withdrawAuthPhoneFlag = true

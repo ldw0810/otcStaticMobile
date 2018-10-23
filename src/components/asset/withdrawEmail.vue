@@ -39,7 +39,8 @@ export default {
   data () {
     return {
       remainTime: 120,
-      maxTime: 120
+      maxTime: 120,
+      isFirst: true
     }
   },
   computed: {
@@ -58,7 +59,8 @@ export default {
           id: this.withdraw_id
         }).then(res => {
           if (res.data && +res.data.error === 0) {
-            this.$message.success(this.$t('asset.asset_withdraw_email_success'))
+            !this.isFirst && this.$message.success(this.$t('asset.asset_withdraw_email_success'))
+            this.isFirst = false
             this.remainTime = +res.data.remain || 120
           }
           resolve()
