@@ -88,7 +88,7 @@ export default {
       return this.$store.state.myAds || {list: []}
     },
     shareLink () {
-      return location.protocol + '//' + location.host + '/ad?id=' + this.shareAd.id + '&shareId=' + this.shareAd.id
+      return location.protocol + '//' + location.host + '/adDetail?id=' + this.shareAd.id + '&shareId=' + this.shareAd.id
     },
     qrCodeConfig () {
       return {

@@ -155,6 +155,7 @@ export default {
       chatMessage: '',
       remainTime: 0,
       timer: 0,
+      orderTimer: 0,
       remark: '',
       password: '',
       inputValue: '',
@@ -334,13 +335,16 @@ export default {
     getMe () {
       this.$store.dispatch('axios_me')
     },
-    getOrder () {
-      this.$loading.open()
+    getOrder (noLoading) {
+      !noLoading && this.$loading.open()
       this.$store.dispatch('axios_order_info', {
         id: this.id
       }).then(res => {
         if (res.data && +res.data.error === 0) {
           this.order = res.data.info
+          if (this.chat.length && (this.chat.length !== res.data.chat.length)) {
+            this.$refs.chat.scrollToBottom()
+          }
           this.chat = res.data.chat
           this.remainTime = +(res.data.info.remain_time || 0)
           this.showTip()
@@ -348,6 +352,13 @@ export default {
       }).catch(() => {
         // this.$message.error(this.$t('order.order_info_request_fail'))
       })
+    },
+    getOrderInterval () {
+      this.orderTimer && clearTimeout(this.orderTimer)
+      this.orderTimer = setTimeout(() => {
+        this.getOrder(1)
+        this.getOrderInterval()
+      }, 60 * 1000)
     },
     orderOper (operStr) {
       if (operStr === 'pay') {
@@ -480,6 +491,11 @@ export default {
   },
   mounted () {
     this.init()
+    this.getOrderInterval()
+  },
+  destroyed () {
+    this.timer && clearTimeout(this.timer)
+    this.orderTimer && clearTimeout(this.orderTimer)
   }
 }
 </script>
