@@ -1,10 +1,10 @@
 <template lang="pug">
   .order(@click="orderClick")
-    mt-header(:title="$t('order.order_detail')" fixed)
+    mt-header(id="header" :title="$t('order.order_detail')")
       router-link(to="/orderList" slot="left")
         mt-button(icon="back")
       .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
-    .content(v-if="order.id")
+    .content(v-if="order.id" id="content")
       .border
       .info(class="showInfo")
         .list
@@ -57,7 +57,7 @@
         .submit(class="mintSubmit" v-else)
           mt-button(disabled) {{$t('order.order_status_over')}}
       Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="sendSuccess")
-    .footer
+    .footer(v-if="order.id" id="footer")
       .oper
         #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" :tabIndex="2" @input="changeInputValue" @paste="pasteInputValue" @keydown.enter="doInputKeyEnter" @focus="doInputFocusEvent" @blur="doInputFocusEvent")
         .browImage(@click.prevent.stop="triggerBrow")
@@ -225,9 +225,6 @@ export default {
     doInputFocusEvent (event) {
       if (event.type === 'focus') {
         this.restoreSelection()
-        setTimeout(() => {
-          document.body.scrollTop = document.body.scrollHeight
-        }, 300)
       } else if (event.type === 'blur') {
         this.saveSelection()
       }
@@ -483,12 +480,6 @@ export default {
   },
   mounted () {
     this.init()
-    // window.addEventListener('resize', (event) => {
-    //   window.setTimeout(() => {
-    //     document.body.scrollTop = document.body.scrollHeight
-    //     alert(event)
-    //   }, 300)
-    // })
   }
 }
 </script>
@@ -500,7 +491,7 @@ export default {
     display flex
     flex-direction column
     .content {
-      position fixed
+      position static
       display flex
       overflow hidden
       flex-direction column
@@ -589,7 +580,7 @@ export default {
       }
     }
     .footer {
-      position fixed
+      position static
       left 0
       bottom 0
       width 100vw
@@ -830,5 +821,8 @@ export default {
   /deep/ .mint-swipe-indicator.is-active {
     opacity 1
     background rgba(0, 0, 0, 1)
+  }
+  #header {
+    position static !important
   }
 </style>

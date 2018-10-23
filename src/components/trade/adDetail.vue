@@ -212,31 +212,39 @@ export default {
         }
       }
     },
-    changeInput (type) {
+    changeInput (value, type) {
       if (type === 'amount') {
-        if (+this.form.amount > +this.ad.order_limit) {
+        if (+value > +this.ad.order_limit) {
           this.form.amount = $fixDecimalAuto(this.ad.order_limit, this.targetCurrency)
-        } else if (+this.form.amount <= 0) {
+        } else if (value === '' || value === null || value === undefined) {
+          this.form.amount = ''
+        } else if (+value <= 0) {
           this.form.amount = 0
+        } else {
+          this.form.amount = +value
         }
-        this.formCommit.amount = +this.form.amount
-        this.formCommit.number = $fixDecimalMax($dividedBy(+this.form.amount, +this.ad.current_price))
+        this.formCommit.amount = +value
+        this.formCommit.number = $fixDecimalMax($dividedBy(+value, +this.ad.current_price))
         this.form.number = $fixDecimalAuto(this.formCommit.number, this.currency)
       } else if (type === 'number') {
-        if (+this.form.number > +this.orderLimitNumber) {
+        if (+value > +this.orderLimitNumber) {
           this.form.number = this.orderLimitNumber
-        } else if (+this.form.number <= 0) {
+        } else if (value === '' || value === null || value === undefined) {
+          this.form.number = ''
+        } else if (+value <= 0) {
           this.form.number = 0
+        } else {
+          this.form.number = +value
         }
-        this.formCommit.number = +this.form.number
-        this.formCommit.amount = $fixDecimalMax($multipliedBy(+this.form.number, +this.ad.current_price))
+        this.formCommit.number = +value
+        this.formCommit.amount = $fixDecimalMax($multipliedBy(+value, +this.ad.current_price))
         this.form.amount = $fixDecimalAuto(this.formCommit.amount, this.targetCurrency)
       }
       this.checkAllState()
     },
     doInputNumberKeyUp (event, type) {
       if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', '.'].indexOf(event.key) > -1) {
-        this.changeInput(type)
+        this.changeInput(event.target.value, type)
       }
     },
     doInputNumberKeyDown (event, type) { // 仅支持：1234567890.上下左右删除
