@@ -9,7 +9,7 @@
           .subTitle(v-text="tipText")
           el-form(ref="form" class="form" :model="form" :rules="rules" @submit.native.prevent="submit" status-icon)
             el-form-item(prop="pinCode" class="formItem phoneCodeDiv" :show-message="false")
-              el-input(class="phoneCode" type="text" v-model="form.pinCode" :placeholder="$t('user.auth_phone_code_required')")
+              el-input(class="phoneCode" type="number" v-model="form.pinCode" :placeholder="$t('user.auth_phone_code_required')")
                 span(slot="prepend")
                   img(src="../../assets/images/icon/IdentifyingCode-FFFFFF.svg")
               SendCode(ref="sendCode" class="sendCode" @sendCode="sendPinCode")

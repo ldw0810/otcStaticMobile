@@ -6,7 +6,7 @@
     .wrapper
       .content
         mt-field(type="password" :label="$t('user.password')" :placeholder="$t('user.password_required')" v-model="form.password" :state="formState.password" @input="checkState('password')" v-if="userInfo.mobile")
-        mt-field(type="text" :label="$t('user.auth_phone_code')" :placeholder="$t('user.auth_phone_code_required')" v-model="form.pinCode" :state="formState.pinCode" @input="checkState('pinCode')")
+        mt-field(type="number" :attr="{pattern: '[0-9.]*'}" :label="$t('user.auth_phone_code')" :placeholder="$t('user.auth_phone_code_required')" v-model="form.pinCode" :state="formState.pinCode" @input="checkState('pinCode')")
       .submit(class="mintSubmit")
         mt-button(@click="submit" :disabled="!formStateAll") {{$t('public.confirm')}}
 </template>

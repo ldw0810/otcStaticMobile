@@ -6,7 +6,7 @@
     .wrapper(v-if="userInfo.id")
       .content
         mt-field(type="password" :label="$t('user.password')" :placeholder="$t('user.password_required')" v-model="form.password" :state="formState.password" @input="checkState('password')")
-        mt-field(type="text" :label="$t('user.auth_google_code')" :placeholder="$t('user.auth_google_code_required')" v-model="form.googleCode" :state="formState.googleCode" @input="checkState('googleCode')")
+        mt-field(type="number" :attr="{pattern: '[0-9.]*'}" :label="$t('user.auth_google_code')" :placeholder="$t('user.auth_google_code_required')" v-model="form.googleCode" :state="formState.googleCode" @input="checkState('googleCode')")
       .submit(class="mintSubmit")
         mt-button(@click="submit" :disabled="!formStateAll") {{$t('public.confirm')}}
 </template>

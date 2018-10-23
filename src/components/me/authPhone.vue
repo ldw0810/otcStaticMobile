@@ -6,7 +6,7 @@
     .wrapper(v-if="userInfo.id")
       .content(v-if="!userInfo.mobile")
         mt-cell(:title="country[0] + ' +' + country[2]" @click.native.prevent="countryFlag = true" is-link)
-        mt-field(type="number" :label="$t('user.auth_phone_number')" :placeholder="$t('user.auth_phone_number_required')" v-model="form.phoneNumber" :state="formState.phoneNumber" :disabled="userInfo.mobile" @input="checkState('phoneNumber')")
+        mt-field(type="number" :attr="{pattern: '[0-9.]*'}" :label="$t('user.auth_phone_number')" :placeholder="$t('user.auth_phone_number_required')" v-model="form.phoneNumber" :state="formState.phoneNumber" :disabled="userInfo.mobile" @input="checkState('phoneNumber')")
       .content(v-else class="closeContent")
         .label {{$t('user.auth_phone_number')}}
         .number {{userInfo.phone_number}}

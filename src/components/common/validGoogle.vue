@@ -5,7 +5,7 @@
         mt-button(icon="back" @click="goBack")
     .wrapper
       .content
-        mt-field(type="text" :label="$t('user.auth_google_code')" :placeholder="$t('user.auth_google_code_required')" v-model="form.pinCode" :state="formState.pinCode" @input="checkState('pinCode')")
+        mt-field(type="number" :attr="{pattern: '[0-9.]*'}" :label="$t('user.auth_google_code')" :placeholder="$t('user.auth_google_code_required')" v-model="form.pinCode" :state="formState.pinCode" @input="checkState('pinCode')")
         .changeDiv(v-if="userInfo.mobile")
           .empty
           .changeButton(v-text="$t('user.auth_phone_use')" @click="$emit('change', 1)")

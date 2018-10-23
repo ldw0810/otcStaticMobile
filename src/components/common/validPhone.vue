@@ -5,7 +5,7 @@
         mt-button(icon="back" @click="goBack")
     .wrapper
       .content
-        mt-field(type="text" :label="$t('user.auth_phone_code')" :placeholder="$t('user.auth_phone_code_required')" v-model="form.pinCode" :state="formState.pinCode" @input="checkState('pinCode')")
+        mt-field(type="number" :attr="{pattern: '[0-9.]*'}" :label="$t('user.auth_phone_code')" :placeholder="$t('user.auth_phone_code_required')" v-model="form.pinCode" :state="formState.pinCode" @input="checkState('pinCode')")
           SendCode(ref="sendCode" class="sendCode" @sendCode="sendPinCode")
         .changeDiv(v-if="userInfo.app_two_factor")
           .empty
