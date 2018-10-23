@@ -15,7 +15,7 @@
           mt-tab-container(v-model="assetHistoryIndex" swipeable)
             mt-tab-container-item(:id="0")
               .wrapper(v-if="deposit.deposit_channels.id" :style="{'-webkit-overflow-scrolling': scrollMode}")
-                mt-loadmore(:autoFill="false" :top-method="loadTop" :top-all-loaded="allLoaded" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
+                mt-loadmore(:autoFill="false" :top-method="loadTop" :top-all-loaded="allLoaded" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore1")
                   .historyPage(v-if="deposit.deposits_history.length")
                     .item(v-for="(item, index) in deposit.deposits_history" :key="index")
                       .info
@@ -33,7 +33,7 @@
                     EmptyList(class="emptyDiv" :text="$t('public.no_asset_recharge')")
             mt-tab-container-item(:id="1")
               .wrapper(v-if="withdraw.withdraw_channels.id" :style="{'-webkit-overflow-scrolling': scrollMode}")
-                mt-loadmore(:autoFill="false" :top-method="loadTop" :top-all-loaded="allLoaded" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore")
+                mt-loadmore(:autoFill="false" :top-method="loadTop" :top-all-loaded="allLoaded" :topPullText="$t('public.loadMore_topPullText')" :topDropText="$t('public.loadMore_dropText')" :topLoadingText="$t('public.loadMore_loadingText')" :bottom-method="loadBottom" :bottom-all-loaded="allLoaded" :bottomPullText="$t('public.loadMore_bottomPullText')" :bottomDropText="$t('public.loadMore_dropText')" :bottomLoadingText="$t('public.loadMore_loadingText')" ref="loadmore2")
                   .historyPage(v-if="withdraw.withdraws.length")
                     .item(v-for="(item, index) in withdraw.withdraws" :key="index")
                       .info
@@ -113,13 +113,13 @@ export default {
   methods: {
     loadTop () {
       this.getHistory(1).then(() => {
-        this.$refs.loadmore.onTopLoaded()
+        this.assetHistoryIndex === 0 ? this.$refs.loadmore1.onTopLoaded() : this.$refs.loadmore2.onTopLoaded()
       })
     },
     loadBottom () {
       this.bottomPageIndex++
       this.getHistory(2).then(() => {
-        this.$refs.loadmore.onBottomLoaded()
+        this.assetHistoryIndex === 0 ? this.$refs.loadmore1.onBottomLoaded() : this.$refs.loadmore2.onBottomLoaded()
       })
     },
     goBack () {
