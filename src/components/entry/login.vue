@@ -75,7 +75,7 @@ export default {
           {
             min: VALI_PASSWORD_NUMBER.min,
             max: VALI_PASSWORD_NUMBER.max,
-            message: this.$t('validate.password_range')
+            message: this.$t('validate.password_range', {'0': VALI_PASSWORD_NUMBER.min, '1': VALI_PASSWORD_NUMBER.max})
           }
         ]
       },

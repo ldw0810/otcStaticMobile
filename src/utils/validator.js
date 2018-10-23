@@ -9,7 +9,7 @@ const language = languageData.find(
 export const VALI_NICKNAME = {
   min: 6,
   max: 16,
-  message: language.user.userName_notValid
+  message: language.user.userName_notValid.replace('{0}', 6).replace('{1}', 16)
 }
 
 // 支付宝名称
@@ -39,8 +39,8 @@ export const VALI_CARD_NUMBER = {
 // 密码
 export const VALI_PASSWORD_NUMBER = {
   min: 6,
-  max: 100,
-  message: language.validate.password_range
+  max: 18,
+  message: language.validate.password_range.replace('{0}', 6).replace('{1}', 18)
 }
 // 提现地址标签
 export const VALI_ADDRESS_LABEL = {

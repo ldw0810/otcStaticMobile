@@ -28,7 +28,7 @@ export default {
   data () {
     const validatePassword = (rule, value, callback) => {
       if (!/[^\d].*[\d]|[\d].*[^\d]/.test(value)) {
-        callback(new Error(this.$t('user.password_minLength')))
+        callback(new Error(this.$t('validate.password_range', {'0': VALI_PASSWORD_NUMBER.min, '1': VALI_PASSWORD_NUMBER.max})))
       } else {
         callback()
       }
@@ -54,7 +54,7 @@ export default {
           {
             min: VALI_PASSWORD_NUMBER.min,
             max: VALI_PASSWORD_NUMBER.max,
-            message: this.$t('validate.password_range')
+            message: this.$t('validate.password_range', {'0': VALI_PASSWORD_NUMBER.min, '1': VALI_PASSWORD_NUMBER.max})
           },
           {
             validator: validatePassword
