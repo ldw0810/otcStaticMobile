@@ -359,7 +359,7 @@ export default {
       }, 60 * 1000)
     },
     chatRefresh () {
-      this.getOrder()
+      this.getOrder(1)
       this.getOrderInterval()
     },
     orderOper (operStr) {
