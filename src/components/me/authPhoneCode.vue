@@ -7,6 +7,8 @@
       .content
         mt-field(type="password" :label="$t('user.password')" :placeholder="$t('user.password_required')" v-model="form.password" :state="formState.password" @input="checkState('password')" v-if="userInfo.mobile")
         mt-field(type="number" :attr="{pattern: '[0-9.]*'}" :label="$t('user.auth_phone_code')" :placeholder="$t('user.auth_phone_code_required')" v-model="form.pinCode" :state="formState.pinCode" @input="checkState('pinCode')")
+          .right(name="slot" v-if="userInfo.mobile")
+            SendCode(ref="sendCode" class="sendCode" @sendCode="sendCode")
       .submit(class="mintSubmit")
         mt-button(@click="submit" :disabled="!formStateAll") {{$t('public.confirm')}}
 </template>
@@ -14,6 +16,7 @@
 import {Button, Field, Header} from 'mint-ui'
 import Vue from 'vue'
 import formMixin from '../../mixins/formMixin'
+import SendCode from '../common/sendCode'
 
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
@@ -22,6 +25,9 @@ Vue.component(Field.name, Field)
 export default {
   mixins: [formMixin],
   name: 'authPhoneCode',
+  components: {
+    SendCode
+  },
   props: {
     userInfo: '',
     country: '',
@@ -44,8 +50,15 @@ export default {
     }
   },
   methods: {
+    sendCode () {
+      this.$emit('sendCode', 1)
+    },
     goBack () {
-      this.$emit('close', 1)
+      if (this.userInfo.mobile) {
+        this.$router.push('/me/settings')
+      } else {
+        this.$emit('close', 1)
+      }
     },
     checkState (value) {
       if (value === 'password') {
@@ -125,5 +138,15 @@ export default {
 
   .submit {
     margin-top 2.5vh
+  }
+  .sendCodeBtn {
+    font-size 1rem
+    @extend .flex-center
+  }
+  /deep/ .sendCode {
+    padding 0 2.5vw
+    .primary {
+      color: #000 !important;
+    }
   }
 </style>

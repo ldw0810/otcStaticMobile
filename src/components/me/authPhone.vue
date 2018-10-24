@@ -7,10 +7,10 @@
       .content(v-if="!userInfo.mobile")
         mt-cell(:title="country[0] + ' +' + country[2]" @click.native.prevent="countryFlag = true" is-link)
         mt-field(type="number" :attr="{pattern: '[0-9.]*'}" :label="$t('user.auth_phone_number')" :placeholder="$t('user.auth_phone_number_required')" v-model="form.phoneNumber" :state="formState.phoneNumber" :disabled="userInfo.mobile" @input="checkState('phoneNumber')")
-      .content(v-else class="closeContent")
-        .label {{$t('user.auth_phone_number')}}
-        .number {{userInfo.phone_number}}
-      .submit(class="mintSubmit")
+      <!--.content(v-else class="closeContent")-->
+        <!--.label {{$t('user.auth_phone_number')}}-->
+        <!--.number {{userInfo.phone_number}}-->
+      .submit(class="mintSubmit" v-if="!userInfo.mobile")
         mt-button(@click="submit" :disabled="!formStateAll") {{$t('user.auth_phone_code_send')}}
     transition-group(tag="div" name="slide-right")
       .popup(class="popup-right" v-if="countryFlag" :key="1")
@@ -18,7 +18,7 @@
           SelectCountry(@close="countryFlag = false" @success="changeCountry")
       .popup(class="popup-right" v-if="authPhoneCodeFlag" :key="2")
         slot
-          AuthPhoneCode(@close="authPhoneCodeFlag = false" :userInfo="userInfo" :country="country[1]" :phoneNumber="form.phoneNumber")
+          AuthPhoneCode(@close="authPhoneCodeFlag = false" :userInfo="userInfo" :country="country[1]" :phoneNumber="form.phoneNumber" @sendCode="submit")
 </template>
 <script type="es6">
 import {Button, Cell, Field, Header} from 'mint-ui'
@@ -95,7 +95,10 @@ export default {
     },
     getMe () {
       this.$store.dispatch('axios_me').then(() => {
-        this.form.phoneNumber = this.userInfo.mobile ? this.userInfo.phone_number : ''
+        if (this.userInfo.mobile) {
+          this.form.phoneNumber = this.userInfo.phone_number
+          this.authPhoneCodeFlag = true
+        }
       })
     },
     submit () {
@@ -129,10 +132,9 @@ export default {
       }
     },
     init () {
-      console.log(this.userInfo)
       if (this.userInfo.mobile) {
-        console.log(this.userInfo)
         this.form.phoneNumber = this.userInfo.phone_number
+        this.authPhoneCodeFlag = true
       }
       this.getMe()
       this.checkAllState()
@@ -166,9 +168,7 @@ export default {
     .number {
       flex 1
       font-size 0.85rem
-      display flex
-      align-items center
-      justify-content center
+      @extend .flex-center
     }
   }
   .submit {
