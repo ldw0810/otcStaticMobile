@@ -354,8 +354,7 @@ export default {
     getOrderInterval () {
       this.orderTimer && clearTimeout(this.orderTimer)
       this.orderTimer = setTimeout(() => {
-        this.getOrder(1)
-        this.getOrderInterval()
+        this.chatRefresh()
       }, 60 * 1000)
     },
     chatRefresh () {
