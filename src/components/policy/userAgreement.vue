@@ -1,15 +1,20 @@
 <template lang="pug">
   .agreement
-    .content(v-html='text')
-    .footer
-      el-button(class="submitButton" type='primary' @click="submit") {{$t('public.confirm')}}
+    mt-header(:title="$t('user.agreement')" fixed)
+      span(slot="left")
+        mt-button(icon="back" @click="close")
+    .content
+      .text(v-html='text')
+      .footer(class="mintCancel")
+        mt-button(@click="close") {{$t('public.confirm')}}
 </template>
 <script type="es6">
 import {$getLanguage} from '../../utils'
-import {Button} from 'element-ui'
 import Vue from 'vue'
+import {Button, Header} from 'mint-ui'
 
 Vue.component(Button.name, Button)
+Vue.component(Header.name, Header)
 
 const language = {}
 language['zh-CN'] = `<h1 class='title'>用户协议</h1><p class='underline'></p>
@@ -554,7 +559,7 @@ export default {
     }
   },
   methods: {
-    submit () {
+    close () {
       this.$emit('close', 1)
     }
   },
@@ -568,26 +573,27 @@ export default {
   .agreement {
     line-height 1.5
     .content {
-      height 100 - $footerHeight
+      margin-top $mintHeaderHeight
+      height 100 - $mintHeaderHeight
       width 100vw
-      padding 5vh 8vw
-      overflow: scroll;
-      overflow-scrolling touch
-      -webkit-overflow-scrolling : touch;
-      /deep/ .underline{
+      overflow-y: scroll;
+      .text {
+        padding 5vh 6vw
+      }
+      .underline{
         border-bottom 1px solid #000000
       }
-      /deep/ .title {
+      .title {
         text-align center
         margin-bottom 2vh
       }
-      /deep/ .sub-title {
+      .sub-title {
         font-size: 1.2rem
         margin-bottom: 1.5vh;
         margin-top: 2vh
         font-weight: 600;
       }
-      /deep/ p {
+      p {
         margin-bottom 1vh
       }
     }
@@ -597,8 +603,6 @@ export default {
       display flex
       align-items center
       justify-content center
-      background-image: linear-gradient(45deg, #0BBFD5 0%, #6DD788 100%);
-      background-size: cover;
     }
   }
 </style>

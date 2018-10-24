@@ -96,7 +96,6 @@
 </template>
 <script type="es6">
 import Vue from 'vue'
-import Policy from '../policy/policy'
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
 import Rules from '../policy/rules'
@@ -123,7 +122,6 @@ export default {
     OrderCancelConfirm,
     OrderReleaseConfirm,
     OrderPayConfirm,
-    Policy,
     Avatar,
     EmptyList,
     Rules,

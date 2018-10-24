@@ -51,7 +51,6 @@
           Rules(@close="showRulesFlag = false" @success="init")
 </template>
 <script type="es6">
-import Policy from '../policy/policy'
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
 import OrderCreateConfirm from './orderCreateConfirm'
@@ -70,7 +69,6 @@ export default {
   mixins: [formMixin],
   name: 'adDetail',
   components: {
-    Policy,
     Avatar,
     EmptyList,
     OrderCreateConfirm,

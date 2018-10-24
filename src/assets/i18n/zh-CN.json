@@ -160,6 +160,7 @@
     "register_success": "注册成功",
     "register_toLogin": "前往登录",
     "register_ad_info": "注册完成并验证手机成功，即送 200 OMT！",
+    "agreement": "用户协议",
     "userName": "昵称",
     "userName_required": "请输入昵称",
     "userName_notValid": "{0}-{1}位字母或数字",
@@ -637,7 +638,8 @@
     "order_chat_send_msg_fail": "消息发送失败",
     "order_chat_type_nonsupport": "不支持的消息类型",
     "order_data_request_fail": "订单数据获取失败",
-    "order_chat_placeholder": "说点什么"
+    "order_chat_placeholder": "说点什么",
+    "order_trade_complaint": "交易申诉"
   },
   "request": {
     "100000": "服务器操作失败",

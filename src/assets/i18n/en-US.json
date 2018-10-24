@@ -160,6 +160,7 @@
     "register_success": "Register success",
     "register_toLogin": "Login",
     "register_ad_info": "Get 200OMT after register and phone verification!",
+    "agreement": "User Agreement",
     "userName": "Nickname",
     "userName_required": "Enter nickname",
     "userName_notValid": "Nick name must consists with {0}-{1} letters or numbers",
@@ -637,7 +638,8 @@
     "order_chat_send_msg_fail": "Message sending failure",
     "order_chat_type_nonsupport": "Unsupport message type",
     "order_data_request_fail": "Oder data request fail",
-    "order_chat_placeholder": "Say something"
+    "order_chat_placeholder": "Say something",
+    "order_trade_complaint": "Trading complaint"
   },
   "request": {
     "100000": "Server error",
