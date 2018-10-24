@@ -56,7 +56,7 @@
           mt-button(class="orderSubmitBtn" @click="orderOper('evaluate')") {{$t('order.order_eval')}}
         .submit(class="mintSubmit" v-else)
           mt-button(disabled) {{$t('order.order_status_over')}}
-      Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrder" @sendSuccess="sendSuccess")
+      Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="chatRefresh" @sendSuccess="sendSuccess")
     .footer(v-if="order.id" id="footer")
       .oper
         #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" :tabIndex="2" @input="changeInputValue" @paste="pasteInputValue" @keydown.enter="doInputKeyEnter" @focus="doInputFocusEvent" @blur="doInputFocusEvent")
@@ -357,6 +357,10 @@ export default {
         this.getOrder(1)
         this.getOrderInterval()
       }, 60 * 1000)
+    },
+    chatRefresh () {
+      this.getOrder()
+      this.getOrderInterval()
     },
     orderOper (operStr) {
       if (operStr === 'pay') {

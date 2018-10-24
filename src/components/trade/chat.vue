@@ -183,7 +183,7 @@ export default {
             this.timeout = setTimeout(() => {
               that.$emit('refresh', 1)
               that.getMsg()
-            }, 6 * 1000)
+            }, 60 * 1000)
           }
         }
       }).catch(() => {
