@@ -4,6 +4,10 @@
     .content
       .title(v-text="$t('public.register')")
       el-form(ref="form" class="form" :model="form" :rules="rules" @submit.native.prevent="submit" status-icon)
+        el-form-item(prop="username" class="formItem" :show-message="false")
+          el-input(class="input" v-model="form.username" :placeholder="$t('user.userName_required')")
+            span(slot="prepend")
+              img(src="../../assets/images/icon/User-FFFFFF.svg")
         el-form-item(prop="email" class="formItem" :show-message="false")
           el-input(class="input" v-model="form.email" :placeholder="$t('user.email_required')")
             span(slot="prepend")
@@ -40,7 +44,7 @@ import UserAgreement from '../policy/userAgreement'
 import Vue from 'vue'
 import {$getAxiosLanguage} from '../../utils'
 import '../../utils/gt'
-import {VALI_PASSWORD_NUMBER} from '../../utils/validator'
+import {VALI_NICKNAME, VALI_PASSWORD_NUMBER} from '../../utils/validator'
 
 Vue.component(Button.name, Button)
 Vue.component(Form.name, Form)
@@ -53,6 +57,43 @@ export default {
     UserAgreement
   },
   data () {
+    const validateUsername = (rule, value, callback) => {
+      this.$store.dispatch('axios_verified_nickname', {
+        nickname: value
+      }).then(res => {
+        if (res.data && +res.data.error === 0) {
+          if (!res.data.exist) {
+            callback()
+          } else {
+            this.usernameRepeatList.push(value)
+            callback(new Error(this.$t('user.email_repeat')))
+          }
+        } else {
+          callback(new Error(this.$t('public.url_request_fail')))
+        }
+      }).catch(() => {
+        callback(new Error(this.$t('public.url_request_fail')))
+      })
+    }
+    const validateUsernameRepeat = (rule, value, callback) => {
+      if (this.usernameRepeatList && this.usernameRepeatList.length) {
+        if (this.usernameRepeatList.indexOf(value) > -1) {
+          callback(new Error(this.$t('user.userName_repeat')))
+        } else {
+          callback()
+        }
+      } else {
+        callback()
+      }
+    }
+    const validateUsernameLength = (rule, value, callback) => {
+      value = '' + value
+      if (value.length < VALI_NICKNAME.min || value.length > VALI_NICKNAME.max) {
+        callback(new Error(VALI_NICKNAME.message))
+      } else {
+        callback()
+      }
+    }
     const validateEmail = (rule, value, callback) => {
       this.$store.dispatch('axios_verified_email', {
         email: value
@@ -76,6 +117,8 @@ export default {
       if (this.emailRepeatList && this.emailRepeatList.length) {
         if (this.emailRepeatList.indexOf(value) > -1) {
           callback(new Error(this.$t('user.email_repeat')))
+        } else {
+          callback()
         }
       } else {
         callback()
@@ -97,12 +140,29 @@ export default {
     }
     return {
       form: {
+        username: '',
         email: '',
         password: '',
         invitationCode: this.$route.query.invitationCode || this.$route.query.inviteCode,
         checkbox: []
       },
       rules: {
+        username: [
+          {
+            required: true,
+            message: this.$t('user.username_required')
+          },
+          {
+            validator: validateUsernameRepeat
+          },
+          {
+            validator: validateUsernameLength
+          },
+          {
+            validator: validateUsername,
+            trigger: 'blur'
+          }
+        ],
         email: [
           {
             required: true,
@@ -153,6 +213,7 @@ export default {
       captchaObj: '',
       captchaStatus: '',
       popupFlag: false,
+      usernameRepeatList: [],
       emailRepeatList: []
     }
   },
@@ -207,11 +268,11 @@ export default {
               let result = this.captchaObj.getValidate()
               this.$loading.open()
               this.$store.dispatch('axios_register', {
+                nickname: this.form.username,
                 email: this.form.email,
                 password: this.form.password,
                 password_confirmation: this.form.password,
                 invite_code: this.form.invitationCode || '',
-                nickname: this.form.email,
                 ln: $getAxiosLanguage(),
                 geetest_challenge: result.geetest_challenge,
                 geetest_validate: result.geetest_validate,
