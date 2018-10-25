@@ -140,7 +140,7 @@ export default {
       })
     },
     goBlockUrl (item) {
-      item.blockchain_url && window.open(item.blockchain_url)
+      item.blockchain_url && window.open(item.blockchain_url, '_blank')
     },
     getHistory (type) {
       return new Promise((resolve, reject) => {
