@@ -56,7 +56,7 @@
           mt-button(class="orderSubmitBtn" @click="orderOper('evaluate')") {{$t('order.order_eval')}}
         .submit(class="mintSubmit" v-else)
           mt-button(disabled) {{$t('order.order_status_over')}}
-      Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="chatRefresh" @sendSuccess="sendSuccess")
+      Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrderInterval" @sendSuccess="sendSuccess")
     .footer(v-if="order.id" id="footer")
       .oper
         #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" :tabIndex="2" @input="changeInputValue" @paste="pasteInputValue" @keydown.enter="doInputKeyEnter" @focus="doInputFocusEvent" @blur="doInputFocusEvent")
@@ -357,15 +357,12 @@ export default {
         // this.$message.error(this.$t('order.order_info_request_fail'))
       })
     },
-    getOrderInterval () {
+    getOrderInterval (noLoading) {
+      this.getOrder(noLoading)
       this.orderTimer && clearTimeout(this.orderTimer)
       this.orderTimer = setTimeout(() => {
-        this.chatRefresh()
+        this.getOrderInterval(1)
       }, 60 * 1000)
-    },
-    chatRefresh () {
-      this.getOrder(1)
-      this.getOrderInterval()
     },
     orderOper (operStr) {
       if (operStr === 'pay') {
@@ -493,12 +490,11 @@ export default {
     },
     init () {
       this.getMe()
-      this.getOrder()
+      this.getOrderInterval()
     }
   },
   mounted () {
     this.init()
-    this.getOrderInterval()
   },
   destroyed () {
     this.timer && clearTimeout(this.timer)

@@ -180,7 +180,6 @@ export default {
           } else {
             this.timeout && clearTimeout(this.timeout)
             this.timeout = setTimeout(() => {
-              this.$emit('refresh', 1)
               this.getMsg()
             }, 60 * 1000)
           }
@@ -188,7 +187,6 @@ export default {
       }).catch(() => {
         this.timeout && clearTimeout(this.timeout)
         this.timeout = setTimeout(() => {
-          this.$emit('refresh', 1)
           this.getMsg()
         }, 60 * 1000)
       })
