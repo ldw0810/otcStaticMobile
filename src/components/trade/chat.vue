@@ -176,17 +176,21 @@ export default {
         } else if (res.data && +res.data.error === 100002) { // timeout
           this.getMsg()
         } else {
-          let that = this
           if (res.data && +res.data.cancel === 1) {
           } else {
             this.timeout && clearTimeout(this.timeout)
             this.timeout = setTimeout(() => {
-              that.$emit('refresh', 1)
-              that.getMsg()
+              this.$emit('refresh', 1)
+              this.getMsg()
             }, 60 * 1000)
           }
         }
       }).catch(() => {
+        this.timeout && clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => {
+          this.$emit('refresh', 1)
+          this.getMsg()
+        }, 60 * 1000)
       })
     },
     inputKey (event) {
@@ -513,33 +517,38 @@ export default {
     margin-bottom: 1.5vh;
     text-align: center;
   }
-
-  .chat .text:before {
-    content: " ";
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    transform: rotate(135deg);
-    background-color: #fff;
-    left: -2px;
-    top: 12px;
-    box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.1);
+  .chat {
+    /deep/ .text {
+      background-color: #fff;
+      box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      position: relative;
+      max-width: calc(75%);
+      line-height: 2.1;
+      font-size: 0.9rem;
+      padding: 0.5vh 2vw;
+      text-align: left;
+      word-break: break-all;
+      border-radius: 2vw;
+      &:before {
+        content: " ";
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        transform: rotate(135deg);
+        background-color: #fff;
+        left: -2px;
+        top: 12px;
+        box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.1);
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 0 0;
+      }
+    }
   }
-
-  .chat .text {
-    background-color: #fff;
-    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
-    display: inline-block;
-    position: relative;
-    max-width: calc(75%);
-    line-height: 2.1;
-    font-size: 0.9rem;
-    padding: 0.5vh 2vw;
-    text-align: left;
-    word-break: break-all;
-    border-radius: 2vw;
-  }
-
   .chat .self {
     text-align: right;
   }
@@ -564,9 +573,11 @@ export default {
     max-width: 15vw;
   }
 
-  img.static-emotion-gif,
-  img.static-emotion {
+  /deep/ img.static-emotion-gif,
+  /deep/ img.static-emotion {
     vertical-align: middle !important;
+    width auto !important
+    height auto !important
   }
 
   .an-move-left {
@@ -660,17 +671,6 @@ export default {
   @media (max-width: 367px) {
     .fzDInfo {
       width: 82%;
-    }
-  }
-
-  /deep/ .message {
-    .text {
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: 0 0;
-      }
     }
   }
 </style>

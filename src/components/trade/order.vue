@@ -264,6 +264,12 @@ export default {
       this.inputValue = event.target.innerHTML
       this.restoreSelection()
     },
+    escapeHtml (str) {
+      let arrEntities = {'lt': '<', 'gt': '>', 'nbsp': ' ', 'amp': '&', 'quot': '"'}
+      return str.replace(/&(lt|gt|nbsp|amp|quot);/ig, (all, t) => {
+        return arrEntities[t]
+      })
+    },
     pasteInputValue (event) {
       event.preventDefault()
       if (!(event.clipboardData && event.clipboardData.items)) {
@@ -277,7 +283,7 @@ export default {
           clipData = event.clipboardData.getData('text/plain')
         } else if (item.kind === 'file') { // 图片
           isImage = true
-          let clipDataList = event.clipboardData.getData('text/html').match(/<img.*?>/g)
+          let clipDataList = this.escapeHtml(event.clipboardData.getData('text/html')).match(/<img.*?>/g)
           if (clipDataList.length) {
             clipData = clipDataList[0]
           } else {
