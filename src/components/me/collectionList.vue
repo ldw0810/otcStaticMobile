@@ -113,7 +113,13 @@ export default {
       this.$store.dispatch('axios_get_receiving').then(res => {
         if (res.data && +res.data.error === 0) {
           this.$store.commit('collectionList_setter', res.data.list || [])
-          this.getDefaultCollectionIndex()
+          if (res.data.list && res.data.list.length) {
+            if (+res.data.list.length === 1) {
+              this.setDefaultCollection(0)
+            } else {
+              this.getDefaultCollectionIndex()
+            }
+          }
         }
       }).catch(() => {
         // this.$message.error(this.$t('user.receivables_request_fail'))
