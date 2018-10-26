@@ -194,7 +194,7 @@
     "rePassword_new": "Confirm new password",
     "rePassword_new_required": "Confirm new password",
     "password_modify_success": "Password reset success",
-    "password_modify_fail": "Password reset fail",
+    "password_modify_fail": "The original password input error",
     "email_token_invalid": "Email timeout",
     "password_modify_notValid": "Information not valid",
     "pinCode": "Pincode",
