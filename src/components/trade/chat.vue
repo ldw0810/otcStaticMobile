@@ -61,7 +61,8 @@ export default {
       msgList: this.chatList,
       inputFocusFlag: false,
       lastEditRange: null,
-      chatTime: 0
+      chatTime: 0,
+      timeout: 0
     }
   },
   watch: {
@@ -74,14 +75,6 @@ export default {
   computed: {
     axios_source_chat () {
       return this.$store.state.axiosCancel.chat
-    },
-    timeout: {
-      set (val) {
-        this.$store.state.timeout.chat = val
-      },
-      get () {
-        return this.$store.state.timeout.chat
-      }
     },
     owner () {
       return {
