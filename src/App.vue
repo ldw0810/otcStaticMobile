@@ -13,6 +13,20 @@ export default {
     }
   },
   methods: {
+    replaceUrl (name, query, delParams, onComplete, onAbort) {
+      let index = 0
+      let url = name
+      if (query) {
+        for (let key in query) {
+          if (key && key !== delParams && (query['' + key] || query['' + key] === 0)) {
+            url += index === 0 ? '?' : '&'
+            url += key + '=' + query['' + key]
+            index++
+          }
+        }
+      }
+      return this.$router.replace(url, onComplete, onAbort)
+    },
     init () {
       if (this.$route.query) {
         if (this.$route.query.withdraw_token) {
@@ -24,6 +38,8 @@ export default {
             }
           }).catch(() => {
             // this.$message.error(this.$t('asset.asset_withdraw_confirm_fail'))
+          }).finally(() => {
+            this.replaceUrl(this.$route.path, this.$route.query, 'withdraw_token')
           })
         } else if (this.$route.query.activation_token) {
           this.$store.dispatch('axios_email_verified', {
@@ -34,6 +50,8 @@ export default {
             }
           }).catch(() => {
             // this.$message.error(this.$t('public.activation_link_notValid'))
+          }).finally(() => {
+            this.replaceUrl(this.$route.path, this.$route.query, 'activation_token')
           })
         }
       }
