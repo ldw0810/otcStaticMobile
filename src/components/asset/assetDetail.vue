@@ -371,9 +371,11 @@ export default {
       this.$store.dispatch('axios_withdraw', requestData).then(res => {
         if (res.data && (res.data.uid || res.data.error === 0)) {
           this.withdrawId = res.data.id
-          this.withdrawEmailFlag = true
-          this.init()
           this.form.number = ''
+          this.$nextTick(() => {
+            this.withdrawEmailFlag = true
+            this.init()
+          })
         } else if (res.data && +res.data.error === 100017) {
           if (this.userInfo.mobile) {
             this.withdrawAuthPhoneFlag = true

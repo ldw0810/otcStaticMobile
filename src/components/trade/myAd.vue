@@ -28,7 +28,7 @@
                   .value(v-else-if="ad.pay_kind === 'bank'") {{$t("public.bank")}}
                   .value(v-else-if="ad.pay_kind === 'local'") {{$t("public.local")}}
               .button
-                mt-button(v-if="ad.status === 'ongoing'" class="operation" type='primary' v-clipboard:copy="shareLink" v-clipboard:success="copySuccess" @click="doShare(ad)") {{$t('public.share')}}
+                mt-button(v-if="ad.status === 'ongoing'" class="operation" type='primary' v-clipboard:copy="getShareLink(ad)" v-clipboard:success="copySuccess" @click.native.stop="doShare(ad)") {{$t('public.share')}}
                 mt-button(v-if="ad.status === 'closed'" class="operation" type='primary' @click="openAd(ad)") {{$t('ad.ad_open')}}
                 mt-button(v-else class="operation" type='primary' @click="closeAd(ad)") {{$t('ad.ad_close')}}
                 mt-button(v-if="+ad.locked > 0" class="operation operationCancel" type='primary' disabled) {{$t('ad.ad_trading')}}
@@ -110,6 +110,9 @@ export default {
       this.getMyAds(2).then(() => {
         this.$refs.loadmore.onBottomLoaded()
       })
+    },
+    getShareLink (shareAd) {
+      return location.protocol + '//' + location.host + '/adDetail?id=' + shareAd.id + '&shareId=' + shareAd.id
     },
     getMyAds (type) {
       return new Promise((resolve, reject) => {
