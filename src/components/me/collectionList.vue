@@ -72,6 +72,9 @@ export default {
           list.splice(index, 1)
           this.getDefaultCollectionIndex()
           this.$store.commit('collectionList_setter', list)
+          if (list.length === 1) {
+            this.setDefaultCollection(0)
+          }
         }
       }).catch(() => {
         // this.$message.error(this.$t('user.receivables_del_fail'))
@@ -104,8 +107,8 @@ export default {
         })
       }
     },
-    getDefaultCollectionIndex (arr) {
-      this.defaultCollectionIndex = _findIndex(arr, item => {
+    getDefaultCollectionIndex () {
+      this.defaultCollectionIndex = _findIndex(this.collectionList, item => {
         return +item.is_default === 1
       })
     },
@@ -114,10 +117,9 @@ export default {
         if (res.data && +res.data.error === 0) {
           this.$store.commit('collectionList_setter', res.data.list || [])
           if (res.data.list && res.data.list.length) {
+            this.getDefaultCollectionIndex()
             if (+res.data.list.length === 1) {
               this.setDefaultCollection(0)
-            } else {
-              this.getDefaultCollectionIndex()
             }
           }
         }
