@@ -637,6 +637,7 @@ export default {
             font-weight normal
             font-size 0.9rem
             margin-bottom 2.5vh
+            padding 0 2.5vw
           }
         }
       }
