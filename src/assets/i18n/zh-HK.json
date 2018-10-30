@@ -194,7 +194,7 @@
     "rePassword_new": "確認新密碼",
     "rePassword_new_required": "請確認新密碼",
     "password_modify_success": "密碼修改成功",
-    "password_modify_fail": "原密碼輸入錯誤",
+    "password_modify_fail": "旧密碼輸入錯誤",
     "email_token_invalid": "找回密碼郵件已失效",
     "password_modify_notValid": "請輸入正確的信息",
     "pinCode": "驗證碼",
