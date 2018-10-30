@@ -190,7 +190,8 @@ export default {
       this.$router.push({
         path: '/assetHistory',
         query: {
-          currency: this.currency
+          currency: this.currency,
+          oper: this.assetOperIndex === 0 ? 'deposit' : 'withdraw'
         }
       })
     },

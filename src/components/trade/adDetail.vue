@@ -33,9 +33,9 @@
         .border
         .adForm
           .label {{adType === 0 ? $t('order.order_buy_title', {'0': currency.toUpperCase()}): $t('order.order_sell_title', {'0': currency.toUpperCase()})}}
-          mt-field(ref="amount" class="submitFormItem" type="number" :tabIndex="1" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @blur.native.capture="inputBlur('amount')" @keydown.native.capture="(event) => {doInputNumberKeyDown(event, 'amount')}" @keyup.native.capture="(event) => {doInputNumberKeyUp(event, 'amount')}")
+          mt-field(ref="amount" class="submitFormItem" type="number" :tabIndex="1" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input="(value) => {formInput(value, 'amount')}" @blur.native.capture="inputBlur('amount')" @keydown.native.capture="(event) => {doInputNumberKeyDown(event, 'amount')}" @keyup.native.capture="(event) => {doInputNumberKeyUp(event, 'amount')}")
             .currency {{targetCurrency.toUpperCase()}}
-          mt-field(ref="number" class="submitFormItem" type="number" :tabIndex="2" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @blur.native.capture="inputBlur('number')" @keydown.native.capture="(event) => {doInputNumberKeyDown(event, 'number')}" @keyup.native.capture="(event) => {doInputNumberKeyUp(event, 'number')}")
+          mt-field(ref="number" class="submitFormItem" type="number" :tabIndex="2" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input="(value) => {formInput(value, 'number')}" @blur.native.capture="inputBlur('number')" @keydown.native.capture="(event) => {doInputNumberKeyDown(event, 'number')}" @keyup.native.capture="(event) => {doInputNumberKeyUp(event, 'number')}")
             .currency {{currency.toUpperCase()}}
       .footer(class="mintSubmit")
         mt-button(class="submitButton" type='primary' @click="submit" :disabled="!formStateAll || isSelfOrder") {{isSelfOrder ? $t('order.order_join_own_otc_ad') : (adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm'))}}
@@ -208,6 +208,11 @@ export default {
         } else {
           return this.balanceObj[this.currency] >= this.form.number
         }
+      }
+    },
+    formInput (value, type) {
+      if (!value) {
+        this.changeInput(value, type)
       }
     },
     changeInput (value, type) {
