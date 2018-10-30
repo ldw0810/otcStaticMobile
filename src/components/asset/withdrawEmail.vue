@@ -144,5 +144,8 @@ export default {
         box-shadow: 0 5px 5px 0 rgba(102, 187, 191, 0.14);
       }
     }
+    .info {
+      text-align: center
+    }
   }
 </style>
