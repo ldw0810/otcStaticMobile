@@ -40,6 +40,7 @@ export default {
             // this.$message.error(this.$t('asset.asset_withdraw_confirm_fail'))
           }).finally(() => {
             this.replaceUrl(this.$route.path, this.$route.query, 'withdraw_token')
+            this.$loading.close()
           })
         } else if (this.$route.query.activation_token) {
           this.$store.dispatch('axios_email_verified', {
@@ -52,6 +53,7 @@ export default {
             // this.$message.error(this.$t('public.activation_link_notValid'))
           }).finally(() => {
             this.replaceUrl(this.$route.path, this.$route.query, 'activation_token')
+            this.$loading.close()
           })
         }
       }
