@@ -696,6 +696,7 @@
     "100052": "ad has close",
     "100053": "withdraw cancel failed",
     "100054": "Min limit should less than your balance",
+    "100055": "The ad price has been revised and the transaction failed.",
     "888888": "Robot checking failed, please try again",
     "999999": "Login timeout, please login again"
   },

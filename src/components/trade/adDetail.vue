@@ -226,8 +226,8 @@ export default {
         } else {
           this.form.amount = +value
         }
-        this.formCommit.amount = +value
-        this.formCommit.number = $fixDecimalMax($dividedBy(+value, +this.ad.current_price))
+        this.formCommit.amount = +this.form.amount
+        this.formCommit.number = $fixDecimalMax($dividedBy(this.formCommit.amount, +this.ad.current_price))
         this.form.number = $fixDecimalAuto(this.formCommit.number, this.currency)
       } else if (type === 'number') {
         if (+value > +this.orderLimitNumber) {
@@ -239,8 +239,8 @@ export default {
         } else {
           this.form.number = +value
         }
-        this.formCommit.number = +value
-        this.formCommit.amount = $fixDecimalMax($multipliedBy(+value, +this.ad.current_price))
+        this.formCommit.number = +this.form.number
+        this.formCommit.amount = $fixDecimalMax($multipliedBy(this.formCommit.number, +this.ad.current_price))
         this.form.amount = $fixDecimalAuto(this.formCommit.amount, this.targetCurrency)
       }
       this.checkAllState()
@@ -290,6 +290,7 @@ export default {
       }
     },
     doNumberKey (event) {
+      debugger
       const value = +event.target.value
       if (value >= 0) {
         let tempAmount = $multipliedBy(value, +this.ad.current_price)
@@ -336,7 +337,7 @@ export default {
       this.$store.dispatch('axios_order_buy', {
         id: this.id,
         price: +this.ad.current_price,
-        price_sum: +this.form.amount,
+        price_sum: +this.formCommit.amount,
         share_id: this.shareId
       }).then(res => {
         if (res.data && +res.data.error === 0) {
@@ -352,6 +353,8 @@ export default {
           }
         } else if (res.data && +res.data.error === 100052) {
           this.$router.push(this.backLink)
+        } else if (res.data && +res.data.error === 100055) {
+          this.init()
         }
       }).catch(() => {
         // this.$message.error(this.$t('order.order_deal_request_fail'))
