@@ -19,13 +19,7 @@ Vue.component(Button.name, Button)
 export default {
   data () {
     return {
-      text: '',
-      domain: `${configure.ZENDESK_DOMAIN_URL}/hc/${$getAxiosLanguage().toLowerCase()}`
-    }
-  },
-  computed: {
-    appealUrl () {
-      return this.domain + '/requests/new'
+      text: ''
     }
   },
   methods: {
@@ -33,19 +27,20 @@ export default {
       this.$emit('close', 1)
     },
     goComplaint () {
+      let appealUrl = `${configure.ZENDESK_DOMAIN_URL}/hc/${$getAxiosLanguage().toLowerCase()}/requests/new`
       if (this.$store.state.userToken) {
-        this.$store.dispatch('axios_zendesk').then(res => {
+        this.$store.dispatch('ajax_zendesk').then(res => {
           if (res.data && +res.data.error === 0) {
-            const returnUrl = encodeURI(this.appealUrl)
-            window.location.href = `${configure.ZENDESK_DOMAIN_URL}/access/jwt?jwt=${res.data.token}&return_to=${returnUrl}`
+            const returnUrl = encodeURI(appealUrl)
+            window.open(`${configure.ZENDESK_DOMAIN_URL}/access/jwt?jwt=${res.data.token}&return_to=${returnUrl}`, '_blank')
           } else {
-            window.location.href = this.appealUrl
+            window.open(appealUrl, '_blank')
           }
         }).catch(() => {
-          window.location.href = this.appealUrl
+          window.open(appealUrl, '_blank')
         })
       } else {
-        window.location.href = this.appealUrl
+        window.open(appealUrl, '_blank')
       }
     }
   }
