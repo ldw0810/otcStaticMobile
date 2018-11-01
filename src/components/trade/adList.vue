@@ -22,7 +22,7 @@
             .contentDown
               .price
                 .number {{ad.current_price | $fixDecimalAuto(ad.target_currency)}}
-                .text {{$t('order.order_unit_price', {'0': currency.toUpperCase()})}}
+                .text {{$t('order.order_unit_price', {'0': ad.targetCurrency.toUpperCase()})}}
               .border
               .limit
                 .number {{ad.min_limit | $fixDecimalAuto(ad.target_currency)}}&nbsp;-&nbsp;{{ad.order_limit | $fixDecimalAuto(ad.target_currency)}}
