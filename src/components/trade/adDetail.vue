@@ -33,9 +33,9 @@
         .border
         .adForm
           .label {{adType === 0 ? $t('order.order_buy_title', {'0': currency.toUpperCase()}): $t('order.order_sell_title', {'0': currency.toUpperCase()})}}
-          mt-field(ref="amount" class="submitFormItem" type="number" :tabIndex="1" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input="(value) => {formInput(value, 'amount')}" @blur.native.capture="inputBlur('amount')" @keydown.native.capture="(event) => {doInputNumberKeyDown(event, 'amount')}" @keyup.native.capture="(event) => {doInputNumberKeyUp(event, 'amount')}")
+          mt-field(ref="amount" class="submitFormItem" type="number" :tabIndex="1" :label="adType === 0 ? $t('ad.ad_buy_money_amount'): $t('ad.ad_sell_money_amount')" :placeholder="adType === 0 ? $t('order.order_buy_money_amount'): $t('order.order_sell_money_amount')" v-model="form.amount" :state="formState.amount" @input="(value) => {formInput(value, 'amount')}" @blur.native.capture="inputBlur('amount')" @keydown.native="(event) => {doInputNumberKeyDown(event, 'amount')}" @keyup.native.stop="(event) => {doInputNumberKeyUp(event, 'amount')}")
             .currency {{targetCurrency.toUpperCase()}}
-          mt-field(ref="number" class="submitFormItem" type="number" :tabIndex="2" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input="(value) => {formInput(value, 'number')}" @blur.native.capture="inputBlur('number')" @keydown.native.capture="(event) => {doInputNumberKeyDown(event, 'number')}" @keyup.native.capture="(event) => {doInputNumberKeyUp(event, 'number')}")
+          mt-field(ref="number" class="submitFormItem" type="number" :tabIndex="2" :label="adType === 0 ? $t('order.order_buy_number_title'): $t('order.order_sell_number_title')" :placeholder="adType === 0 ? $t('order.order_buy_number'): $t('order.order_sell_number')" v-model="form.number" :state="formState.number" @input="(value) => {formInput(value, 'number')}" @blur.native.capture="inputBlur('number')" @keydown.native="(event) => {doInputNumberKeyDown(event, 'number')}" @keyup.native.stop="(event) => {doInputNumberKeyUp(event, 'number')}")
             .currency {{currency.toUpperCase()}}
       .footer(class="mintSubmit")
         mt-button(class="submitButton" type='primary' @click="submit" :disabled="!formStateAll || isSelfOrder") {{isSelfOrder ? $t('order.order_join_own_otc_ad') : (adType === 0 ? $t('order.order_buy_confirm') : $t('order.order_sell_confirm'))}}
@@ -216,32 +216,39 @@ export default {
       }
     },
     changeInput (value, type) {
+      let tempValue = ''
       if (type === 'amount') {
         if (+value > +this.ad.order_limit) {
-          this.form.amount = $fixDecimalAuto(this.ad.order_limit, this.targetCurrency)
+          tempValue = $fixDecimalAuto(this.ad.order_limit, this.targetCurrency)
         } else if (value === '' || value === null || value === undefined) {
-          this.form.amount = ''
+          tempValue = ''
         } else if (+value <= 0) {
-          this.form.amount = 0
+          tempValue = 0
         } else {
-          this.form.amount = +value
+          tempValue = +value
         }
-        this.formCommit.amount = +this.form.amount
-        this.formCommit.number = $fixDecimalMax($dividedBy(this.formCommit.amount, +this.ad.current_price))
-        this.form.number = $fixDecimalAuto(this.formCommit.number, this.currency)
+        this.$nextTick(() => {
+          this.form.amount = tempValue
+          this.formCommit.amount = +tempValue
+          this.formCommit.number = $fixDecimalMax($dividedBy(this.formCommit.amount, +this.ad.current_price))
+          this.form.number = $fixDecimalAuto(this.formCommit.number, this.currency)
+        })
       } else if (type === 'number') {
         if (+value > +this.orderLimitNumber) {
-          this.form.number = this.orderLimitNumber
+          tempValue = this.orderLimitNumber
         } else if (value === '' || value === null || value === undefined) {
-          this.form.number = ''
+          tempValue = ''
         } else if (+value <= 0) {
-          this.form.number = 0
+          tempValue = 0
         } else {
-          this.form.number = +value
+          tempValue = +value
         }
-        this.formCommit.number = +this.form.number
-        this.formCommit.amount = $fixDecimalMax($multipliedBy(this.formCommit.number, +this.ad.current_price))
-        this.form.amount = $fixDecimalAuto(this.formCommit.amount, this.targetCurrency)
+        this.$nextTick(() => {
+          this.form.number = tempValue
+          this.formCommit.number = +tempValue
+          this.formCommit.amount = $fixDecimalMax($multipliedBy(this.formCommit.number, +this.ad.current_price))
+          this.form.amount = $fixDecimalAuto(this.formCommit.amount, this.targetCurrency)
+        })
       }
       this.checkAllState()
     },
