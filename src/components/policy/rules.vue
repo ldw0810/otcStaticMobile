@@ -29,7 +29,7 @@ export default {
     goComplaint () {
       let appealUrl = `${configure.ZENDESK_DOMAIN_URL}/hc/${$getAxiosLanguage().toLowerCase()}/requests/new`
       if (this.$store.state.userToken) {
-        this.$store.dispatch('ajax_zendesk').then(res => {
+        this.$store.dispatch('axios_zendesk').then(res => {
           if (res.data && +res.data.error === 0) {
             const returnUrl = encodeURI(appealUrl)
             window.open(`${configure.ZENDESK_DOMAIN_URL}/access/jwt?jwt=${res.data.token}&return_to=${returnUrl}`, '_blank')
