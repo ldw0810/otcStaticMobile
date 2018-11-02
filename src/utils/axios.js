@@ -36,7 +36,7 @@ const showAxiosError = (errorCode) => {
         iconClass: 'icon icon-error'
       })
       router.push('/login')
-    } else if ([100002, 100017, 100021, 100036, 100038].indexOf(+errorCode) === -1) {
+    } else if ([100002, 100017, 100036, 100038].indexOf(+errorCode) === -1) {
       errMsg && Toast({
         message: errMsg,
         iconClass: 'icon icon-error'
