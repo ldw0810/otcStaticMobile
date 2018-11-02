@@ -94,12 +94,13 @@ export default {
       z-index 100
     }
     .bannerContent {
-      width 80vw
-      height 80vh
+      width 60vw
+      height 60vh
       z-index 101
+      margin-top -10vh
       .img {
-        width 80vw
-        height 80vh
+        width 60vw
+        height 60vh
         img {
           width 100%
           height 100%
