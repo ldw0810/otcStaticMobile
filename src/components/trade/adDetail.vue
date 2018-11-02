@@ -222,6 +222,8 @@ export default {
           tempValue = $fixDecimalAuto(this.ad.order_limit, this.targetCurrency)
         } else if (value === '' || value === null || value === undefined) {
           tempValue = ''
+        } else if (('' + value).lastIndexOf('.') > -1) {
+          tempValue = value
         } else if (+value <= 0) {
           tempValue = 0
         } else {
@@ -239,6 +241,8 @@ export default {
           tempValue = this.orderLimitNumber
         } else if (value === '' || value === null || value === undefined) {
           tempValue = ''
+        } else if (('' + value).lastIndexOf('.') > -1) {
+          tempValue = value
         } else if (+value <= 0) {
           tempValue = 0
         } else {
