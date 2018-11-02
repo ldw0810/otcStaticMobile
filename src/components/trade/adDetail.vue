@@ -42,10 +42,10 @@
     transition-group(tag="div" name="slide-right")
       .popup(class="popup-right" v-if="showConfirmFlag" :key="1")
         slot
-          OrderCreateConfirm(:ad="ad" :form="form" @close="showConfirmFlag = false" @success="createOrder")
+          OrderCreateConfirm(:ad="ad" :form="formCommit" @close="showConfirmFlag = false" @success="createOrder")
       .popup(class="popup-right" v-if="showCompleteFlag" :key="2")
         slot
-          AdCompleteConfirm(:ad="ad" :form="form" @close="showCompleteFlag = false" @success="init")
+          AdCompleteConfirm(:ad="ad" :form="formCommit" @close="showCompleteFlag = false" @success="init")
       .popup(class="popup-right" v-if="showRulesFlag" :key="3")
         slot
           Rules(@close="showRulesFlag = false" @success="init")
