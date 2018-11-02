@@ -647,7 +647,7 @@
     "100002": "Login required",
     "100003": "Invalid validation code",
     "100004": "User name or password error",
-    "100005": "The original password error",
+    "100005": "Password error",
     "100006": "Email token error",
     "100007": "Nick name exist",
     "100008": "Binding two-factor authentication required",
