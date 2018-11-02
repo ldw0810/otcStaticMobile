@@ -1,8 +1,8 @@
 <template lang="pug">
   .adDetail
     mt-header(:title="(adType === 0 ? $t('public.buy') : $t('public.sell')) + currency.toUpperCase()" fixed)
-      router-link(:to="backLink" slot="left")
-        mt-button(icon="back")
+      span(slot="left")
+        mt-button(icon="back" @click="goBack")
       .rules(slot="right" @click="showRulesFlag = true") {{$t('order.order_trade_notice')}}
     .wrapper(v-if="ad.id")
       .content
@@ -122,14 +122,6 @@ export default {
     shareId () {
       return this.$store.state.shareId
     },
-    backLink () {
-      return {
-        path: this.adType === 0 ? '/buy' : '/sell',
-        query: {
-          currency: this.currency
-        }
-      }
-    },
     currency () {
       return this.ad.currency || ''
     },
@@ -151,6 +143,9 @@ export default {
     }
   },
   methods: {
+    goBack () {
+      this.$router.go(-1)
+    },
     checkState (value) {
       if (value === 'amount') {
         if (this.form.amount) {
@@ -302,7 +297,6 @@ export default {
       }
     },
     doNumberKey (event) {
-      debugger
       const value = +event.target.value
       if (value >= 0) {
         let tempAmount = $multipliedBy(value, +this.ad.current_price)
@@ -328,10 +322,10 @@ export default {
             this.$message.error(this.$t('order.order_join_own_otc_ad'))
           } else if (res.data.info.status === 'closed') {
             this.$message.error(this.$t('order.order_closed'))
-            this.$router.push(this.backLink)
+            this.goBack()
           }
         } else if (+res.data.error === 100021) {
-          this.$router.push(this.backLink)
+          this.goBack()
         }
       }).catch(() => {
         // this.$message.error(this.$t('public.url_request_fail'))
@@ -364,7 +358,7 @@ export default {
             this.showCompleteFlag = true
           }
         } else if (res.data && +res.data.error === 100052) {
-          this.$router.push(this.backLink)
+          this.goBack()
         } else if (res.data && +res.data.error === 100055) {
           this.init()
         }
