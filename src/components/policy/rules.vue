@@ -32,15 +32,15 @@ export default {
         this.$store.dispatch('axios_zendesk').then(res => {
           if (res.data && +res.data.error === 0) {
             const returnUrl = encodeURI(appealUrl)
-            window.open(`${configure.ZENDESK_DOMAIN_URL}/access/jwt?jwt=${res.data.token}&return_to=${returnUrl}`, '_blank')
+            window.location.href = `${configure.ZENDESK_DOMAIN_URL}/access/jwt?jwt=${res.data.token}&return_to=${returnUrl}`
           } else {
-            window.open(appealUrl, '_blank')
+            window.location.href = appealUrl
           }
         }).catch(() => {
-          window.open(appealUrl, '_blank')
+          window.location.href = appealUrl
         })
       } else {
-        window.open(appealUrl, '_blank')
+        window.location.href = appealUrl
       }
     }
   }
