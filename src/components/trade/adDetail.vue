@@ -198,7 +198,7 @@ export default {
           return this.balanceObj[this.targetCurrency] >= this.form.amount
         }
       } else if (type === 'number') {
-        if (this.isLegalTrade || +this.adType === 0) {
+        if (+this.adType === 0) {
           return true
         } else {
           return this.balanceObj[this.currency] >= this.form.number
