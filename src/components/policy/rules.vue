@@ -12,7 +12,6 @@
 import {Button} from 'element-ui'
 import Vue from 'vue'
 import configure from '../../../configure'
-import {$getAxiosLanguage} from '../../utils'
 
 Vue.component(Button.name, Button)
 
