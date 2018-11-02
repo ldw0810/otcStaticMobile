@@ -15,7 +15,6 @@ import configure from '../../../configure'
 
 Vue.component(Actionsheet.name, Actionsheet)
 
-const domain = `${configure.ZENDESK_DOMAIN_URL}/hc/${(window.localStorage.getItem('language') || 'zh-TW').replace('HK', 'TW').toLowerCase()}`
 export default {
   data () {
     return {
@@ -28,15 +27,15 @@ export default {
     footerList () {
       return [{
         name: this.$t('public.about'),
-        url: `${domain}/articles/360001934074`
+        url: `${this.getDomain()}/articles/360001934074`
       },
       {
         name: this.$t('public.explain'),
-        url: `${domain}/articles/360001929453`
+        url: `${this.getDomain()}/articles/360001929453`
       },
       {
         name: this.$t('public.helpCenter'),
-        url: `${domain}/categories/360000187674`
+        url: `${this.getDomain()}/categories/360000187674`
       }]
     },
     actions () {
@@ -50,6 +49,9 @@ export default {
     }
   },
   methods: {
+    getDomain () {
+      return `${configure.ZENDESK_DOMAIN_URL}/hc/${(window.localStorage.getItem('language') || 'zh-TW').replace('HK', 'TW').toLowerCase()}`
+    },
     showAction () {
       this.actionFlag = true
     },
@@ -92,10 +94,10 @@ export default {
               const returnUrl = encodeURI(this.footerList[index].url)
               window.location.href = `${configure.ZENDESK_DOMAIN_URL}/access/jwt?jwt=${res.data.token}&return_to=${returnUrl}`
             } else {
-              window.location.href = `${domain}/categories/360000187674`
+              window.location.href = `${this.getDomain()}/categories/360000187674`
             }
           }).catch(() => {
-            window.location.href = `${domain}/categories/360000187674`
+            window.location.href = `${this.getDomain()}/categories/360000187674`
           })
         } else if (this.footerList[index].url) {
           window.location.href = this.footerList[index].url

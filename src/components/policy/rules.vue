@@ -27,7 +27,7 @@ export default {
       this.$emit('close', 1)
     },
     goComplaint () {
-      let appealUrl = `${configure.ZENDESK_DOMAIN_URL}/hc/${$getAxiosLanguage().toLowerCase()}/requests/new`
+      let appealUrl = `${configure.ZENDESK_DOMAIN_URL}/hc/${(window.localStorage.getItem('language') || 'zh-TW').replace('HK', 'TW').toLowerCase()}/requests/new`
       if (this.$store.state.userToken) {
         this.$store.dispatch('axios_zendesk').then(res => {
           if (res.data && +res.data.error === 0) {
