@@ -232,6 +232,7 @@ export default {
           this.formCommit.amount = +tempValue
           this.formCommit.number = $fixDecimalMax($dividedBy(this.formCommit.amount, +this.ad.current_price))
           this.form.number = $fixDecimalAuto(this.formCommit.number, this.currency)
+          this.checkAllState()
         })
       } else if (type === 'number') {
         if (+value > +this.orderLimitNumber) {
@@ -248,9 +249,9 @@ export default {
           this.formCommit.number = +tempValue
           this.formCommit.amount = $fixDecimalMax($multipliedBy(this.formCommit.number, +this.ad.current_price))
           this.form.amount = $fixDecimalAuto(this.formCommit.amount, this.targetCurrency)
+          this.checkAllState()
         })
       }
-      this.checkAllState()
     },
     doInputNumberKeyUp (event, type) {
       if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', '.'].indexOf(event.key) > -1) {
