@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     goLink () {
-      window.open('https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8', '_blank')
+      window.location.href = 'https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8'
     },
     copySuccess () {
       this.$message.success(this.$t('public.invite_copy_success'))
