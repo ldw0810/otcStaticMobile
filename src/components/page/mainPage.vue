@@ -8,13 +8,16 @@
         mt-swipe(class="bannerContent" :auto="configure.HOME_CAROUSEL.speed" :defaultIndex="configure.HOME_CAROUSEL.defaultIndex")
           mt-swipe-item(v-for="(item, index) in homeCarouselList" :key="index")
             .img
-              img(:src="item")
+              img(:src="item.en_img_src" v-if="item.en_img_src && language.toLowerCase().indexOf('en') > -1")
+              img(:src="item.tw_img_src" v-else-if="item.tw_img_src && language.toLowerCase().indexOf('zh-tw') > -1")
+              img(:src="item.zh_img_src" v-else-if="item.zh_img_src && language.toLowerCase().indexOf('zh-cn') > -1")
         .button(@click="hideBanner") {{$t('public.confirm')}}
 </template>
 <script type="es6">
 import Vue from 'vue'
 import {Swipe, SwipeItem} from 'mint-ui'
 import configure from '../../../configure'
+import {$getAxiosLanguage} from '../../utils'
 
 Vue.component(Swipe.name, Swipe)
 Vue.component(SwipeItem.name, SwipeItem)
@@ -37,6 +40,9 @@ export default {
     },
     homeCarouselList () {
       return this.$store.state.homeCarouselList
+    },
+    language () {
+      return $getAxiosLanguage()
     }
   },
   methods: {

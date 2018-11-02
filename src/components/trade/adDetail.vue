@@ -139,7 +139,7 @@ export default {
       return obj
     },
     orderLimitNumber () {
-      return $fixDecimalAuto($dividedBy(+this.ad.order_limit, +this.ad.current_price), this.currency)
+      return $fixDecimalAuto($dividedBy('' + this.ad.order_limit, '' + this.ad.current_price), this.currency)
     }
   },
   methods: {
