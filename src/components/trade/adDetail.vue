@@ -253,17 +253,14 @@ export default {
       }
     },
     doInputNumberKeyUp (event, type) {
-      if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', '.'].indexOf(event.key) > -1) {
-        this.changeInput(event.target.value, type)
-      }
+      this.changeInput(event.target.value, type)
     },
     doInputNumberKeyDown (event, type) { // 仅支持：1234567890.上下左右删除
       const keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode
       const key = event.key
-      const defaultKeyCodeList = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 8, 37, 38, 39, 40]
       const defaultKeyList = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown']
-      for (let i = 0; i < defaultKeyCodeList.length; i++) {
-        if (+keyCode === defaultKeyCodeList[i] && key === defaultKeyList[i]) {
+      for (let i = 0; i < defaultKeyList.length; i++) {
+        if (key === defaultKeyList[i]) {
           return true
         }
       }
@@ -273,7 +270,7 @@ export default {
         } else if (type === 'number') {
           this.submit()
         }
-      } else if (+keyCode === 190 && key === '.') {
+      } else if (key === '.') {
         let bindValue = this.form[type]
         if (('' + bindValue).indexOf('.') > -1) {
           event.preventDefault()
