@@ -92,39 +92,43 @@ export default {
       this.captchaStatus = 'loading'
       this.$store.dispatch('axios_captcha_server').then(res => {
         if (res.data && +res.data.error === 0) {
-          window.initGeetest({
-            gt: res.data.gt,
-            challenge: res.data.challenge,
-            offline: false,
-            new_captcha: res.data.new_captcha,
-            product: 'bind', // 产品形式，包括：float，popup, custom
-            width: '292px',
-            lang: localStorage.getItem('language') === 'zh-CN' ? 'zh-cn' : 'en'
-          },
-          captchaObj => {
-            captchaObj.appendTo(document.getElementById('captcha'))
-            this.captchaObj = captchaObj
-            this.captchaStatus = 'success'
-            captchaObj.onSuccess(() => {
-              let result = this.captchaObj.getValidate()
-              this.$loading.open()
-              this.$store.dispatch('axios_send_forget_mail', {
-                email: this.form.email,
-                geetest_challenge: result.geetest_challenge,
-                geetest_validate: result.geetest_validate,
-                geetest_seccode: result.geetest_seccode,
-                check_captcha: 1
-              }).then(result => {
-                if (result.data && +result.data.error === 0) {
-                  this.$message.success(this.$t('user.auth_email_send_success'))
-                } else if (result.data && +result.data.error === 100040) {
-                  this.emailNotValidList.push(this.form.email)
-                }
-              }).catch(() => {
-                // this.$message.error(this.$t('public.url_request_fail'))
+          if (window.initGeetest) {
+            window.initGeetest({
+              gt: res.data.gt,
+              challenge: res.data.challenge,
+              offline: false,
+              new_captcha: res.data.new_captcha,
+              product: 'bind', // 产品形式，包括：float，popup, custom
+              width: '292px',
+              lang: localStorage.getItem('language') === 'zh-CN' ? 'zh-cn' : 'en'
+            },
+            captchaObj => {
+              captchaObj.appendTo(document.getElementById('captcha'))
+              this.captchaObj = captchaObj
+              this.captchaStatus = 'success'
+              captchaObj.onSuccess(() => {
+                let result = this.captchaObj.getValidate()
+                this.$loading.open()
+                this.$store.dispatch('axios_send_forget_mail', {
+                  email: this.form.email,
+                  geetest_challenge: result.geetest_challenge,
+                  geetest_validate: result.geetest_validate,
+                  geetest_seccode: result.geetest_seccode,
+                  check_captcha: 1
+                }).then(result => {
+                  if (result.data && +result.data.error === 0) {
+                    this.$message.success(this.$t('user.auth_email_send_success'))
+                  } else if (result.data && +result.data.error === 100040) {
+                    this.emailNotValidList.push(this.form.email)
+                  }
+                }).catch(() => {
+                  // this.$message.error(this.$t('public.url_request_fail'))
+                })
               })
             })
-          })
+          } else {
+            this.captchaStatus = 'error'
+          }
         } else {
           this.captchaStatus = 'error'
           this.$message.error(this.$t('user.captcha_request_fail'))

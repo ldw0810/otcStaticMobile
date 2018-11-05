@@ -139,55 +139,59 @@ export default {
       this.captchaStatus = 'loading'
       this.$store.dispatch('axios_captcha_server').then(res => {
         if (res.data && +res.data.error === 0) {
-          window.initGeetest({
-            gt: res.data.gt,
-            challenge: res.data.challenge,
-            offline: false,
-            new_captcha: res.data.new_captcha,
-            product: 'bind', // 产品形式，包括：float，popup, custom
-            width: '292px',
-            lang: localStorage.getItem('language') === 'zh-CN' ? 'zh-cn' : 'en'
-          },
-          captchaObj => {
-            captchaObj.appendTo(document.getElementById('captcha'))
-            this.captchaObj = captchaObj
-            this.captchaStatus = 'success'
-            captchaObj.onSuccess(() => {
-              let result = this.captchaObj.getValidate()
-              this.$loading.open()
-              this.$store.dispatch('axios_login', {
-                email: this.form.email,
-                password: this.form.password,
-                geetest_challenge: result.geetest_challenge,
-                geetest_validate: result.geetest_validate,
-                geetest_seccode: result.geetest_seccode,
-                check_captcha: 1
-              }).then(result => {
-                if (result.data && +result.data.error === 0) {
-                  this.$store.commit('saveToken', result.data.token)
-                  this.login()
-                } else if (result.data && +result.data.error === 100038) {
-                  if (result.data.sms || result.data.app) {
-                    this.$store.commit('loginInfo_setter', {
-                      mobile: result.data.mobile,
-                      loginToken: result.data.login_token
-                    })
-                    this.$store.commit('userInfo_mobile_setter', result.data.sms)
-                    this.$store.commit('userInfo_app_two_factor_setter', result.data.app)
+          if (window.initGeetest) {
+            window.initGeetest({
+              gt: res.data.gt,
+              challenge: res.data.challenge,
+              offline: false,
+              new_captcha: res.data.new_captcha,
+              product: 'bind', // 产品形式，包括：float，popup, custom
+              width: '292px',
+              lang: localStorage.getItem('language') === 'zh-CN' ? 'zh-cn' : 'en'
+            },
+            captchaObj => {
+              captchaObj.appendTo(document.getElementById('captcha'))
+              this.captchaObj = captchaObj
+              this.captchaStatus = 'success'
+              captchaObj.onSuccess(() => {
+                let result = this.captchaObj.getValidate()
+                this.$loading.open()
+                this.$store.dispatch('axios_login', {
+                  email: this.form.email,
+                  password: this.form.password,
+                  geetest_challenge: result.geetest_challenge,
+                  geetest_validate: result.geetest_validate,
+                  geetest_seccode: result.geetest_seccode,
+                  check_captcha: 1
+                }).then(result => {
+                  if (result.data && +result.data.error === 0) {
+                    this.$store.commit('saveToken', result.data.token)
+                    this.login()
+                  } else if (result.data && +result.data.error === 100038) {
+                    if (result.data.sms || result.data.app) {
+                      this.$store.commit('loginInfo_setter', {
+                        mobile: result.data.mobile,
+                        loginToken: result.data.login_token
+                      })
+                      this.$store.commit('userInfo_mobile_setter', result.data.sms)
+                      this.$store.commit('userInfo_app_two_factor_setter', result.data.app)
+                    }
+                    if (result.data.sms) {
+                      this.validatePhonePopupFlag = true
+                      this.validateGooglePopupFlag = false
+                    } else if (result.data.app) {
+                      this.validatePhonePopupFlag = false
+                      this.validateGooglePopupFlag = true
+                    }
                   }
-                  if (result.data.sms) {
-                    this.validatePhonePopupFlag = true
-                    this.validateGooglePopupFlag = false
-                  } else if (result.data.app) {
-                    this.validatePhonePopupFlag = false
-                    this.validateGooglePopupFlag = true
-                  }
-                }
-              }).catch(() => {
-                // this.$message.error(this.$t('public.url_request_fail'))
+                }).catch(() => {
+                  // this.$message.error(this.$t('public.url_request_fail'))
+                })
               })
             })
-          })
+          } else {
+            this.captchaStatus = 'error'
+          }
         } else {
           this.captchaStatus = 'error'
           this.$message.error(this.$t('user.captcha_request_fail'))
