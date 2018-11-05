@@ -160,7 +160,11 @@ export const $fixDecimalAuto = function (value, currency) {
  * 资产默认位数
  */
 export const $fixDecimalsAsset = function (value) {
-  return $fixDecimal(value, configure.CONF_DECIMAL_ASSET)
+  if (+value < Math.pow(0.1, configure.CONF_DECIMAL_ASSET)) {
+    return 0
+  } else {
+    return $fixDecimal(value, configure.CONF_DECIMAL_ASSET)
+  }
 }
 /**
  * 数字币基本位数
