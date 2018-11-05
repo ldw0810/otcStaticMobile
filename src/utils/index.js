@@ -186,26 +186,9 @@ export const $fixDecimalMax = function (value) {
 }
 // BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_FLOOR });
 export const $fixDecimal = function (value, limit) {
-  let tempLimit = +limit
-  let tempValue = +value
-  if (tempValue > 0) {
-    while (tempValue < 0.1) {
-      tempLimit += 1
-      tempValue *= 10
-    }
-    while (tempValue >= 1000 && tempLimit >= 0) {
-      tempLimit -= 1
-      tempValue /= 10
-      if (tempLimit === 0) {
-        break
-      }
-    }
-  } else if (tempValue === 0) {
-    tempLimit = 0
-  }
   return Number(BigNumber(value + '')
-    .decimalPlaces(tempLimit, BigNumber.ROUND_FLOOR)
-    .toFixed(tempLimit).toString())
+    .decimalPlaces(limit, BigNumber.ROUND_FLOOR)
+    .toFixed(limit).toString())
 }
 
 /**
