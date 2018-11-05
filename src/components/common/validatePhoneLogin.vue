@@ -85,6 +85,10 @@ export default {
         code: '',
         login_token: this.loginInfo.loginToken,
         refresh: 1
+      }).then(res => {
+        if (res.data && +res.data.error === 100039) {
+          this.$emit('close', 1)
+        }
       })
     },
     submit () {
