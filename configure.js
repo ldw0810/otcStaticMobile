@@ -49,7 +49,6 @@ export default {
     }
   ],
   DEFAULT_LANGUAGE: 'zh-HK',
-  CHAT_URL: '/chat',
   CHAT_TIMEOUT: 90000,
   ACTIVITIES_URL: '/hc/api/internal/recent_activities',
   axios_TIMEOUT: 20000,

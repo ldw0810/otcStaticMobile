@@ -6,7 +6,6 @@ const path = require('path')
 
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -15,7 +14,12 @@ module.exports = {
         target: "https://alpha.otcmaker.com",
         secure: false,
         changeOrigin: true
-      }
+      },
+      "/chat": {
+        target: "https://alpha.otcmaker.com",
+        secure: false,
+        changeOrigin: true
+      },
     },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

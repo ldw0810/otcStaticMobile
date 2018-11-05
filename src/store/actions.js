@@ -156,7 +156,7 @@ export default {
     store.commit('axiosCancel_setter', {
       chat: source
     })
-    return http.get(configure.CHAT_URL, requestData, {
+    return http.get('/chat', requestData, {
       timeout: 90000,
       cancelToken: source.token
     })
