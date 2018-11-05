@@ -98,7 +98,6 @@ export default {
         amount: '',
         number: ''
       },
-      isSelfOrder: false,
       showConfirmFlag: false,
       showCompleteFlag: false,
       showRulesFlag: false
@@ -140,6 +139,9 @@ export default {
     },
     orderLimitNumber () {
       return $fixDecimalAuto($dividedBy('' + this.ad.order_limit, '' + this.ad.current_price), this.currency)
+    },
+    isSelfOrder () {
+      return this.ad.member.id === this.userInfo.id
     }
   },
   methods: {
@@ -314,7 +316,6 @@ export default {
       }).then(res => {
         if (res.data && +res.data.error === 0) {
           this.ad = res.data.info
-          this.isSelfOrder = (this.ad.member.id === this.userInfo.id)
           if (this.ad.member.id === this.userInfo.id) {
             this.$message.error(this.$t('order.order_join_own_otc_ad'))
           } else if (res.data.info.status === 'closed') {
