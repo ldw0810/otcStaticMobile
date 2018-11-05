@@ -680,7 +680,7 @@
     "100036": "can not create more than one same Ad",
     "100037": "Invalid email verify token",
     "100038": "Two-factor authentication required",
-    "100039": "Login token invalid",
+    "100039": "Login timeout",
     "100040": "Email address not found",
     "100041": "Withdraw fail",
     "100042": "Withdraw address code fail",
