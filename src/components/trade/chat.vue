@@ -104,6 +104,54 @@ export default {
         }
       })
     },
+    sendImageInfo (imgObj) {
+      let newMsg = {
+        type: 0,
+        data: value,
+        time: $getDateStr(tempTime),
+        compareTime: timeFlag ? tempTime.getTime() : compareTime,
+        timeFlag: timeFlag,
+        status: 0 // 0. 加载  1. 成功 -1 失败
+      }
+      let tempIndex = this.msgList.length
+      this.$set(this.msgList, tempIndex, newMsg)
+    },
+    sendImage (imgObj) {
+      if (imgObj.status === 'start') {
+        this.sendImageInfo(imgObj)
+      } else {
+        let tempNum = 0
+        for (let i = this.msgList.length - 1; i >= 0; i--) {
+          if (this.msgList[i].data && (this.msgList[i].data.indexOf(imgObj.uid) > -1)) {
+            if (imgObj.status === 'ready' || imgObj.status === 'uploading') {
+              this.$nextTick(() => {
+                this.msgList[i].data = this.msgList[i].data.replace(/(src=")(.*?)(")/gi, `$1${imgObj.url}$3`)
+                this.msgList[i].progress = +imgObj.progress
+              })
+            } else if (imgObj.status === 'success') {
+              this.$nextTick(() => {
+                this.msgList[i].data = this.msgList[i].data.replace(/(src=")(.*?)(")/gi, `$1${imgObj.url}$3`)
+                this.msgList[i].progress = 100
+                this.msgList[i].status = 1
+                this.sendInfo(`<img src="${imgObj.url}" uid="${imgObj.uid}" alt="${imgObj.name}"/>`)
+              })
+            } else if (imgObj.status === 'error') {
+              this.$nextTick(() => {
+                imgObj.url && (this.msgList[i].data = this.msgList[i].data.replace(/(src=")(.*?)(")/gi, `$1${imgObj.url}$3`))
+                this.msgList[i].progress = 100
+                this.msgList[i].status = -1
+              })
+            }
+            break
+          } else {
+            tempNum++
+          }
+        }
+        if (+tempNum === this.msgList.length) {
+          this.sendImageInfo(imgObj)
+        }
+      }
+    },
     sendInfo (value) {
       value = value ? $trim($trim(('' + value).trim(), '<br>'), '&nbsp;', 'left').trim() : ''
       if (value) {

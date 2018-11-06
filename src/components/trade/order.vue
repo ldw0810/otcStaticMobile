@@ -23,7 +23,7 @@
           .item(v-if="triggerInfoFlag")
             .label {{$t('order.order_order_payment')}}:
             .text {{order.pay_kind ? $t('public.' + order.pay_kind) : ''}}
-          .btn(@click="triggerInfo") {{$t('order.order_hide_detail')}}
+          .btn(@click="triggerInfo") {{triggerInfoFlag ? $t('order.order_hide_detail') : $t('order.order_show_detail')}}
         .border(v-if="triggerInfoFlag")
         .remark(v-if="triggerInfoFlag")
           .label {{$t('ad.ad_remark')}}:
@@ -59,10 +59,13 @@
       Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrderInterval" @sendSuccess="sendSuccess")
     .footer(v-if="order.id" id="footer")
       .oper
-        #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" :tabIndex="2" @input="changeInputValue" @paste="pasteInputValue" @keydown.enter="doInputKeyEnter" @focus="doInputFocusEvent" @blur="doInputFocusEvent")
+        .footerInputWrapper
+          #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" :tabIndex="2" @input="changeInputValue" @paste="pasteInputValue" @keydown.enter="doInputKeyEnter" @focus="doInputFocusEvent" @blur="doInputFocusEvent")
+          .sendBtn(@click="sendInfo")
+        el-upload(class="uploader" ref="upload" :headers="{Authorization: userToken}" action="/api/v1/common/up_img" :data="{upload_file: uploadFile}" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="uploadBefore" :on-progress="showUploadProgress")
+          .uploadImage(@click="submitUpload")
         .browImage(@click.prevent.stop="triggerBrow")
           img(:src="browImage")
-        mt-button(class="sendBtn orderSubmitBtn" @click="sendInfo") {{$t('public.send')}}
       transition(name="bottom" mode="out-in")
         mt-swipe(class="browPage" :auto="0" :continuous="false" v-if="browFlag" @click.native.stop="browPageClick")
           mt-swipe-item(v-for="browPage in browPageTotal" :key="browPage")
@@ -99,6 +102,7 @@ import Vue from 'vue'
 import Avatar from '../common/avatar'
 import EmptyList from '../common/emptyList'
 import Rules from '../policy/rules'
+import {Upload} from 'element-ui'
 import {Button, Field, Header, Swipe, SwipeItem} from 'mint-ui'
 import OrderPayConfirm from './orderPayConfirm'
 import OrderReleaseConfirm from './orderReleaseConfrim'
@@ -109,6 +113,7 @@ import ValidPhone from '../common/validPhone'
 import ValidGoogle from '../common/validGoogle'
 import {$insertHtmlAtCaret, $restoreSelection, $saveSelection} from '../../utils'
 
+Vue.component(Upload.name, Upload)
 Vue.component(Header.name, Header)
 Vue.component(Button.name, Button)
 Vue.component(Field.name, Field)
@@ -158,11 +163,14 @@ export default {
       password: '',
       inputValue: '',
       inputSelection: {},
-      browFlag: false,
       browList: ['微笑', '撇嘴', '色', '发呆', '得意', '流泪', '害羞', '闭嘴', '睡', '大哭', '尴尬', '发怒', '调皮', '呲牙', '惊讶', '难过', '酷', '冷汗', '抓狂', '吐', '偷笑', '愉快', '白眼', '傲慢', '饥饿', '困', '惊恐', '流汗', '憨笑', '大兵', '奋斗', '咒骂', '疑问', '嘘', '晕', '折磨', '衰', '骷髅', '敲打', '再见', '擦汗', '抠鼻', '鼓掌', '糗大了', '坏笑', '左哼哼', '右哼哼', '哈欠', '鄙视', '委屈', '快哭了', '阴险', '亲亲', '吓', '可怜', '菜刀', '西瓜', '啤酒', '篮球', '乒乓', '咖啡', '饭', '猪头', '玫瑰', '凋谢', '示爱', '爱心', '心碎', '蛋糕', '闪电', '炸弹', '刀', '足球', '瓢虫', '便便', '月亮', '太阳', '礼物', '拥抱', '强', '弱', '握手', '胜利', '抱拳', '勾引', '拳头', '差劲', '爱你', 'NO', 'OK', '爱情', '飞吻', '跳跳', '发抖', '怄火', '转圈', '磕头', '回头', '跳绳', '挥手', '激动', '街舞', '献吻', '左太极', '右太极'],
       browCurrentPage: 1,
       browLine: 3,
-      browRow: 9
+      browRow: 9,
+      browFlag: false,
+      uploadFlag: false,
+      uploadImageUrl: '',
+      uploadFile: ''
     }
   },
   watch: {
@@ -173,6 +181,9 @@ export default {
   computed: {
     userInfo () {
       return this.$store.state.userInfo
+    },
+    userToken () {
+      return this.$store.state.userToken
     },
     orderType () {
       return this.order.op_type === 'buy' ? 0 : 1
@@ -200,6 +211,9 @@ export default {
     },
     browImage () {
       return this.browFlag ? require('../../assets/images/trade/ShapeFocus.png') : require('../../assets/images/trade/Shape.png')
+    },
+    uploadImage () {
+      return this.uploadFlag ? require('../../assets/images/trade/imageFocus.png') : require('../../assets/images/trade/image.png')
     },
     browPageTotal () {
       return Math.ceil(this.browList.length / (this.browLine * this.browRow))
@@ -304,6 +318,78 @@ export default {
     },
     orderClick () {
       this.browFlag = false
+    },
+    submitUpload () {
+      this.uploadFlag = true
+      this.$refs.upload.submit()
+    },
+    uploadSuccess (res, file) {
+      if (file.url) {
+        this.uploadFlag = false
+        this.uploadFile = ''
+        this.uploadImageUrl = file.url
+        this.$refs.chat.sendImage({
+          status: 'success',
+          name: file.name,
+          url: file.url || '',
+          uid: file.uid
+        })
+      } else {
+        this.$refs.chat.sendImage({
+          status: file.status,
+          name: file.name,
+          url: file.url || '',
+          uid: file.uid
+        })
+      }
+    },
+    uploadError (res, file) {
+      this.uploadFlag = false
+      this.uploadFile = ''
+      this.$refs.chat.sendImage({
+        status: file.status,
+        name: file.name,
+        url: file.url || '',
+        uid: file.uid
+      })
+    },
+    showUploadProgress (event, file) {
+      this.$refs.chat.sendImage({
+        name: file.name,
+        url: file.url || '',
+        status: file.status || '',
+        progress: file.percentage || 0,
+        uid: file.uid
+      })
+    },
+    uploadBefore (file) {
+      let isImage = false
+      const isLt = file.size / 1024 / 1024 < 2
+      let imageTypeList = ['bmp', 'jpg', 'jpeg', 'png', 'svg', 'bmp', 'gif']
+      if (file.type) {
+        for (let i = 0; i < imageTypeList.length; i++) {
+          if (file.type.indexOf(imageTypeList[i]) > -1) {
+            isImage = true
+            break
+          }
+        }
+      }
+      if (!isImage) {
+        this.$message.error(this.$t('order.order_upload_is_image'))
+      }
+      if (!isLt) {
+        this.$message.error(this.$t('order.order_upload_limit'))
+      }
+      this.uploadFlag = isLt && isImage
+      if (this.uploadFlag) {
+        this.uploadFile = file
+        this.$refs.chat.sendImage({
+          status: 'start',
+          name: file.name,
+          uid: file.uid
+        })
+      }
+      return this.uploadFlag
     },
     showTip () {
       this.timer && clearTimeout(this.timer)
@@ -472,6 +558,7 @@ export default {
     sendInfo (event) {
       event && event.preventDefault()
       this.$refs.chat.sendInfo(this.inputValue)
+      document.getElementById('footerInput').focus()
     },
     insertBrow (page, line, row) {
       // let browHTML = `<i class="browIcon" style="${this.getBrowImage(page, line, row)}"></i>`
@@ -605,17 +692,24 @@ export default {
       width 100vw
       background #fff
       display flex
-      align-items center
+      align-items flex-start
       border-top 1px solid #EEEEEE
       flex-direction column
       transition: .2s ease-out;
       .oper {
         display flex
         align-items center
+        .footerInputWrapper {
+          @extend .flex-center
+          justify-content flex-start
+          border-right 1px solid #eee
+          border-left 1px solid #eee
+          border-bottom 1px solid #eee
+          width 76vw
+        }
         #footerInput {
-          margin 0.5vh 2vw
+          margin 0.5vh 0
           padding 0.5vh 1.5vw
-          border 1px solid #eee
           min-height 5vh
           max-height 10vh
           width: 66vw
@@ -637,9 +731,44 @@ export default {
             line-height 4vh
           }
         }
+        .uploader {
+          width 4vh
+          height 4vh
+          margin-left 3.5vw
+          .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            &:hover {
+              border-color: #409EFF;
+            }
+          }
+          .uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+          }
+          .uploadImage {
+            width: 4vh;
+            height: 4vh;
+            background url("../../assets/images/trade/image.png") 0 0
+            background-size cover
+            &:active, &:focus {
+              background url("../../assets/images/trade/imageFocus.png") 0 0
+              background-size cover
+            }
+          }
+        }
+
         .browImage {
           width 4vh
           height 4vh
+          margin-left 3.5vw
           img {
             width 100%
             height 100%
@@ -648,9 +777,14 @@ export default {
           }
         }
         .sendBtn {
-          width 20vw
-          margin-left 2vw
-          height 5.5vh
+          width 4vh
+          height 4vh
+          background url("../../assets/images/trade/send.png") 0 0
+          background-size cover
+          &:active, &:focus {
+            background url("../../assets/images/trade/sendFocus.png") 0 0
+            background-size cover
+          }
         }
       }
       .browPage {
@@ -842,6 +976,7 @@ export default {
     opacity 1
     background rgba(0, 0, 0, 1)
   }
+
   #header {
     position static !important
   }

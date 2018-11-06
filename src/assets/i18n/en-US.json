@@ -639,7 +639,9 @@
     "order_chat_type_nonsupport": "Unsupport message type",
     "order_data_request_fail": "Oder data request fail",
     "order_chat_placeholder": "Say something",
-    "order_trade_complaint": "Trading complaint"
+    "order_trade_complaint": "Trading complaint",
+    "order_upload_is_image": "Upload must be pictures",
+    "order_upload_limit": "Upload pictures can not exceed 2MB size."
   },
   "request": {
     "100000": "Server error",
