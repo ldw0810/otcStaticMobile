@@ -3,7 +3,7 @@
     transition(name="fade" mode="out-in")
       router-view
     transition(name="fade" mode="out-in")
-      .banner(v-if="isFirstLogin && homeCarouselList.length")
+      .banner(v-if="isFirstLogin && homeCarouselList.length" @touchmove.prevent="bannerScroll")
         .bg
         mt-swipe(class="bannerContent" :auto="configure.HOME_CAROUSEL.speed" :defaultIndex="configure.HOME_CAROUSEL.defaultIndex")
           mt-swipe-item(v-for="(item, index) in homeCarouselList" :key="index")
@@ -46,6 +46,10 @@ export default {
     }
   },
   methods: {
+    bannerScroll (event) {
+      debugger
+      event.preventDefault()
+    },
     hideBanner () {
       this.isFirstLogin = 0
     },
@@ -83,8 +87,12 @@ export default {
 </script>
 <style lang='stylus' scoped>
   .banner {
+    position fixed
+    left 0
+    top 0
     width 100vw
     height 100vh
+    z-index 999999999
     @extend .flex-vertical-center
     .bg {
       position fixed

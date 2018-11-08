@@ -634,6 +634,7 @@ export default {
 
   .chat .image {
     max-width: 35vw;
+    cursor zoom-in
   }
 
   .showPercentage100 {
