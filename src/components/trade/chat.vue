@@ -139,7 +139,6 @@ export default {
             let tempImg = new Image()
             tempImg.src = imgObj.url
             tempImg.onload = () => {
-              console.log(this.msgList[i])
               this.msgList[i].data = this.msgList[i].data.replace(/("imgUrl":")(.*?)(")/gi, `$1${imgObj.url}$3`)
               this.msgList[i].imageWidth = tempImg.width / 2
               this.msgList[i].imageHeight = tempImg.height / 2
@@ -349,7 +348,6 @@ export default {
     this.init()
   },
   mounted () {
-    console.log(this.msgList)
     this.scrollToBottom()
   },
   beforeDestroy () {
