@@ -48,12 +48,12 @@ export default {
         })
       }
     },
-    init () {
+    doInit () {
       this.getBankList()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

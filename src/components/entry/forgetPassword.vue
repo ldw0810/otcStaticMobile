@@ -65,7 +65,7 @@ export default {
   },
   watch: {
     $route: function (val) {
-      this.init()
+      this.doInit()
     }
   },
   methods: {
@@ -138,13 +138,13 @@ export default {
         // this.$message.error(this.$t('user.captcha_request_fail'))
       })
     },
-    init () {
+    doInit () {
       this.$loading.close()
       this.initCaptcha()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

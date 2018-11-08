@@ -71,15 +71,15 @@ export default {
         this.$loading.close()
       }
     },
-    init () {
+    doInit () {
       this.sendEmail().then(() => {
-        this.$refs.sendCode.init()
+        this.$refs.sendCode.doInit()
       })
       this.getMe()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

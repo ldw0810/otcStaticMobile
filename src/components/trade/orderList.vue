@@ -62,7 +62,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     }
   },
   methods: {
@@ -119,12 +119,12 @@ export default {
         }
       })
     },
-    init () {
+    doInit () {
       this.getOrders()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

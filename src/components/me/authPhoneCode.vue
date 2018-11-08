@@ -110,7 +110,7 @@ export default {
         }
       }
     },
-    init () {
+    doInit () {
       this.$loading.close()
       if (!this.userInfo.mobile) {
         this.formState.password = 'success'
@@ -120,7 +120,7 @@ export default {
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

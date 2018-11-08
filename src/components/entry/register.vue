@@ -219,11 +219,11 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   },
   methods: {
     showAgreement () {
@@ -301,7 +301,7 @@ export default {
         // this.$message.error(this.$t('user.captcha_request_fail'))
       })
     },
-    init () {
+    doInit () {
       this.$loading.close()
       this.initCaptcha()
     }

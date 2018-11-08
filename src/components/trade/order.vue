@@ -89,7 +89,7 @@
           OrderCompleteConfirm(:order="order" @close="confirmFlag.complete = false" @success="doOper('complete')")
       .popup(class="popup-right" v-if="showRulesFlag" :key="5")
         slot
-          Rules(@close="showRulesFlag = false" @success="init")
+          Rules(@close="showRulesFlag = false" @success="doInit")
       .popup(class="popup-right" v-if="confirmFlag.authPhone" :key="6")
         slot
           ValidPhone(:needAuth="false" @close="confirmFlag.authPhone = false" @success="doAuthClose" @change="changeValidate(0)")
@@ -175,7 +175,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     }
   },
   computed: {
@@ -602,13 +602,13 @@ export default {
       this.inputValue = ''
       document.getElementById('footerInput').innerHTML = this.inputValue
     },
-    init () {
+    doInit () {
       this.getMe()
       this.getOrderInterval()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   },
   destroyed () {
     this.timer && clearTimeout(this.timer)

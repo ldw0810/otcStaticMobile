@@ -50,13 +50,13 @@ export default {
         // this.$message.error(this.$t('user.receivables_request_fail'))
       })
     },
-    init () {
+    doInit () {
       this.getMe()
       this.getCollectionList()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

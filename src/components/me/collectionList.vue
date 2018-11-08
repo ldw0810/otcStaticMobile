@@ -135,12 +135,12 @@ export default {
         }
       })
     },
-    init () {
+    doInit () {
       this.getCollectionList()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

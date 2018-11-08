@@ -142,13 +142,13 @@ export default {
     changeBank (item) {
       this.form.bank = item
     },
-    init () {
+    doInit () {
       this.$loading.close()
       this.checkAllState()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

@@ -67,7 +67,7 @@ export default {
       this.timer && clearTimeout(this.timer)
       this.subTime = this.time
     },
-    init () {
+    doInit () {
       if (this.subTime && !this.subOnce) {
         this.clear()
         this.countDown()

@@ -93,7 +93,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     }
   },
   computed: {
@@ -220,12 +220,12 @@ export default {
         id: item.id
       }).then(res => {
         if (res.data && +res.data.error === 0) {
-          this.init()
+          this.doInit()
         }
       }).catch(() => {
       })
     },
-    init () {
+    doInit () {
       if (!this.$route.query.currency) {
         this.getMe()
       }
@@ -237,7 +237,7 @@ export default {
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

@@ -64,7 +64,7 @@ export default {
     getMe () {
       this.$store.dispatch('axios_me')
     },
-    init () {
+    doInit () {
       if (this.isFirstLogin) {
         this.getBanner()
       }
@@ -77,7 +77,7 @@ export default {
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

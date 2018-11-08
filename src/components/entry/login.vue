@@ -21,13 +21,13 @@
         .goButton(v-text="$t('user.password_forget')" @click="$router.push('/forgetPassword')")
         .empty
         .goButton(v-text="$t('user.login_toRegister')" @click="$router.push('/register')")
-    transition-group(tag="div" name="slide-right")
-      .popup(class="popup-right" v-if="validatePhonePopupFlag" :key="1")
-        slot
-          validatePhoneLogin(@close="validatePhonePopupFlag = false" @changeValidate="changeValidate('google')" @success="login")
-      .popup(class="popup-right" v-if="validateGooglePopupFlag" :key="2")
-        slot
-          validateGoogleLogin(@close="validateGooglePopupFlag = false" @changeValidate="changeValidate('phone')" @success="login")
+      transition-group(tag="div" name="slide-right")
+        .popup(class="popup-right" v-if="validatePhonePopupFlag" :key="1")
+          slot
+            validatePhoneLogin(@close="validatePhonePopupFlag = false" @changeValidate="changeValidate('google')" @success="login")
+        .popup(class="popup-right" v-if="validateGooglePopupFlag" :key="2")
+          slot
+            validateGoogleLogin(@close="validateGooglePopupFlag = false" @changeValidate="changeValidate('phone')" @success="login")
     #captcha
 </template>
 <script type="es6">
@@ -87,7 +87,7 @@ export default {
   },
   watch: {
     $route: function (val) {
-      this.init()
+      this.doInit()
     }
   },
   methods: {
@@ -201,13 +201,13 @@ export default {
         // this.$message.error(this.$t('user.captcha_request_fail'))
       })
     },
-    init () {
+    doInit () {
       this.$loading.close()
       this.initCaptcha()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

@@ -9,7 +9,7 @@ export default {
   name: 'App',
   watch: {
     $route: function (val) {
-      this.init()
+      this.doInit()
     }
   },
   methods: {
@@ -27,7 +27,7 @@ export default {
       }
       return this.$router.replace(url, onComplete, onAbort)
     },
-    init () {
+    doInit () {
       if (this.$route.query) {
         if (this.$route.query.withdraw_token) {
           this.$store.dispatch('axios_withdraw_confirm', {
@@ -64,7 +64,7 @@ export default {
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

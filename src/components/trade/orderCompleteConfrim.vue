@@ -51,11 +51,11 @@ export default {
       this.$emit('close', 1)
       this.$emit('success', 1)
     },
-    init () {
+    doInit () {
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

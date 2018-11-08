@@ -75,7 +75,7 @@ export default {
   },
   watch: {
     $route: function (val) {
-      this.init()
+      this.doInit()
     }
   },
   methods: {
@@ -119,12 +119,12 @@ export default {
         })
       }
     },
-    init () {
+    doInit () {
       this.initToken()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

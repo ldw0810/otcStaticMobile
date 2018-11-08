@@ -50,12 +50,12 @@ export default {
     getMe () {
       this.$store.dispatch('axios_me')
     },
-    init () {
+    doInit () {
       this.getMe()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

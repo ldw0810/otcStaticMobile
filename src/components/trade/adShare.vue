@@ -105,7 +105,7 @@ export default {
       }
       drawing()
     },
-    init () {
+    doInit () {
       this.$loading.close()
       this.createImage()
       setTimeout(() => {
@@ -114,7 +114,7 @@ export default {
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

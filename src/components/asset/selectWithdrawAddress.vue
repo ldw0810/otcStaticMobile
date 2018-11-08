@@ -43,11 +43,11 @@ export default {
       this.$emit('add', 1)
       this.goBack()
     },
-    init () {
+    doInit () {
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

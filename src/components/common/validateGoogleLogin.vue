@@ -58,7 +58,7 @@ export default {
       return this.$store.state.userInfo.mobile
     },
     validateGoogle () {
-      return this.$store.state.userInfo_app_two_factor_setter
+      return this.$store.state.userInfo.app_two_factor
     },
     loginInfo () {
       return this.$store.state.loginInfo || {}
@@ -66,7 +66,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     }
   },
   methods: {
@@ -99,8 +99,8 @@ export default {
         }
       })
     },
-    init () {
-      if (!this.validateGoogleLogin) {
+    doInit () {
+      if (!this.validateGoogle) {
         if (this.validatePhone) {
           this.$emit('changeValidate', 1)
         } else {

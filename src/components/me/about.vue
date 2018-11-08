@@ -65,12 +65,12 @@ export default {
         }
       }
     },
-    init () {
+    doInit () {
       this.$loading.close()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

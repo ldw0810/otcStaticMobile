@@ -80,7 +80,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     }
   },
   computed: {
@@ -159,7 +159,7 @@ export default {
           if (res.data && +res.data.error === 0) {
             this.$message.success(this.$t('ad.ad_close_success'))
             this.$loading.open()
-            this.init(1)
+            this.doInit(1)
           }
         }).catch(() => {
           // this.$message.error(this.$t('ad.ad_close_fail'))
@@ -176,7 +176,7 @@ export default {
           if (res.data && +res.data.error === 0) {
             this.$message.success(this.$t('ad.ad_open_success'))
             this.$loading.open()
-            this.init(1)
+            this.doInit(1)
           }
         }).catch(() => {
           // this.$message.error(this.$t('ad.ad_open_fail'))
@@ -210,12 +210,12 @@ export default {
     copySuccess () {
       this.$message.success(this.$t('public.invite_copy_success'))
     },
-    init () {
+    doInit () {
       this.getMyAds()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

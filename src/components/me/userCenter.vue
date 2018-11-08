@@ -70,12 +70,12 @@ export default {
         this.$router.push('/login')
       }
     },
-    init () {
+    doInit () {
       this.getMe()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

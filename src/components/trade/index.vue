@@ -88,7 +88,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     },
     '$store.state.tradePriceData': {
       handle: () => {
@@ -154,7 +154,7 @@ export default {
       }).catch(() => {
       })
     },
-    init () {
+    doInit () {
       this.navbarIndex = this.$route.meta.navbarIndex || 0
       this.$store.commit('tradePath_setter', this.$route.fullPath)
       this.getCurrencyCode()
@@ -171,7 +171,7 @@ export default {
     this.tradePriceTimer && clearTimeout(this.tradePriceTimer)
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

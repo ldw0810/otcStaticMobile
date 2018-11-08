@@ -44,19 +44,19 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     }
   },
   methods: {
     goTrade () {
       this.$router.push(this.$store.state.tradePath)
     },
-    init () {
+    doInit () {
       this.tabbarIndex = this.$route.meta.tabbarIndex || 0
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

@@ -13,7 +13,6 @@ import install from './utils/installs'
 import languageDataList from './locale'
 import './style/index.styl'
 import preview from 'vue-photo-preview'
-import 'vue-photo-preview/dist/skin.css'
 
 Vue.config.productionTip = false
 Vue.use(install)

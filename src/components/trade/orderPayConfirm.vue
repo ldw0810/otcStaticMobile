@@ -52,11 +52,11 @@ export default {
       this.$emit('close', 1)
       this.$emit('success', this.form.remark)
     },
-    init () {
+    doInit () {
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

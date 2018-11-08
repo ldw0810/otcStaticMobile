@@ -75,7 +75,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     }
   },
   methods: {
@@ -123,7 +123,7 @@ export default {
         }
       })
     },
-    init () {
+    doInit () {
       if (!this.validatePhone) {
         if (this.validateGoogle) {
           this.$emit('changeValidate', 1)

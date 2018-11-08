@@ -58,7 +58,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     },
     '$store.state.ads': {
       handle: () => {
@@ -169,7 +169,7 @@ export default {
         })
       }
     },
-    init () {
+    doInit () {
       this.getAds()
       this.getAdsData().then(() => {
         this.getAds()
@@ -177,7 +177,7 @@ export default {
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

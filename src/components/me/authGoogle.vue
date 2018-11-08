@@ -92,13 +92,13 @@ export default {
         }
       }
     },
-    init () {
+    doInit () {
       this.getMe()
       this.checkAllState()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

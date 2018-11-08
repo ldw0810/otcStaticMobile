@@ -50,12 +50,12 @@ export default {
         })
       }
     },
-    init () {
+    doInit () {
       this.getCountryList()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

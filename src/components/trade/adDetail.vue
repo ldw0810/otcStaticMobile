@@ -45,10 +45,10 @@
           OrderCreateConfirm(:ad="ad" :form="formCommit" @close="showConfirmFlag = false" @success="createOrder")
       .popup(class="popup-right" v-if="showCompleteFlag" :key="2")
         slot
-          AdCompleteConfirm(:ad="ad" :form="formCommit" @close="showCompleteFlag = false" @success="init")
+          AdCompleteConfirm(:ad="ad" :form="formCommit" @close="showCompleteFlag = false" @success="doInit")
       .popup(class="popup-right" v-if="showRulesFlag" :key="3")
         slot
-          Rules(@close="showRulesFlag = false" @success="init")
+          Rules(@close="showRulesFlag = false" @success="doInit")
 </template>
 <script type="es6">
 import Avatar from '../common/avatar'
@@ -105,7 +105,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     }
   },
   computed: {
@@ -358,18 +358,18 @@ export default {
         } else if (res.data && +res.data.error === 100052) {
           this.goBack()
         } else if (res.data && +res.data.error === 100055) {
-          this.init()
+          this.doInit()
         }
       }).catch(() => {
         // this.$message.error(this.$t('order.order_deal_request_fail'))
       })
     },
-    init () {
+    doInit () {
       this.getAd()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

@@ -131,7 +131,7 @@ export default {
         }
       }
     },
-    init () {
+    doInit () {
       if (this.userInfo.mobile) {
         this.form.phoneNumber = this.userInfo.phone_number
         this.authPhoneCodeFlag = true
@@ -141,7 +141,7 @@ export default {
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

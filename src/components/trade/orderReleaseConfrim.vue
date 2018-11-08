@@ -60,11 +60,11 @@ export default {
       this.$emit('close', 1)
       this.$emit('success', this.form.password)
     },
-    init () {
+    doInit () {
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

@@ -58,12 +58,12 @@ export default {
         // this.$message.error(this.$t('user.auth_google_request_fail'))
       })
     },
-    init () {
+    doInit () {
       this.getGoogleKey()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

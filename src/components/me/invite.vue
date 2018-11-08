@@ -108,7 +108,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     }
   },
   methods: {
@@ -216,14 +216,14 @@ export default {
     getMe () {
       this.$store.dispatch('axios_me')
     },
-    init () {
+    doInit () {
       this.getInviteDetail()
       this.getBanner()
       this.getMe()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

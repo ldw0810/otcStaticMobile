@@ -26,6 +26,7 @@ import {$getDateStr, $trim} from '../../utils'
 import Avatar from '../common/avatar'
 import {Button, Progress} from 'mint-ui'
 import Vue from 'vue'
+import 'vue-photo-preview/dist/skin.css'
 
 Vue.component(Button.name, Button)
 Vue.component(Progress.name, Progress)
@@ -282,7 +283,7 @@ export default {
       ele.innerHTML = str
       return ele.textContent
     },
-    init () {
+    doInit () {
       this.timeout && clearTimeout(this.timeout)
       this.msg && (this.msgList[this.msgList.length] = this.msg)
       this.getMsg()
@@ -345,7 +346,7 @@ export default {
     }
   },
   created () {
-    this.init()
+    this.doInit()
   },
   mounted () {
     this.scrollToBottom()

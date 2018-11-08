@@ -102,13 +102,13 @@ export default {
         })
       }
     },
-    init () {
+    doInit () {
       this.$loading.close()
       this.checkAllState()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>

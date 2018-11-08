@@ -137,7 +137,7 @@ export default {
   },
   watch: {
     $route: function () {
-      this.init()
+      this.doInit()
     },
     'withdrawAddressAddFlag': function () {
       this.checkAllState()
@@ -374,7 +374,7 @@ export default {
           this.form.number = ''
           this.$nextTick(() => {
             this.withdrawEmailFlag = true
-            this.init()
+            this.doInit()
           })
         } else if (res.data && +res.data.error === 100017) {
           if (this.userInfo.mobile) {
@@ -387,14 +387,14 @@ export default {
         // this.$message.error(this.$t('asset.asset_withdraw_fail'))
       })
     },
-    init () {
+    doInit () {
       this.getMe()
       this.assetOperIndex = this.$route.query.oper === 'withdraw' ? 1 : 0
       this.getData()
     }
   },
   mounted () {
-    this.init()
+    this.doInit()
   }
 }
 </script>
