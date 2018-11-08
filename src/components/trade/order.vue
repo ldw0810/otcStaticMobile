@@ -62,7 +62,7 @@
         .footerInputWrapper
           #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" :tabIndex="2" @input="changeInputValue" @paste="pasteInputValue" @keydown.enter="doInputKeyEnter" @focus="doInputFocusEvent" @blur="doInputFocusEvent")
           .sendBtn(@click="sendInfo")
-        el-upload(class="uploader" ref="upload" :headers="{Authorization: userToken}" action="/api/v1/common/up_img.json" :show-upload-list="false" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="uploadBefore" :on-progress="showUploadProgress")
+        el-upload(class="uploader" ref="upload" :headers="{Authorization: userToken}" action="/api/v1/common/up_img.json" :show-file-list="false" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="uploadBefore" :on-progress="showUploadProgress")
           .uploadImage(@click="submitUpload")
         .browImage(@click.prevent.stop="triggerBrow")
           img(:src="browImage")
