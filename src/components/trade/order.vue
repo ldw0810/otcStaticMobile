@@ -62,7 +62,7 @@
         .footerInputWrapper
           #footerInput(contenteditable="true" :placeholder="$t('order.order_chat_placeholder')" :tabIndex="2" @input="changeInputValue" @paste="pasteInputValue" @keydown.enter="doInputKeyEnter" @focus="doInputFocusEvent" @blur="doInputFocusEvent")
           .sendBtn(@click="sendInfo")
-        el-upload(class="uploader" ref="upload" :headers="{Authorization: userToken}" action="/api/v1/common/up_img" :data="{upload_file: uploadFile}" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="uploadBefore" :on-progress="showUploadProgress")
+        el-upload(class="uploader" ref="upload" :headers="{Authorization: userToken}" action="/api/v1/common/up_img.json" :show-upload-list="false" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="uploadBefore" :on-progress="showUploadProgress")
           .uploadImage(@click="submitUpload")
         .browImage(@click.prevent.stop="triggerBrow")
           img(:src="browImage")
@@ -198,9 +198,34 @@ export default {
         for (let i = this.chat.length - 1; i >= 0; i--) {
           let timeFlag = +this.chat[i].from === 0 ? false : +this.chat[i].created_at * 1000 - tempTime > 3 * 60 * 1000
           tempTime = timeFlag ? +this.chat[i].created_at * 1000 : tempTime
+          let tempType = 0
+          let tempParseMsg = {}
+          try {
+            tempParseMsg = JSON.parse(this.chat[i].msg)
+          } catch (e) {
+          }
+          if (+this.chat[i].from === 0) {
+            tempType = 9
+          } else {
+            if (typeof tempParseMsg === 'object' && tempParseMsg.imgUrl) { // 图片
+              if (this.chat[i].to === this.order.member.member_id) {
+                tempType = 1
+              } else {
+                tempType = 5
+              }
+            } else {
+              if (this.chat[i].to === this.order.member.member_id) {
+                tempType = 0
+              } else {
+                tempType = 4
+              }
+            }
+          }
           tempList[this.chat.length - (i + 1)] = {
-            type: +this.chat[i].from === 0 ? 9 : this.chat[i].to === this.order.member.member_id ? 0 : 1,
+            type: tempType,
             data: this.chat[i].msg,
+            imgUrl: [1, 5].indexOf(tempType) > -1 ? tempParseMsg.imgUrl : '',
+            imgAlt: [1, 5].indexOf(tempType) > -1 ? tempParseMsg.imgAlt : '',
             time: +this.chat[i].created_at * 1000,
             compareTime: tempTime,
             timeFlag: timeFlag
@@ -212,8 +237,10 @@ export default {
     browImage () {
       return this.browFlag ? require('../../assets/images/trade/ShapeFocus.png') : require('../../assets/images/trade/Shape.png')
     },
-    uploadImage () {
-      return this.uploadFlag ? require('../../assets/images/trade/imageFocus.png') : require('../../assets/images/trade/image.png')
+    uploadData () {
+      return {
+        upload_file: this.uploadFile
+      }
     },
     browPageTotal () {
       return Math.ceil(this.browList.length / (this.browLine * this.browRow))
@@ -324,14 +351,14 @@ export default {
       this.$refs.upload.submit()
     },
     uploadSuccess (res, file) {
-      if (file.url) {
+      if (+res.error === 0 && res.data) {
         this.uploadFlag = false
         this.uploadFile = ''
-        this.uploadImageUrl = file.url
+        this.uploadImageUrl = res.data
         this.$refs.chat.sendImage({
           status: 'success',
           name: file.name,
-          url: file.url || '',
+          url: res.data,
           uid: file.uid
         })
       } else {
@@ -358,7 +385,7 @@ export default {
         name: file.name,
         url: file.url || '',
         status: file.status || '',
-        progress: file.percentage || 0,
+        percentage: +file.percentage,
         uid: file.uid
       })
     },
@@ -977,6 +1004,9 @@ export default {
     background rgba(0, 0, 0, 1)
   }
 
+  /deep/ .el-upload-list {
+    display none !important
+  }
   #header {
     position static !important
   }

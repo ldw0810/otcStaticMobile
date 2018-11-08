@@ -4,7 +4,7 @@
       li(v-for="(chat, index) in msgList" :key="index" :class="{'an-move-right': +chat.type === 0, 'an-move-left': +chat.type === 1, 'an-move-center': +chat.type === 9}")
         p(class="time system" v-if="+chat.type === 9")
           span(v-html="$getDateStr(new Date(chat.time)) + '<br/>' + parseText(chat.data)")
-        div(:class="'main' + (+chat.type === 0 ? ' self': '')" v-else)
+        div(:class="'main' + (+chat.type < 4 ? ' self': '')" v-else)
           p(class="time" v-if="chat.timeFlag")
             span(v-text="$getDateStr(new Date(chat.time))")
           .avatar
@@ -12,21 +12,23 @@
           <!-- 状态 -->
           span(class='chat-status' v-show='chat.status !== 1')
             span(class='chat-loading' v-show='chat.status === 0')
-            span(:title='$t("order.order_chat_send_msg_fail")' class='chat-error' v-show='chat.status === -1') !
-          <!-- 文本 -->
-          .text(v-html="parseText(chat.data)")
+            span(:title='$t("order.order_chat_send_msg_fail")' class='chat-error' v-show='chat.status === -1')
           <!-- 图片 -->
-          .text(v-if="+chat.type === 3")
-            img(:src="chat.data" class="image" :alt="$t('order.order_chat_img')")
+          .text(class="imgText" v-if="+chat.type === 1 || +chat.type === 5")
+            img(:src="JSON.parse(chat.data).imgUrl" class="image" :alt="JSON.parse(chat.data).imgAlt" :preview="order.id" :preview-text="JSON.parse(chat.data).imgAlt")
+            mt-progress(:style="{width: chat.imageWidth}" class="progress" :value="chat.percentage" :class="{'showPercentage100': chat.percentage >= 100}" v-if="chat.percentage || chat.percentage === 0")
+          <!-- 文本 -->
+          .text(v-html="parseText(chat.data)" v-if="+chat.type !== 1 && +chat.type !== 5")
 </template>
 <script type="es6">
 import {VALI_CHAT} from '../../utils/validator'
 import {$getDateStr, $trim} from '../../utils'
 import Avatar from '../common/avatar'
-import {Button} from 'mint-ui'
+import {Button, Progress} from 'mint-ui'
 import Vue from 'vue'
 
 Vue.component(Button.name, Button)
+Vue.component(Progress.name, Progress)
 
 export default {
   components: {
@@ -105,9 +107,19 @@ export default {
       })
     },
     sendImageInfo (imgObj) {
+      const tempTime = new Date()
+      let compareTime = this.msgList.length ? this.msgList[this.msgList.length - 1].compareTime : 0
+      let timeFlag = tempTime.getTime() - compareTime > 3 * 60 * 1000
+      let msgData = {
+        imgUrl: imgObj.url || require('../../assets/images/trade/image.png'),
+        imgUid: imgObj.uid || '',
+        imgAlt: imgObj.name || ''
+      }
       let newMsg = {
-        type: 0,
-        data: value,
+        type: 1,
+        data: JSON.stringify(msgData),
+        imgUrl: msgData.imgUrl,
+        imgAlt: msgData.imgAlt,
         time: $getDateStr(tempTime),
         compareTime: timeFlag ? tempTime.getTime() : compareTime,
         timeFlag: timeFlag,
@@ -115,6 +127,7 @@ export default {
       }
       let tempIndex = this.msgList.length
       this.$set(this.msgList, tempIndex, newMsg)
+      this.scrollToBottom()
     },
     sendImage (imgObj) {
       if (imgObj.status === 'start') {
@@ -123,24 +136,26 @@ export default {
         let tempNum = 0
         for (let i = this.msgList.length - 1; i >= 0; i--) {
           if (this.msgList[i].data && (this.msgList[i].data.indexOf(imgObj.uid) > -1)) {
-            if (imgObj.status === 'ready' || imgObj.status === 'uploading') {
-              this.$nextTick(() => {
-                this.msgList[i].data = this.msgList[i].data.replace(/(src=")(.*?)(")/gi, `$1${imgObj.url}$3`)
-                this.msgList[i].progress = +imgObj.progress
-              })
-            } else if (imgObj.status === 'success') {
-              this.$nextTick(() => {
-                this.msgList[i].data = this.msgList[i].data.replace(/(src=")(.*?)(")/gi, `$1${imgObj.url}$3`)
-                this.msgList[i].progress = 100
+            let tempImg = new Image()
+            tempImg.src = imgObj.url
+            tempImg.onload = () => {
+              console.log(this.msgList[i])
+              this.msgList[i].data = this.msgList[i].data.replace(/("imgUrl":")(.*?)(")/gi, `$1${imgObj.url}$3`)
+              this.msgList[i].imageWidth = tempImg.width / 2
+              this.msgList[i].imageHeight = tempImg.height / 2
+              if (imgObj.status === 'ready' || imgObj.status === 'uploading') {
+                this.msgList[i].percentage = +imgObj.percentage
+              } else if (imgObj.status === 'success') {
+                this.msgList[i].percentage = 100
                 this.msgList[i].status = 1
-                this.sendInfo(`<img src="${imgObj.url}" uid="${imgObj.uid}" alt="${imgObj.name}"/>`)
-              })
-            } else if (imgObj.status === 'error') {
-              this.$nextTick(() => {
-                imgObj.url && (this.msgList[i].data = this.msgList[i].data.replace(/(src=")(.*?)(")/gi, `$1${imgObj.url}$3`))
-                this.msgList[i].progress = 100
+                this.sendMsg(this.msgList[i].data, i)
+              } else if (imgObj.status === 'fail' || imgObj.status === 'error') {
+                this.msgList[i].percentage = ''
                 this.msgList[i].status = -1
-              })
+              }
+              // $set强制修改，防止不刷新数据
+              this.$set(this.msgList, i, this.msgList[i])
+              this.scrollToBottom()
             }
             break
           } else {
@@ -148,7 +163,7 @@ export default {
           }
         }
         if (+tempNum === this.msgList.length) {
-          this.sendImageInfo(imgObj)
+          this.sendMsg(this.msgList[this.msgList.length - 1].data, this.msgList.length - 1)
         }
       }
     },
@@ -171,28 +186,31 @@ export default {
         let tempIndex = this.msgList.length
         this.$set(this.msgList, tempIndex, newMsg)
         this.scrollToBottom()
-        this.$store.dispatch('axios_send_msg', {
-          order_id: this.order.id,
-          to: this.contact.id,
-          msg: value
-        }).then(res => {
-          if (res.data && +res.data.error === 0) {
-            this.$nextTick(() => {
-              this.msgList[tempIndex].status = 1
-            })
-          } else {
-            this.$nextTick(() => {
-              this.msgList[tempIndex].status = -1
-            })
-          }
-        }).catch(() => {
-          this.$nextTick(() => {
-            this.msgList[tempIndex].status = -1
-          })
-        })
+        this.sendMsg(value, tempIndex)
       } else {
         return false
       }
+    },
+    sendMsg (msg, index) {
+      this.$store.dispatch('axios_send_msg', {
+        order_id: this.order.id,
+        to: this.contact.id,
+        msg: msg
+      }).then(res => {
+        if (res.data && +res.data.error === 0) {
+          this.$nextTick(() => {
+            this.msgList[index].status = 1
+          })
+        } else {
+          this.$nextTick(() => {
+            this.msgList[index].status = -1
+          })
+        }
+      }).catch(() => {
+        this.$nextTick(() => {
+          this.msgList[index].status = -1
+        })
+      })
     },
     getMsg () {
       this.$store.dispatch('axios_chat', {
@@ -331,6 +349,7 @@ export default {
     this.init()
   },
   mounted () {
+    console.log(this.msgList)
     this.scrollToBottom()
   },
   beforeDestroy () {
@@ -556,13 +575,14 @@ export default {
     margin-bottom: 1.5vh;
     text-align: center;
   }
+
   .chat {
     /deep/ .text {
       background-color: #fff;
       box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
       display: inline-block;
       position: relative;
-      max-width: calc(75%);
+      max-width: calc(50%);
       line-height: 2.1;
       font-size: 0.9rem;
       padding: 0.5vh 2vw;
@@ -585,9 +605,14 @@ export default {
         height: 100%;
         object-fit: cover;
         object-position: 0 0;
+        vertical-align: middle;
       }
     }
+    .imgText {
+      padding: 1vh 2vw;
+    }
   }
+
   .chat .self {
     text-align: right;
   }
@@ -609,7 +634,24 @@ export default {
   }
 
   .chat .image {
-    max-width: 15vw;
+    max-width: 35vw;
+  }
+
+  .showPercentage100 {
+    transition-delay .5s
+    width 0 !important
+    height 0 !important
+    padding 0 !important
+    margin 0 !important
+  }
+
+  /deep/ .progress {
+    width 100%
+    height 1.5vh
+    padding 0.5vh 0
+    .mt-progress-content {
+      height 1vh
+    }
   }
 
   /deep/ img.static-emotion-gif,

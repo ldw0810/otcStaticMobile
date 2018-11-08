@@ -263,6 +263,9 @@ export default {
   axios_send_msg ({commit}, requestData = {}) {
     return http.post('/api/v1/otc/send.json', requestData)
   },
+  axios_upload_img ({commit}, requestData = {}) {
+    return http.post('/api/v1/common/up_img.json', requestData)
+  },
   // put方式
   axios_update_receiving ({commit}, requestData = {}) {
     return http.put('/api/v1/common/receiving.json', requestData)

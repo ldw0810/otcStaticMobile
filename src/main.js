@@ -12,12 +12,16 @@ import filters from './utils/filters'
 import install from './utils/installs'
 import languageDataList from './locale'
 import './style/index.styl'
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
 
 Vue.config.productionTip = false
 Vue.use(install)
 Vue.use(vuexI18n.plugin, store)
 Vue.use(VueClipboard)
 Vue.use(VueLazyLoad)
+Vue.use(preview)
+
 // 存储token
 if (localStorage.getItem('userToken') && !store.state.userToken) {
   store.commit('saveToken', localStorage.getItem('userToken'))
