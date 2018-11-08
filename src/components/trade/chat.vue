@@ -12,11 +12,11 @@
           <!-- 状态 -->
           span(class='chat-status' v-show='chat.status !== 1')
             span(class='chat-loading' v-show='chat.status === 0')
-            span(:title='$t("order.order_chat_send_msg_fail")' class='chat-error' v-show='chat.status === -1')
+            span(:title='$t("order.order_chat_send_msg_fail")' class='chat-error' v-show='chat.status === -1') !
           <!-- 图片 -->
           .text(class="imgText" v-if="+chat.type === 1 || +chat.type === 5")
             img(:src="JSON.parse(chat.data).imgUrl" class="image" :alt="JSON.parse(chat.data).imgAlt" :preview="order.id" :preview-text="JSON.parse(chat.data).imgAlt")
-            mt-progress(:style="{width: chat.imageWidth}" class="progress" :value="chat.percentage" :class="{'showPercentage100': chat.percentage >= 100}" v-if="chat.percentage || chat.percentage === 0")
+            mt-progress(:style="{width: chat.imageWidth}" class="progress" :value="chat.percentage" :class="{'showPercentage100': chat.percentage >= 100}" v-if="chat.status >= 0 && (chat.percentage || chat.percentage === 0)")
           <!-- 文本 -->
           .text(v-html="parseText(chat.data)" v-if="+chat.type !== 1 && +chat.type !== 5")
 </template>
@@ -364,8 +364,8 @@ export default {
   }
 
   .chat-loading {
-    width: 20px;
-    height: 20px;
+    width: 2.5vh;
+    height: 2.5vh;
     display: inline-block;
     vertical-align: middle;
     animation: weuiLoading 1s steps(12, end) infinite;
@@ -381,11 +381,11 @@ export default {
     align-items: center;
     justify-content: center;
     background-color: #f76260;
-    width: 18px;
-    height: 18px;
+    width: 2.5vh;
+    height: 2.5vh;
     border-radius: 50%;
     color: #fff;
-    font-size 0.85rem
+    font-size 0.8rem
     .ivu-icon-alert {
       color: #fff;
       transform-origin: center;
@@ -650,6 +650,9 @@ export default {
     padding 0.5vh 0
     .mt-progress-content {
       height 1vh
+      .mt-progress-progress {
+        background-image: linear-gradient(134deg, #0BBFD5 0%, #6DD7B2 100%);
+      }
     }
   }
 

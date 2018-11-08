@@ -785,6 +785,7 @@ export default {
             height: 4vh;
             background url("../../assets/images/trade/image.png") 0 0
             background-size cover
+            cursor pointer
             &:active, &:focus {
               background url("../../assets/images/trade/imageFocus.png") 0 0
               background-size cover
@@ -796,6 +797,7 @@ export default {
           width 4vh
           height 4vh
           margin-left 3.5vw
+          cursor pointer
           img {
             width 100%
             height 100%
