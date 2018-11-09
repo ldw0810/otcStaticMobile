@@ -16,7 +16,7 @@
           <!-- 图片 -->
           .text(class="imgText" v-if="+chat.type === 1 || +chat.type === 5")
             img(v-lazy="JSON.parse(chat.data).imgUrl" class="image" :alt="JSON.parse(chat.data).imgAlt" :preview="order.id" :preview-text="JSON.parse(chat.data).imgAlt")
-            mt-progress(:style="{width: chat.imageWidth}" class="progress" :value="chat.percentage" :class="{'showPercentage100': chat.percentage >= 100}" v-if="chat.status >= 0 && (chat.percentage || chat.percentage === 0)")
+            mt-progress(class="progress" :value="chat.percentage" :class="{'showPercentage100': chat.percentage >= 100}" v-if="chat.status >= 0 && (chat.percentage || chat.percentage === 0)")
           <!-- 文本 -->
           .text(v-html="parseText(chat.data)" v-if="+chat.type !== 1 && +chat.type !== 5")
 </template>
@@ -139,10 +139,9 @@ export default {
           if (this.msgList[i].data && (this.msgList[i].data.indexOf(imgObj.uid) > -1)) {
             let tempImg = new Image()
             tempImg.src = imgObj.url
+            this.scrollToBottom()
             tempImg.onload = () => {
               this.msgList[i].data = this.msgList[i].data.replace(/("imgUrl":")(.*?)(")/gi, `$1${imgObj.url}$3`)
-              this.msgList[i].imageWidth = tempImg.width / 2
-              this.msgList[i].imageHeight = tempImg.height / 2
               if (imgObj.status === 'ready' || imgObj.status === 'uploading') {
                 this.msgList[i].percentage = +imgObj.percentage
               } else if (imgObj.status === 'success') {
