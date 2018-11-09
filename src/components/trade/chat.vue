@@ -15,7 +15,7 @@
             span(:title='$t("order.order_chat_send_msg_fail")' class='chat-error' v-show='chat.status === -1') !
           <!-- 图片 -->
           .text(class="imgText" v-if="+chat.type === 1 || +chat.type === 5")
-            img(:src="JSON.parse(chat.data).imgUrl" class="image" :alt="JSON.parse(chat.data).imgAlt" :preview="order.id" :preview-text="JSON.parse(chat.data).imgAlt")
+            img(v-lazy="JSON.parse(chat.data).imgUrl" class="image" :alt="JSON.parse(chat.data).imgAlt" :preview="order.id" :preview-text="JSON.parse(chat.data).imgAlt")
             mt-progress(:style="{width: chat.imageWidth}" class="progress" :value="chat.percentage" :class="{'showPercentage100': chat.percentage >= 100}" v-if="chat.status >= 0 && (chat.percentage || chat.percentage === 0)")
           <!-- 文本 -->
           .text(v-html="parseText(chat.data)" v-if="+chat.type !== 1 && +chat.type !== 5")

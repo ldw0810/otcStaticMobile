@@ -19,7 +19,9 @@ Vue.use(install)
 Vue.use(vuexI18n.plugin, store)
 Vue.use(VueClipboard)
 Vue.use(VueLazyLoad)
-Vue.use(preview)
+Vue.use(preview, {
+  tapToClose: true
+})
 
 // 存储token
 if (localStorage.getItem('userToken') && !store.state.userToken) {
