@@ -150,7 +150,7 @@ export default {
         username: [
           {
             required: true,
-            message: this.$t('user.username_required')
+            message: this.$t('user.userName_required')
           },
           {
             validator: validateUsernameRepeat
