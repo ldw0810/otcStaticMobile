@@ -266,7 +266,7 @@ const routers = [
     children: [
       {
         path: 'login',
-        alias: ['/login', '/user/login', '/entry'],
+        alias: ['/login', '/user/login', '/entry', '/login/iteringID', '/user/login/iteringID', '/entry/iteringID', '/entry/login/iteringID'],
         component: entry.login
       },
       {
