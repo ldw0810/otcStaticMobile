@@ -56,7 +56,7 @@
           mt-button(class="orderSubmitBtn" @click="orderOper('evaluate')") {{$t('order.order_eval')}}
         .submit(class="mintSubmit" v-else)
           mt-button(disabled) {{$t('order.order_status_over')}}
-      Chat(class="chatWrapper" ref="chat" :contact="{id: order.member.member_id, name: order.member.nickname}" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrderInterval" @sendSuccess="sendSuccess")
+      Chat(class="chatWrapper" ref="chat" :order="order" :chatList="chatList" :msg="chatMessage" :chatFlag="chatFlag" @refresh="getOrderInterval" @sendSuccess="sendSuccess")
     .footer(v-if="order.id" id="footer")
       .oper
         .footerInputWrapper
@@ -111,7 +111,7 @@ import OrderCompleteConfirm from './orderCompleteConfrim'
 import Chat from './chat'
 import ValidPhone from '../common/validPhone'
 import ValidGoogle from '../common/validGoogle'
-import {$insertHtmlAtCaret, $restoreSelection, $saveSelection} from '../../utils'
+import {$insertHtmlAtCaret, $isJson, $restoreSelection, $saveSelection} from '../../utils'
 
 Vue.component(Upload.name, Upload)
 Vue.component(Header.name, Header)
@@ -200,25 +200,30 @@ export default {
           tempTime = timeFlag ? +this.chat[i].created_at * 1000 : tempTime
           let tempType = 0
           let tempParseMsg = {}
-          try {
+          if ($isJson(this.chat[i].msg)) {
             tempParseMsg = JSON.parse(this.chat[i].msg)
-          } catch (e) {
-          }
-          if (+this.chat[i].from === 0) {
-            tempType = 9
-          } else {
-            if (typeof tempParseMsg === 'object' && tempParseMsg.imgUrl) { // 图片
-              if (this.chat[i].to === this.order.member.member_id) {
-                tempType = 1
-              } else {
-                tempType = 5
-              }
+            if (+this.chat[i].from === 0) {
+              tempType = 9
             } else {
-              if (this.chat[i].to === this.order.member.member_id) {
-                tempType = 0
+              if (typeof tempParseMsg === 'object' && tempParseMsg.imgUrl) { // 图片
+                if (this.chat[i].to === this.order.member.member_id) {
+                  tempType = 1
+                } else {
+                  tempType = 5
+                }
               } else {
-                tempType = 4
+                if (this.chat[i].to === this.order.member.member_id) {
+                  tempType = 0
+                } else {
+                  tempType = 4
+                }
               }
+            }
+          } else {
+            if (this.chat[i].to === this.order.member.member_id) {
+              tempType = 0
+            } else {
+              tempType = 4
             }
           }
           tempList[this.chat.length - (i + 1)] = {

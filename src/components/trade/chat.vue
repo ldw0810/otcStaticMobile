@@ -22,7 +22,7 @@
 </template>
 <script type="es6">
 import {VALI_CHAT} from '../../utils/validator'
-import {$getDateStr, $trim} from '../../utils'
+import {$getDateStr, $isJson, $trim} from '../../utils'
 import Avatar from '../common/avatar'
 import {Button, Progress} from 'mint-ui'
 import Vue from 'vue'
@@ -36,11 +36,6 @@ export default {
     Avatar
   },
   props: {
-    contact: {
-      id: '',
-      name: '',
-      avatar: require('../../assets/images/trade/DefaultHead.jpg')
-    },
     order: {},
     msg: '',
     chatList: {
@@ -78,13 +73,6 @@ export default {
   computed: {
     axios_source_chat () {
       return this.$store.state.axiosCancel.chat
-    },
-    owner () {
-      return {
-        id: this.$store.state.userInfo.id,
-        name: this.$store.state.userInfo.nickname,
-        avatar: require('../../assets/images/trade/DefaultHead.jpg')
-      }
     }
   },
   methods: {
@@ -193,7 +181,7 @@ export default {
     sendMsg (msg, index) {
       this.$store.dispatch('axios_send_msg', {
         order_id: this.order.id,
-        to: this.contact.id,
+        to: this.order.member.member_id,
         msg: msg
       }).then(res => {
         if (res.data && +res.data.error === 0) {
@@ -219,9 +207,39 @@ export default {
         if (res.data && +res.data.error === 0) {
           let compareTime = this.msgList.length ? this.msgList[this.msgList.length - 1].compareTime : 0
           let timeFlag = +res.data.from === 0 ? false : tempTime - compareTime > 3 * 60 * 1000
+          let tempType = 0
+          let tempParseMsg = {}
+          if ($isJson(res.data.msg)) {
+            tempParseMsg = JSON.parse(res.data.msg)
+            if (res.data.from === 0) {
+              tempType = 9
+            } else {
+              if (typeof tempParseMsg === 'object' && tempParseMsg.imgUrl) { // 图片
+                if (res.data.to === this.order.member.member_id) {
+                  tempType = 1
+                } else {
+                  tempType = 5
+                }
+              } else {
+                if (res.data.to === this.order.member.member_id) {
+                  tempType = 0
+                } else {
+                  tempType = 4
+                }
+              }
+            }
+          } else {
+            if (res.data.to === this.order.member.member_id) {
+              tempType = 0
+            } else {
+              tempType = 4
+            }
+          }
           this.$set(this.msgList, this.msgList.length, {
-            type: +res.data.from === 0 ? 9 : 1,
+            type: tempType,
             data: res.data.msg,
+            imgUrl: [1, 5].indexOf(tempType) > -1 ? tempParseMsg.imgUrl : '',
+            imgAlt: [1, 5].indexOf(tempType) > -1 ? tempParseMsg.imgAlt : '',
             time: $getDateStr(tempTime),
             compareTime: timeFlag ? tempTime : compareTime,
             timeFlag: timeFlag
