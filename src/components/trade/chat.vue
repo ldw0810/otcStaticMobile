@@ -229,7 +229,9 @@ export default {
               }
             }
           } else {
-            if (res.data.to === this.order.member.member_id) {
+            if (+res.data.from === 0) {
+              tempType = 9
+            } else if (res.data.to === this.order.member.member_id) {
               tempType = 0
             } else {
               tempType = 4

@@ -220,7 +220,9 @@ export default {
               }
             }
           } else {
-            if (this.chat[i].to === this.order.member.member_id) {
+            if (+this.chat[i].from === 0) {
+              tempType = 9
+            } else if (this.chat[i].to === this.order.member.member_id) {
               tempType = 0
             } else {
               tempType = 4
