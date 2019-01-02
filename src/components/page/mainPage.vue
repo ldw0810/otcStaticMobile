@@ -47,7 +47,6 @@ export default {
   },
   methods: {
     bannerScroll (event) {
-      debugger
       event.preventDefault()
     },
     hideBanner () {
