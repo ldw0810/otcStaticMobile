@@ -14,7 +14,12 @@ export default {
     omt: require('./src/assets/images/trade/CoinLogo-OMT.svg'),
     ring: require('./src/assets/images/trade/CoinLogo-RING.png'),
     ck: require('./src/assets/images/trade/CoinLogo-CAT.png'),
-    kton: require('./src/assets/images/trade/CoinLogo-KTON.png')
+    kton: require('./src/assets/images/trade/CoinLogo-KTON.png'),
+    gold: require('./src/assets/images/trade/CoinLogo-GOLD.png'),
+    wood: require('./src/assets/images/trade/CoinLogo-WOOD.png'),
+    hoo: require('./src/assets/images/trade/CoinLogo-HOO.png'),
+    fire: require('./src/assets/images/trade/CoinLogo-FIRE.png'),
+    soil: require('./src/assets/images/trade/CoinLogo-SOIL.png'),
   },
   CONF_DIGITAL_CURRENCY_LIST: [
     {
@@ -46,7 +51,37 @@ export default {
       targetCurrency: 'dai',
       buyLimit: 50,
       sellLimit: 5,
-    }
+    },
+    {
+      currency: 'gold',
+      targetCurrency: 'dai',
+      buyLimit: 50,
+      sellLimit: 5,
+    },
+    {
+      currency: 'wood',
+      targetCurrency: 'dai',
+      buyLimit: 50,
+      sellLimit: 5,
+    },
+    {
+      currency: 'hoo',
+      targetCurrency: 'dai',
+      buyLimit: 50,
+      sellLimit: 5,
+    },
+    {
+      currency: 'fire',
+      targetCurrency: 'dai',
+      buyLimit: 50,
+      sellLimit: 5,
+    },
+    {
+      currency: 'soil',
+      targetCurrency: 'dai',
+      buyLimit: 50,
+      sellLimit: 5,
+    },
   ],
   DEFAULT_LANGUAGE: 'zh-HK',
   CHAT_TIMEOUT: 90000,
