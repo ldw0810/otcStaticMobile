@@ -1,8 +1,8 @@
 FROM node:9.11.1-jessie as builder
 
 WORKDIR /app
-COPY package.json /www
-COPY package-lock.json /www
+COPY package.json /app
+COPY package-lock.json /app
 RUN npm install
 
 COPY . /app
