@@ -17,9 +17,9 @@ export default {
     kton: require('./src/assets/images/trade/CoinLogo-KTON.png'),
     gold: require('./src/assets/images/trade/CoinLogo-GOLD.png'),
     wood: require('./src/assets/images/trade/CoinLogo-WOOD.png'),
-    hoo: require('./src/assets/images/trade/CoinLogo-HOO.png'),
+    hho: require('./src/assets/images/trade/CoinLogo-HHO.png'),
     fire: require('./src/assets/images/trade/CoinLogo-FIRE.png'),
-    soil: require('./src/assets/images/trade/CoinLogo-SOIL.png'),
+    sioo: require('./src/assets/images/trade/CoinLogo-SIOO.png'),
   },
   CONF_DIGITAL_CURRENCY_LIST: [
     {
@@ -65,7 +65,7 @@ export default {
       sellLimit: 5,
     },
     {
-      currency: 'hoo',
+      currency: 'hho',
       targetCurrency: 'dai',
       buyLimit: 50,
       sellLimit: 5,
@@ -77,7 +77,7 @@ export default {
       sellLimit: 5,
     },
     {
-      currency: 'soil',
+      currency: 'sioo',
       targetCurrency: 'dai',
       buyLimit: 50,
       sellLimit: 5,
