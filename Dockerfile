@@ -1,7 +1,13 @@
-FROM node:latest as builder
+FROM node:9.11.1-jessie as builder
+
 WORKDIR /app
-ADD . /app
-RUN npm install && npm run build
+COPY package.json /app
+COPY package-lock.json /app
+RUN npm install
+
+COPY . /app
+RUN npm run build
+
 
 FROM nginx:latest
 COPY --from=builder /app/dist /usr/share/nginx/html
